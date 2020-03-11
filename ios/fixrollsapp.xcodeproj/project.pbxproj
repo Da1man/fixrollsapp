@@ -16,6 +16,9 @@
 		2D02E4BD1E0B4A84006451C7 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		2D02E4BF1E0B4AB3006451C7 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		2DCD954D1E0B4F2C00145EB5 /* fixrollsappTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* fixrollsappTests.m */; };
+		78AAB33285F6471B9B5DE8E5 /* Proxima Nova Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = 51B2745A097B43FE9E486407 /* Proxima Nova Bold.otf */; };
+		AA284DACD42E45B2875902BE /* Proxima Nova Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = 5C9B87D5757E471E9D812FAC /* Proxima Nova Light.otf */; };
+		5826BDD327E94E50B86D5C1C /* Proxima Nova Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = B0E9CB076E3E47578FA5F428 /* Proxima Nova Regular.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +54,9 @@
 		2D02E4901E0B4A5D006451C7 /* fixrollsapp-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "fixrollsapp-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		ED2971642150620600B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = Platforms/AppleTVOS.platform/Developer/SDKs/AppleTVOS12.0.sdk/System/Library/Frameworks/JavaScriptCore.framework; sourceTree = DEVELOPER_DIR; };
+		51B2745A097B43FE9E486407 /* Proxima Nova Bold.otf */ = {isa = PBXFileReference; name = "Proxima Nova Bold.otf"; path = "../app/fonts/Proxima Nova Bold.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		5C9B87D5757E471E9D812FAC /* Proxima Nova Light.otf */ = {isa = PBXFileReference; name = "Proxima Nova Light.otf"; path = "../app/fonts/Proxima Nova Light.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
+		B0E9CB076E3E47578FA5F428 /* Proxima Nova Regular.otf */ = {isa = PBXFileReference; name = "Proxima Nova Regular.otf"; path = "../app/fonts/Proxima Nova Regular.otf"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -140,6 +146,7 @@
 				00E356EF1AD99517003FC87E /* fixrollsappTests */,
 				83CBBA001A601CBA00E9B192 /* Products */,
 				2D16E6871FA4F8E400B85C8A /* Frameworks */,
+				C03CF8BD679441FB8AE86BAC /* Resources */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -156,6 +163,17 @@
 			);
 			name = Products;
 			sourceTree = "<group>";
+		};
+		C03CF8BD679441FB8AE86BAC /* Resources */ = {
+			isa = "PBXGroup";
+			children = (
+				51B2745A097B43FE9E486407 /* Proxima Nova Bold.otf */,
+				5C9B87D5757E471E9D812FAC /* Proxima Nova Light.otf */,
+				B0E9CB076E3E47578FA5F428 /* Proxima Nova Regular.otf */,
+			);
+			name = Resources;
+			sourceTree = "<group>";
+			path = "";
 		};
 /* End PBXGroup section */
 
@@ -240,7 +258,7 @@
 		83CBB9F71A601CBA00E9B192 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0940;
+				LastUpgradeCheck = 940;
 				ORGANIZATIONNAME = Facebook;
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
@@ -293,6 +311,9 @@
 			files = (
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				13B07FBD1A68108700A75B9A /* LaunchScreen.xib in Resources */,
+				78AAB33285F6471B9B5DE8E5 /* Proxima Nova Bold.otf in Resources */,
+				AA284DACD42E45B2875902BE /* Proxima Nova Light.otf in Resources */,
+				5826BDD327E94E50B86D5C1C /* Proxima Nova Regular.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
