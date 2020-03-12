@@ -1,5 +1,5 @@
 import React, {PureComponent} from 'react';
-import {Text, View, StyleSheet, TouchableOpacity, Image} from 'react-native';
+import {Text, View, StyleSheet, TouchableOpacity, Image, Alert} from 'react-native';
 import {THEME, w} from '../common/variables';
 
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
@@ -8,8 +8,23 @@ import {faLeaf} from '@fortawesome/pro-light-svg-icons';
 import {faPlusCircle} from '@fortawesome/pro-light-svg-icons';
 
 export default class ProductItem extends PureComponent {
+  addToCartHandler = () => {
+    Alert.alert(
+      'Добавить в корзину?',
+      'Добавить ролл Нежный угорь 1 шт. в корзину?',
+      [
+        {
+          text: 'Отменить',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+        {text: 'Добавить', onPress: () => console.log('OK Pressed')},
+      ],
+      {cancelable: false},
+    );
+  }
   render() {
-    const {} = this.props;
+    const {name} = this.props;
     return (
       <View style={styles.container}>
         <TouchableOpacity style={styles.imageSection} activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}>
@@ -27,13 +42,13 @@ export default class ProductItem extends PureComponent {
           </View>
         </TouchableOpacity>
         <View style={styles.titleSection}>
-          <Text style={styles.titleText}>Нежный угорь</Text>
+          <Text style={styles.titleText}>{name}</Text>
         </View>
         <View style={styles.priceSection}>
           <View>
             <Text style={styles.priceText}>437 ₽</Text>
           </View>
-          <TouchableOpacity>
+          <TouchableOpacity activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY} onPress={this.addToCartHandler}>
             <FontAwesomeIcon icon={faPlusCircle} size={THEME.FONT_SIZE.BUTTON_PLUS} color={THEME.COLOR.ACCENT}/>
           </TouchableOpacity>
         </View>
@@ -51,6 +66,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     borderRadius: 15,
     marginBottom: 15,
+    elevation: 6,
   },
   imageSection: {
     justifyContent: 'center',

@@ -5,9 +5,13 @@ import {THEME} from '../common/variables';
 import TagComponent from '../components/TagConponent';
 import ProductItem from '../components/ProductItem';
 import CartButton from '../components/CartButton';
+import {connect} from 'react-redux';
 
 class CatalogScreen extends PureComponent {
   render() {
+    const {products} = this.props
+    console.log(products)
+    const productsList = products.map((item) => <ProductItem key={item.id} name={item.name}/>)
     return (
       <View style={{flex: 1}}>
         <Header/>
@@ -22,13 +26,7 @@ class CatalogScreen extends PureComponent {
             <TagComponent name={'Краб'} checked={false}/>
           </View>
           <View style={styles.productsSection}>
-            <ProductItem />
-            <ProductItem />
-            <ProductItem />
-            <ProductItem />
-            <ProductItem />
-            <ProductItem />
-            <ProductItem />
+            {productsList}
           </View>
         </ScrollView>
         <CartButton />
@@ -68,4 +66,10 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CatalogScreen;
+let mapStateToProps = state => {
+  return {
+    products: state.catalog.products,
+  };
+};
+
+export default connect(mapStateToProps, {}) (CatalogScreen);
