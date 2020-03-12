@@ -1,16 +1,35 @@
 import React, {PureComponent} from 'react';
-import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
+import {Text, View, StyleSheet, TouchableOpacity, Animated, Easing} from 'react-native';
 import {THEME} from '../common/variables';
 
 export default class CartButton extends PureComponent {
+  _bottomCartButton = new Animated.Value(-60)
+
   render() {
-    const {} = this.props;
+    const {cartTotal} = this.props;
+    const animatedStyle = {
+      bottom: this._bottomCartButton,
+    };
+    if (cartTotal) {
+      Animated.timing(this._bottomCartButton, {
+        toValue: 0,
+        duration: 300,
+      }).start();
+    } else {
+      Animated.timing(this._bottomCartButton, {
+        toValue: -60,
+        duration: 300,
+      }).start();
+    }
     return (
-      <View>
-        <TouchableOpacity activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY} style={styles.container}>
-          <Text style={styles.priceText}>2 044 ₽</Text>
+      <Animated.View style={[styles.container, animatedStyle]}>
+        <TouchableOpacity
+          activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
+          style={styles.button}
+        >
+          <Text style={styles.priceText}>{cartTotal.toLocaleString()} ₽</Text>
         </TouchableOpacity>
-      </View>
+      </Animated.View>
     );
   }
 }
@@ -20,11 +39,16 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 60,
     backgroundColor: THEME.COLOR.ACCENT,
+
+    position: 'absolute',
+    bottom: -0,
+    left: 0,
+  },
+  button: {
     justifyContent: 'center',
     alignItems: 'center',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
+    width: '100%',
+    height: '100%',
   },
   priceText: {
     fontFamily: THEME.FONT_FAMILY.BOLD,

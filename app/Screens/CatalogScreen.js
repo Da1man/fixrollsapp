@@ -6,12 +6,17 @@ import TagComponent from '../components/TagConponent';
 import ProductItem from '../components/ProductItem';
 import CartButton from '../components/CartButton';
 import {connect} from 'react-redux';
+import {addToCart} from '../redux/catalogReducer';
 
 class CatalogScreen extends PureComponent {
   render() {
-    const {products} = this.props
-    console.log(products)
-    const productsList = products.map((item) => <ProductItem key={item.id} name={item.name}/>)
+    const {products, cartTotal, addToCart} = this.props
+    console.log(cartTotal)
+    const productsList = products.map((item) => <ProductItem
+      key={item.id}
+      item={item}
+      addToCart={addToCart}
+    />)
     return (
       <View style={{flex: 1}}>
         <Header/>
@@ -29,7 +34,7 @@ class CatalogScreen extends PureComponent {
             {productsList}
           </View>
         </ScrollView>
-        <CartButton />
+        <CartButton cartTotal={cartTotal}/>
       </View>
     );
   }
@@ -37,6 +42,7 @@ class CatalogScreen extends PureComponent {
 
 const styles = StyleSheet.create({
   container: {
+    marginBottom: 0,
   },
   titleSection: {
     marginTop: 20,
@@ -69,7 +75,11 @@ const styles = StyleSheet.create({
 let mapStateToProps = state => {
   return {
     products: state.catalog.products,
+    cartTotal: state.catalog.cartTotal,
+    cartProducts: state.catalog.cartProducts,
   };
 };
 
-export default connect(mapStateToProps, {}) (CatalogScreen);
+export default connect(mapStateToProps, {
+  addToCart,
+}) (CatalogScreen);

@@ -8,47 +8,55 @@ import {faLeaf} from '@fortawesome/pro-light-svg-icons';
 import {faPlusCircle} from '@fortawesome/pro-light-svg-icons';
 
 export default class ProductItem extends PureComponent {
-  addToCartHandler = () => {
-    Alert.alert(
-      'Добавить в корзину?',
-      'Добавить ролл Нежный угорь 1 шт. в корзину?',
-      [
-        {
-          text: 'Отменить',
-          onPress: () => console.log('Cancel Pressed'),
-          style: 'cancel',
-        },
-        {text: 'Добавить', onPress: () => console.log('OK Pressed')},
-      ],
-      {cancelable: false},
-    );
-  }
+
   render() {
-    const {name} = this.props;
+    const {item, addToCart} = this.props;
+
+    const addToCartHandler = () => {
+      Alert.alert(
+        'Добавить в корзину?',
+        'Добавить ролл Нежный угорь 1 шт. в корзину?',
+        [
+          {
+            text: 'Отменить',
+            onPress: () => console.log('Cancel Pressed'),
+            style: 'cancel',
+          },
+          {text: 'Добавить', onPress: () => addToCart(item)},
+        ],
+        {cancelable: false},
+      );
+    };
+
     return (
       <View style={styles.container}>
         <TouchableOpacity style={styles.imageSection} activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}>
           <Image style={styles.productImage}
-                 source={{uri:'https://fixrolls.ru/wp-content/uploads/2019/10/Set-Love2-1-1-1.jpg'}}
+                 source={{uri: item.image}}
                  resizeMode={'cover'}
           />
           <View style={styles.iconSection}>
+            {item.isHot &&
             <TouchableOpacity style={styles.icon}>
               <FontAwesomeIcon icon={faFire} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.RED_ICON}/>
             </TouchableOpacity>
+            }
+            {item.isVegetarian &&
             <TouchableOpacity>
               <FontAwesomeIcon icon={faLeaf} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.GREEN_ICON}/>
             </TouchableOpacity>
+            }
+
           </View>
         </TouchableOpacity>
         <View style={styles.titleSection}>
-          <Text style={styles.titleText}>{name}</Text>
+          <Text style={styles.titleText}>{item.name}</Text>
         </View>
         <View style={styles.priceSection}>
           <View>
-            <Text style={styles.priceText}>437 ₽</Text>
+            <Text style={styles.priceText}>{item.price} ₽</Text>
           </View>
-          <TouchableOpacity activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY} onPress={this.addToCartHandler}>
+          <TouchableOpacity activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY} onPress={addToCartHandler}>
             <FontAwesomeIcon icon={faPlusCircle} size={THEME.FONT_SIZE.BUTTON_PLUS} color={THEME.COLOR.ACCENT}/>
           </TouchableOpacity>
         </View>
@@ -101,5 +109,5 @@ const styles = StyleSheet.create({
     fontSize: THEME.FONT_SIZE.TITLE,
     fontFamily: THEME.FONT_FAMILY.REGULAR,
     color: THEME.COLOR.BLACK,
-  }
+  },
 });
