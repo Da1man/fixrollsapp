@@ -11,7 +11,9 @@ export const THEME = {
     LIGHT: 'Proxima Nova Light',
   },
   FONT_SIZE: {
+    BUTTON_PLUS: 28,
     TITLE: 24,
+    MAIN: 18,
     TAGS: 18,
     DESCRIPTION: 18,
   },
@@ -24,8 +26,9 @@ export const THEME = {
     BLACK: '#343535',
     WHITE: '#FCFCFD',
     RED_ICON: '#FC5B5B',
+    GREEN_ICON: '#25D380',
   },
   SETTINGS: {
     ACTIVE_OPACITY: 0.3,
   },
-}
+};

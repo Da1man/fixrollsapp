@@ -6,21 +6,19 @@ export default class TagComponent extends PureComponent {
   render() {
     const {name, checked} = this.props;
     return (
-      <View style={styles.container}>
-        <TouchableOpacity
-          activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
-          style={{...styles.tagItem, borderColor: checked ? THEME.COLOR.GRAY : THEME.COLOR.ACCENT}}
-        >
-          <Text style={{...styles.tagNameText, color: checked ? THEME.COLOR.GRAY : THEME.COLOR.ACCENT}}>{name}</Text>
-        </TouchableOpacity>
-      </View>
+      <TouchableOpacity
+        activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
+        style={{...styles.tagItem, borderColor: checked ? THEME.COLOR.GRAY : THEME.COLOR.ACCENT}}
+      >
+        <Text style={{...styles.tagNameText, color: checked ? THEME.COLOR.GRAY : THEME.COLOR.ACCENT}}>{name}</Text>
+      </TouchableOpacity>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {},
   tagItem: {
+    marginTop: 10,
     marginRight: 10,
     borderWidth: 1,
     borderColor: THEME.COLOR.ACCENT,
