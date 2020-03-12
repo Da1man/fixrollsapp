@@ -12,6 +12,7 @@ export const THEME = {
   },
   FONT_SIZE: {
     TITLE: 24,
+    TAGS: 18,
     DESCRIPTION: 18,
   },
   COLOR: {
@@ -25,6 +26,6 @@ export const THEME = {
     RED_ICON: '#FC5B5B',
   },
   SETTINGS: {
-    ACTIVE_OPACITY: 0.5,
+    ACTIVE_OPACITY: 0.3,
   },
 }
