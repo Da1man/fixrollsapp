@@ -1,6 +1,9 @@
 import * as _ from 'lodash';
 
 const ADD_TO_CART = 'ADD_TO_CART';
+const TOGGLE_OPEN_CART = 'TOGGLE_OPEN_CART';
+const TOGGLE_NEED_OPEN_CART = 'TOGGLE_NEED_OPEN_CART';
+const TOGGLE_NEED_CLOSE_CART = 'TOGGLE_NEED_CLOSE_CART';
 
 let initialState = {
   products: [
@@ -77,12 +80,14 @@ let initialState = {
   ],
   cartProducts: [],
   cartTotal: 0,
-  isFetching: false,
+  cartIsOpened: false,
+  cartNeedOpen: false,
+  cartNeedClose: false,
 };
 
 let updateTotal = (state) => {
   let total = 0;
-  state.cartProducts.forEach((item) => total = total + item.price )
+  state.cartProducts.forEach((item) => total = total + item.price * item.count )
   return {
     ...state,
     cartTotal: total,
@@ -110,9 +115,30 @@ export const catalogReducer = (state = initialState, action) => {
         return updateTotal(newState);
       }
     }
+    case TOGGLE_OPEN_CART: {
+      const newState = {
+        ...state, isOpened: !state.isOpened
+      };
+      return newState;
+    }
+    case TOGGLE_NEED_OPEN_CART: {
+      const newState = {
+        ...state, cartNeedOpen: !state.cartNeedOpen
+      };
+      return newState;
+    }
+    case TOGGLE_NEED_CLOSE_CART: {
+      const newState = {
+        ...state, cartNeedClose: !state.cartNeedClose
+      };
+      return newState;
+    }
     default:
       return state;
   }
 };
 
 export const addToCart = (product) => ({type: ADD_TO_CART, product});
+export const toggleCartOpen = () => ({type: TOGGLE_OPEN_CART});
+export const toggleNeedOpen = () => ({type: TOGGLE_NEED_OPEN_CART});
+export const toggleNeedClose = () => ({type: TOGGLE_NEED_CLOSE_CART});
