@@ -1,16 +1,26 @@
 import React, {PureComponent} from 'react';
 import {Text, View, StyleSheet, TouchableOpacity, Image, Alert} from 'react-native';
 import {THEME, w} from '../common/variables';
+import {connect} from 'react-redux';
 
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faFire} from '@fortawesome/pro-light-svg-icons';
 import {faLeaf} from '@fortawesome/pro-light-svg-icons';
 import {faPlusCircle} from '@fortawesome/pro-light-svg-icons';
+import {toggleNeedClose, toggleNeedOpen} from '../redux/catalogReducer';
 
-export default class ProductItem extends PureComponent {
+class ProductItem extends PureComponent {
 
   render() {
-    const {item, addToCart} = this.props;
+    const {
+      item,
+      addToCart,
+      cartTotal,
+      cartNeedOpen,
+      cartNeedClose,
+      toggleNeedOpen,
+      toggleNeedClose,
+    } = this.props;
 
     const addToCartHandler = () => {
       Alert.alert(
@@ -22,10 +32,16 @@ export default class ProductItem extends PureComponent {
             onPress: () => console.log('Cancel Pressed'),
             style: 'cancel',
           },
-          {text: 'Добавить', onPress: () => addToCart(item)},
+          {text: 'Добавить', onPress: () => {
+            addToCart(item)
+              if (!cartTotal) {
+                toggleNeedOpen()
+              }
+            }},
         ],
         {cancelable: false},
       );
+
     };
 
     return (
@@ -111,3 +127,17 @@ const styles = StyleSheet.create({
     color: THEME.COLOR.BLACK,
   },
 });
+
+let mapStateToProps = state => {
+  return {
+    cartNeedOpen: state.catalog.cartNeedOpen,
+    cartNeedClose: state.catalog.cartNeedClose,
+    cartTotal: state.catalog.cartTotal,
+  };
+};
+
+export default connect(mapStateToProps, {
+  toggleNeedOpen,
+  toggleNeedClose,
+}) (ProductItem);
+

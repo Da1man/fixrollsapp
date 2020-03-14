@@ -1,17 +1,22 @@
 import React, {PureComponent} from 'react';
 import {Text, View, StyleSheet, TouchableOpacity, Image, Alert} from 'react-native';
 import {THEME, w} from '../common/variables';
+import {connect} from 'react-redux';
 
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faMinus, faPlus} from '@fortawesome/pro-regular-svg-icons';
+import {incCountCart, decCountCart} from '../redux/catalogReducer';
 
-export default class CartProductItem extends PureComponent {
-
+class CartProductItem extends PureComponent {
   render() {
-    const {item} = this.props
+    const {item, incCountCart, decCountCart} = this.props
     return (
       <View style={styles.container}>
-        <TouchableOpacity activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY} style={styles.decSection}>
+        <TouchableOpacity
+          activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
+          style={styles.decSection}
+          onPress={() => decCountCart(item)}
+        >
           <FontAwesomeIcon icon={faMinus} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.WHITE}/>
         </TouchableOpacity>
         <View style={styles.contentSection}>
@@ -22,7 +27,11 @@ export default class CartProductItem extends PureComponent {
             <Text style={styles.countText}>{`${item.price}x${item.count} ₽`}</Text>
           </View>
         </View>
-        <TouchableOpacity activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY} style={styles.incSection}>
+        <TouchableOpacity
+          activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
+          style={styles.incSection}
+          onPress={() => incCountCart(item)}
+        >
           <FontAwesomeIcon icon={faPlus} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.WHITE}/>
         </TouchableOpacity>
       </View>
@@ -72,3 +81,14 @@ const styles = StyleSheet.create({
     width: 30,
   },
 });
+
+let mapStateToProps = state => {
+  return {
+  };
+};
+
+export default connect(mapStateToProps, {
+  incCountCart,
+  decCountCart,
+}) (CartProductItem);
+

@@ -4,15 +4,15 @@ import {THEME} from '../common/variables';
 import CartProductItem from './CartProductItem';
 
 import {connect} from 'react-redux';
-import {toggleCartOpen, toggleNeedOpen, toggleNeedClose} from '../redux/catalogReducer';
+import {toggleCartOpened, toggleNeedOpen, toggleNeedClose} from '../redux/catalogReducer';
 
 class CartButton extends PureComponent {
   _bottomCartButton = new Animated.Value(-500);
 
   render() {
     const {
-      cartTotal, cartProducts, cartIsOpened, cartNeedOpen,
-      cartNeedClose} = this.props;
+      cartTotal, cartProducts, cartIsOpened, toggleCartOpened, cartNeedOpen,
+      cartNeedClose, toggleNeedOpen, toggleNeedClose} = this.props;
     const animatedStyle = {
       bottom: this._bottomCartButton,
     };
@@ -38,14 +38,15 @@ class CartButton extends PureComponent {
           toValue: -0,
           duration: 300,
         }).start();
-        this.props.toggleCartOpen()
+        toggleCartOpened()
       } else {
         Animated.timing(this._bottomCartButton, {
           toValue: -430,
           duration: 300,
         }).start();
-        this.props.toggleCartOpen()
+        toggleCartOpened()
       }
+      // console.log(cartIsOpened)
     };
 
     const cartProductsList = cartProducts.map((item) => <CartProductItem
@@ -58,7 +59,7 @@ class CartButton extends PureComponent {
         <TouchableOpacity
           activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
           style={styles.button}
-          onPress={openCartHandler}
+          onPress={() => openCartHandler()}
         >
           <Text style={styles.priceText}>{cartTotal.toLocaleString()} ₽</Text>
         </TouchableOpacity>
@@ -118,7 +119,7 @@ let mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, {
-  toggleCartOpen,
+  toggleCartOpened,
   toggleNeedOpen,
   toggleNeedClose,
 }) (CartButton);

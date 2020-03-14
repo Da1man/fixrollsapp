@@ -11,7 +11,6 @@ import {addToCart} from '../redux/catalogReducer';
 class CatalogScreen extends PureComponent {
   render() {
     const {products, cartTotal, addToCart, cartProducts, isOpened} = this.props
-    console.log(cartTotal)
     const productsList = products.map((item) => <ProductItem
       key={item.id}
       item={item}

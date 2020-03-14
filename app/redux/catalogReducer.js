@@ -1,7 +1,10 @@
+import {Alert} from 'react-native';
 import * as _ from 'lodash';
 
 const ADD_TO_CART = 'ADD_TO_CART';
-const TOGGLE_OPEN_CART = 'TOGGLE_OPEN_CART';
+const INC_COUNT_CART = 'INC_COUNT_CART';
+const DEC_COUNT_CART = 'DEC_COUNT_CART';
+const TOGGLE_CART_OPENED = 'TOGGLE_CART_OPENED';
 const TOGGLE_NEED_OPEN_CART = 'TOGGLE_NEED_OPEN_CART';
 const TOGGLE_NEED_CLOSE_CART = 'TOGGLE_NEED_CLOSE_CART';
 
@@ -99,6 +102,7 @@ export const catalogReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_TO_CART: {
       if (_.findIndex(state.cartProducts, {id: action.product.id}) != -1) {
+
         const newState = {
           ...state, cartProducts: state.cartProducts.map(p => {
             if (p.id === action.product.id) {
@@ -115,9 +119,77 @@ export const catalogReducer = (state = initialState, action) => {
         return updateTotal(newState);
       }
     }
-    case TOGGLE_OPEN_CART: {
+    case INC_COUNT_CART: {
       const newState = {
-        ...state, isOpened: !state.isOpened
+        ...state,
+        cartProducts: state.cartProducts.map (p => {
+          if (p.id === action.product.id) {
+            return {...p, count: p.count + 1}
+          }
+          return p
+        })
+      }
+      return updateTotal(newState)
+    }
+
+    case DEC_COUNT_CART: {
+      if (action.product.count === 1) {
+
+        // Alert.alert(
+        //   'Удалить из корзины?',
+        //   'Удалить Нежный угорь из корзины?',
+        //   [
+        //     {
+        //       text: 'Отменить',
+        //       onPress: () => console.log('Cancel Pressed'),
+        //       style: 'cancel',
+        //     },
+        //     {text: 'Удалить', onPress: () => {
+        //         console.log(state.cartProducts);
+        //         const deleteIndex = _.findIndex(state.cartProducts, {id: action.product.id});
+        //         const newCartProducts = [...state.cartProducts];
+        //         newCartProducts.splice(deleteIndex, 1);
+        //         const newState = {
+        //           ...state,
+        //           cartProducts: newCartProducts,
+        //           cartNeedClose: true,
+        //         };
+        //         console.log(newState.cartProducts)
+        //         return updateTotal(newState)
+        //       }},
+        //   ],
+        //   {cancelable: false},
+        // );
+
+
+        //
+        const deleteIndex = _.findIndex(state.cartProducts, {id: action.product.id});
+        const newCartProducts = [...state.cartProducts];
+        newCartProducts.splice(deleteIndex, 1);
+        const newState = {
+          ...state,
+          cartProducts: newCartProducts,
+          cartNeedClose: true,
+        };
+        return updateTotal(newState)
+        //
+      } else {
+        const newState = {
+          ...state,
+          cartProducts: state.cartProducts.map (p => {
+            if (p.id === action.product.id) {
+              return {...p, count: p.count - 1}
+            }
+            return p
+          })
+        }
+        return updateTotal(newState)
+      }
+    }
+
+    case TOGGLE_CART_OPENED: {
+      const newState = {
+        ...state, cartIsOpened: !state.cartIsOpened
       };
       return newState;
     }
@@ -129,7 +201,9 @@ export const catalogReducer = (state = initialState, action) => {
     }
     case TOGGLE_NEED_CLOSE_CART: {
       const newState = {
-        ...state, cartNeedClose: !state.cartNeedClose
+        ...state,
+        cartNeedClose: !state.cartNeedClose,
+        cartIsOpened: false,
       };
       return newState;
     }
@@ -139,6 +213,8 @@ export const catalogReducer = (state = initialState, action) => {
 };
 
 export const addToCart = (product) => ({type: ADD_TO_CART, product});
-export const toggleCartOpen = () => ({type: TOGGLE_OPEN_CART});
+export const incCountCart = (product) => ({type: INC_COUNT_CART, product})
+export const decCountCart = (product) => ({type: DEC_COUNT_CART, product})
+export const toggleCartOpened = () => ({type: TOGGLE_CART_OPENED});
 export const toggleNeedOpen = () => ({type: TOGGLE_NEED_OPEN_CART});
 export const toggleNeedClose = () => ({type: TOGGLE_NEED_CLOSE_CART});
