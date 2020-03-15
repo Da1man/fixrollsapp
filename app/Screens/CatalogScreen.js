@@ -1,15 +1,19 @@
 import React, {PureComponent} from 'react';
-import {StyleSheet, Text, View, ScrollView} from 'react-native';
+import {StyleSheet, Text, View, ScrollView, TouchableOpacity} from 'react-native';
 import Header from '../components/Header';
-import {THEME} from '../common/variables';
+import {THEME, w, h} from '../common/variables';
 import TagComponent from '../components/TagConponent';
 import ProductItem from '../components/ProductItem';
 import CartButton from '../components/CartButton';
 import {connect} from 'react-redux';
 import {addToCart} from '../redux/catalogReducer';
 
+import BlurOverlay,{closeOverlay,openOverlay} from 'react-native-blur-overlay';
+
+
 class CatalogScreen extends PureComponent {
   render() {
+
     const {products, cartTotal, addToCart, cartProducts, isOpened} = this.props
     const productsList = products.map((item) => <ProductItem
       key={item.id}
@@ -17,7 +21,8 @@ class CatalogScreen extends PureComponent {
       addToCart={addToCart}
     />)
     return (
-      <View style={{flex: 1}}>
+
+      <View style={{flex: 1}} >
         <Header/>
         <ScrollView style={styles.container}>
           <View style={styles.titleSection}>
@@ -33,7 +38,18 @@ class CatalogScreen extends PureComponent {
             {productsList}
           </View>
         </ScrollView>
+        {/*<BlurOverlay*/}
+        {/*  radius={14}*/}
+        {/*  downsampling={2}*/}
+        {/*  brightness={-200}*/}
+        {/*  onPress={() => {*/}
+        {/*    closeOverlay();*/}
+        {/*  }}*/}
+        {/*  customStyles={{alignItems: 'center', justifyContent: 'center'}}*/}
+        {/*  blurStyle="dark"*/}
+        {/*/>*/}
         <CartButton cartTotal={cartTotal} cartProducts={cartProducts}/>
+
       </View>
     );
   }
@@ -42,6 +58,15 @@ class CatalogScreen extends PureComponent {
 const styles = StyleSheet.create({
   container: {
     marginBottom: 0,
+  },
+  blurView: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+    width: w,
+    height: h,
   },
   titleSection: {
     marginTop: 20,

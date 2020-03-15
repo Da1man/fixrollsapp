@@ -1,5 +1,8 @@
 import React, {PureComponent} from 'react';
 import {Text, View, StyleSheet, TouchableOpacity, Animated, Easing, ScrollView, Alert} from 'react-native';
+
+import BlurOverlay,{closeOverlay,openOverlay} from 'react-native-blur-overlay';
+
 import {THEME, w} from '../common/variables';
 import CartProductItem from './CartProductItem';
 
@@ -52,6 +55,7 @@ class CartButton extends PureComponent {
           toValue: -0,
           duration: 300,
         }).start();
+        openOverlay();
         toggleCartOpened();
       } else {
         Animated.timing(this._bottomCartButton, {
@@ -60,7 +64,6 @@ class CartButton extends PureComponent {
         }).start();
         toggleCartOpened();
       }
-      // console.log(cartIsOpened)
     };
 
     const cartProductsList = cartProducts.map((item) => <CartProductItem
@@ -69,7 +72,6 @@ class CartButton extends PureComponent {
     />);
     return (
       <Animated.View style={[styles.container, animatedStyle]}>
-
         <TouchableOpacity
           activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
           style={styles.button}
@@ -110,6 +112,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: -600,
     left: 0,
+    borderRadius: 30,
   },
   button: {
     // justifyContent: 'center',

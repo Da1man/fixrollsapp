@@ -8,6 +8,7 @@ import {faFire} from '@fortawesome/pro-light-svg-icons';
 import {faLeaf} from '@fortawesome/pro-light-svg-icons';
 import {faPlusCircle} from '@fortawesome/pro-light-svg-icons';
 import {toggleNeedClose, toggleNeedOpen} from '../redux/catalogReducer';
+import {openOverlay} from 'react-native-blur-overlay';
 
 class ProductItem extends PureComponent {
 
@@ -41,7 +42,6 @@ class ProductItem extends PureComponent {
       //   ],
       //   {cancelable: false},
       // );
-
       addToCart(item)
       if (!cartTotal) {
         toggleNeedOpen()
