@@ -85,7 +85,7 @@ let initialState = {
   cartProducts: [],
   cartTotal: 0,
   cartIsOpened: false,
-  cartNeedOpen: true,
+  cartNeedOpen: false,
   cartNeedClose: false,
 };
 

@@ -8,9 +8,6 @@ import CartButton from '../components/CartButton';
 import {connect} from 'react-redux';
 import {addToCart} from '../redux/catalogReducer';
 
-import BlurOverlay,{closeOverlay,openOverlay} from 'react-native-blur-overlay';
-
-
 class CatalogScreen extends PureComponent {
   render() {
 

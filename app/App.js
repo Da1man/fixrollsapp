@@ -6,8 +6,6 @@ import {StatusBar} from 'react-native';
 import {Provider} from 'react-redux';
 import store from './redux/store';
 
-import BlurOverlay,{closeOverlay,openOverlay} from 'react-native-blur-overlay';
-
 import CatalogScreen from './Screens/CatalogScreen';
 import {THEME} from './common/variables';
 import ProductScreen from './Screens/ProductScreen';
