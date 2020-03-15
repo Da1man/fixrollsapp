@@ -31,5 +31,6 @@ export const THEME = {
   },
   SETTINGS: {
     ACTIVE_OPACITY: 0.3,
+    MINIMAL_ORDER_PRICE: 500,
   },
 };

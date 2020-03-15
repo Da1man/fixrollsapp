@@ -1,4 +1,5 @@
 import {Alert} from 'react-native';
+import AlertAsync from "react-native-alert-async";
 import * as _ from 'lodash';
 
 const ADD_TO_CART = 'ADD_TO_CART';
@@ -94,9 +95,9 @@ let updateTotal = (state) => {
   return {
     ...state,
     cartTotal: total,
+    cartNeedClose: total ? false : true,
   };
 };
-
 
 export const catalogReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -137,7 +138,7 @@ export const catalogReducer = (state = initialState, action) => {
 
         // Alert.alert(
         //   'Удалить из корзины?',
-        //   'Удалить Нежный угорь из корзины?',
+        //   `Удалить ${action.product.name} из корзины?`,
         //   [
         //     {
         //       text: 'Отменить',
@@ -145,34 +146,28 @@ export const catalogReducer = (state = initialState, action) => {
         //       style: 'cancel',
         //     },
         //     {text: 'Удалить', onPress: () => {
-        //         console.log(state.cartProducts);
         //         const deleteIndex = _.findIndex(state.cartProducts, {id: action.product.id});
         //         const newCartProducts = [...state.cartProducts];
         //         newCartProducts.splice(deleteIndex, 1);
         //         const newState = {
         //           ...state,
         //           cartProducts: newCartProducts,
-        //           cartNeedClose: true,
         //         };
-        //         console.log(newState.cartProducts)
         //         return updateTotal(newState)
         //       }},
         //   ],
         //   {cancelable: false},
         // );
 
-
-        //
         const deleteIndex = _.findIndex(state.cartProducts, {id: action.product.id});
         const newCartProducts = [...state.cartProducts];
         newCartProducts.splice(deleteIndex, 1);
         const newState = {
           ...state,
           cartProducts: newCartProducts,
-          cartNeedClose: true,
         };
         return updateTotal(newState)
-        //
+
       } else {
         const newState = {
           ...state,
@@ -186,6 +181,8 @@ export const catalogReducer = (state = initialState, action) => {
         return updateTotal(newState)
       }
     }
+
+
 
     case TOGGLE_CART_OPENED: {
       const newState = {

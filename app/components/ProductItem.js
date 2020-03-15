@@ -23,24 +23,29 @@ class ProductItem extends PureComponent {
     } = this.props;
 
     const addToCartHandler = () => {
-      Alert.alert(
-        'Добавить в корзину?',
-        'Добавить ролл Нежный угорь 1 шт. в корзину?',
-        [
-          {
-            text: 'Отменить',
-            onPress: () => console.log('Cancel Pressed'),
-            style: 'cancel',
-          },
-          {text: 'Добавить', onPress: () => {
-            addToCart(item)
-              if (!cartTotal) {
-                toggleNeedOpen()
-              }
-            }},
-        ],
-        {cancelable: false},
-      );
+      // Alert.alert(
+      //   'Добавить в корзину?',
+      //   'Добавить ролл Нежный угорь 1 шт. в корзину?',
+      //   [
+      //     {
+      //       text: 'Отменить',
+      //       onPress: () => console.log('Cancel Pressed'),
+      //       style: 'cancel',
+      //     },
+      //     {text: 'Добавить', onPress: () => {
+      //       addToCart(item)
+      //         if (!cartTotal) {
+      //           toggleNeedOpen()
+      //         }
+      //       }},
+      //   ],
+      //   {cancelable: false},
+      // );
+
+      addToCart(item)
+      if (!cartTotal) {
+        toggleNeedOpen()
+      }
 
     };
 
