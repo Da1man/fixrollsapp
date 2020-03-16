@@ -45,7 +45,6 @@ class ProductItem extends PureComponent {
       if (!cartTotal) {
         toggleNeedOpen()
       }
-
     };
 
     return (

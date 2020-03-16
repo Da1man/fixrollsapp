@@ -1,50 +1,119 @@
 import React, {PureComponent} from 'react';
-import {StyleSheet, Text, View, ScrollView, TouchableOpacity} from 'react-native';
+import {StyleSheet, Text, View, ScrollView, TouchableOpacity, RefreshControl} from 'react-native';
 import Header from '../components/Header';
 import {THEME, w, h} from '../common/variables';
 import TagComponent from '../components/TagConponent';
 import ProductItem from '../components/ProductItem';
 import CartButton from '../components/CartButton';
 import {connect} from 'react-redux';
-import {addToCart} from '../redux/catalogReducer';
+import {addToCart, setIsFetching, setProducts, setTags} from '../redux/catalogReducer';
+
+import {ApiConnect} from '../common/WooCommerceApi';
 
 class CatalogScreen extends PureComponent {
+
+  componentDidMount() {
+    this.fetchProducts()
+    this.fetchTags()
+  }
+
+  fetchProducts = () => {
+    this.props.setIsFetching(true);
+    ApiConnect.get('products', {
+      per_page: 100,
+      category: '88',
+
+    })
+      .then((response) => {
+        console.log('products response',response)
+        let list = [];
+        response.map(product => list.push({
+          id: product.id,
+          name: product.name,
+          price: product.regular_price,
+          discountPrice: product.sale_price === '' ? null : product.sale_price,
+          count: 1,
+          image: product.images[0].src,
+          isX2: product.attributes.length === 0 ? false : product.attributes[0].name === 'x2' ? true : false
+        }));
+
+        this.props.setProducts(list);
+        this.props.setIsFetching(false);
+        //console.log(this.props.products)
+      });
+  }
+
+  fetchTags = () => {
+    console.log('tag is fetching')
+    ApiConnect.get('products/tags', {
+      per_page: 100,
+      orderby: 'count',
+      order: 'desc',
+    })
+      .then((response) => {
+        // console.log('tags response', response)
+        let list = response.map(tag => ({
+          id: tag.id,
+          name: tag.name,
+          slug: tag.slug,
+          count: tag.count,
+          checked: false,
+        }));
+        // console.log('tags list', list)
+        this.props.setTags(list);
+        console.log('tag is fetching done')
+        //console.log(this.props.products)
+      });
+  }
+
+
   render() {
 
-    const {products, cartTotal, addToCart, cartProducts, isOpened} = this.props
+    const {products, cartTotal, addToCart, cartProducts, isOpened, isFetching, tags} = this.props
     const productsList = products.map((item) => <ProductItem
       key={item.id}
       item={item}
       addToCart={addToCart}
     />)
+    const tagList = tags.map((tag) => <TagComponent
+      key={tag.id}
+      name={tag.name}
+      slug={tag.slug}
+      count={tag.count}
+      checked={tag.checked}
+      id={tag.id}
+    />)
     return (
 
       <View style={{flex: 1}} >
         <Header/>
-        <ScrollView style={styles.container}>
+        <ScrollView
+          style={styles.container}
+          refreshControl={
+            <RefreshControl
+              refreshing={isFetching}
+              onRefresh={this.fetchProducts}
+              colors={[THEME.COLOR.ACCENT]}/>
+          }
+        >
           <View style={styles.titleSection}>
             <Text style={styles.titleText}>Роллы</Text>
           </View>
           <View style={styles.tagSection}>
-            <TagComponent name={'Лосось'} checked={false}/>
-            <TagComponent name={'Креветки'} checked={false}/>
-            <TagComponent name={'Тунец'} checked={true}/>
-            <TagComponent name={'Краб'} checked={false}/>
+            <TagComponent
+              key={0}
+              name={'Все'}
+              checked={true}
+              count={99}
+              slug={'products'}
+              id={1}
+            />
+            {tagList}
           </View>
           <View style={styles.productsSection}>
             {productsList}
           </View>
         </ScrollView>
-        {/*<BlurOverlay*/}
-        {/*  radius={14}*/}
-        {/*  downsampling={2}*/}
-        {/*  brightness={-200}*/}
-        {/*  onPress={() => {*/}
-        {/*    closeOverlay();*/}
-        {/*  }}*/}
-        {/*  customStyles={{alignItems: 'center', justifyContent: 'center'}}*/}
-        {/*  blurStyle="dark"*/}
-        {/*/>*/}
         <CartButton cartTotal={cartTotal} cartProducts={cartProducts}/>
 
       </View>
@@ -98,9 +167,14 @@ let mapStateToProps = state => {
     products: state.catalog.products,
     cartTotal: state.catalog.cartTotal,
     cartProducts: state.catalog.cartProducts,
+    isFetching: state.catalog.isFetching,
+    tags: state.catalog.tags,
   };
 };
 
 export default connect(mapStateToProps, {
   addToCart,
+  setIsFetching,
+  setProducts,
+  setTags,
 }) (CatalogScreen);

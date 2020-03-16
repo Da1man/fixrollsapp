@@ -1,4 +1,4 @@
-import React, {PureComponent} from 'react';
+import React, {PureComponent, Component} from 'react';
 import {Text, View, StyleSheet, TouchableOpacity, Animated, Easing, ScrollView, Alert} from 'react-native';
 import Interactable from 'react-native-interactable';
 
@@ -28,13 +28,25 @@ const Screen = {
   height: h - 75,
 };
 
-class CartButton extends PureComponent {
+class CartButton extends Component {
   constructor(props) {
     super(props);
     // this._deltaY = new Animated.Value(Screen.height - 100);
   }
+
   _deltaY = new Animated.Value(Screen.height - 100);
   _bottomCartButton = new Animated.Value(200);
+
+  onCartSnap = (event) => {
+    const snapPointId = event.nativeEvent.id;
+    if (this.props.cartTotal && snapPointId === 'closed') {
+      this.cart.snapTo({index: 1});
+    }
+  }
+
+  componentDidUpdate() {
+
+  }
 
   render() {
 
@@ -47,48 +59,22 @@ class CartButton extends PureComponent {
     };
 
     if (cartNeedOpen) {
-      Animated.timing(this._bottomCartButton, {
-        toValue: 0,
-        duration: 300,
-      }).start();
       toggleNeedOpen();
+      this.cart.snapTo({index: 1});
     }
     if (cartNeedClose) {
-      Animated.timing(this._bottomCartButton, {
-        toValue: Screen.height - 0,
-        duration: 500,
-      }).start();
-
       toggleNeedClose();
-
-      this.refs['cartButton'].changePosition({index: 0});
+      this.cart.snapTo({index: 2});
     }
-
-    const openCartHandler = () => {
-      if (!cartIsOpened) {
-        Animated.timing(this._bottomCartButton, {
-          toValue: -0,
-          duration: 300,
-        }).start();
-        openOverlay();
-        toggleCartOpened();
-      } else {
-        Animated.timing(this._bottomCartButton, {
-          toValue: -100,
-          duration: 300,
-        }).start();
-        toggleCartOpened();
-      }
-    };
 
     const cartProductsList = cartProducts.map((item) => <CartProductItem
       key={item.id}
       item={item}
     />);
+
     return (<>
         <View style={styles.panelContainer} pointerEvents={'box-none'}>
           <Animated.View
-            ref='cartButton'
             pointerEvents={'box-none'}
             style={[styles.panelContainer, {
               backgroundColor: 'black',
@@ -97,44 +83,48 @@ class CartButton extends PureComponent {
                 outputRange: [1, 0],
                 extrapolateRight: 'clamp',
               }),
-            }]}/>
+            }]}
+          />
           <Interactable.View
-            // style={styles.container}
+            style={styles.container}
+            ref={ref => this.cart = ref}
             verticalOnly={true}
-            snapPoints={[{y: h * 0.3}, {y: Screen.height - 0}]}
-            boundaries={{top: 0}}
-            initialPosition={{y: Screen.height - 0}}
-            animatedValueY={this._deltaY}>
-            <Animated.View style={[styles.container, animatedStyle]}>
+            snapPoints={[
+              {y: Screen.height * 0.3, id: 'full'},
+              {y: Screen.height, id: 'opened'},
+              {y: Screen.height * 1.1, id: 'closed'}]}
+            initialPosition={{y: Screen.height * 1.1}}
+            boundaries={{top: 60, bounce: 0.5}}
+            onSnap={this.onCartSnap}
+            animatedValueY={this._deltaY}
+          >
 
-            <TouchableOpacity
-              activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
-              style={styles.button}
-            >
-              <Text style={styles.priceText}>{cartTotal.toLocaleString('ru-RU')} ₽</Text>
-            </TouchableOpacity>
-            <View style={styles.orderTitle}>
-              <Text style={styles.orderTitleText}>Ваш заказ:</Text>
-            </View>
-            <ScrollView style={styles.orderSection}>
-              {cartProductsList}
-            </ScrollView>
-            <View style={styles.totalSection}>
-              <Text style={styles.totalTitleText}>Итого:</Text>
-              <Text style={styles.totalText}>{`${cartTotal.toLocaleString('ru-RU')} ₽`}</Text>
-            </View>
-            <View style={styles.checkoutButtonSection}>
-              {cartTotal >= THEME.SETTINGS.MINIMAL_ORDER_PRICE
-                ? <TouchableOpacity style={styles.checkoutButton}>
-                  <Text style={styles.checkoutButtonText}>Оплатить</Text>
-                </TouchableOpacity>
-                : <TouchableOpacity style={styles.checkoutButtonDisabled}
-                                    onPress={() => onDisableCheckoutPress(cartTotal)}>
-                  <Text style={styles.checkoutButtonTextDisabled}>Оплатить</Text>
-                </TouchableOpacity>
-              }
-            </View>
-            </Animated.View>
+              <View
+                style={styles.button}
+              >
+                <Text style={styles.priceText}>{cartTotal.toLocaleString('ru-RU')} ₽</Text>
+              </View>
+              <View style={styles.orderTitle}>
+                <Text style={styles.orderTitleText}>Ваш заказ:</Text>
+              </View>
+              <ScrollView style={styles.orderSection}>
+                {cartProductsList}
+              </ScrollView>
+              <View style={styles.totalSection}>
+                <Text style={styles.totalTitleText}>Итого:</Text>
+                <Text style={styles.totalText}>{`${cartTotal.toLocaleString('ru-RU')} ₽`}</Text>
+              </View>
+              <View style={styles.checkoutButtonSection}>
+                {cartTotal >= THEME.SETTINGS.MINIMAL_ORDER_PRICE
+                  ? <TouchableOpacity style={styles.checkoutButton}>
+                    <Text style={styles.checkoutButtonText}>Оплатить</Text>
+                  </TouchableOpacity>
+                  : <TouchableOpacity style={styles.checkoutButtonDisabled}
+                                      onPress={() => onDisableCheckoutPress(cartTotal)}>
+                    <Text style={styles.checkoutButtonTextDisabled}>Оплатить</Text>
+                  </TouchableOpacity>
+                }
+              </View>
 
           </Interactable.View>
         </View>
