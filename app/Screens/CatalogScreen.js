@@ -7,40 +7,16 @@ import ProductItem from '../components/ProductItem';
 import CartButton from '../components/CartButton';
 import {connect} from 'react-redux';
 import {addToCart, setIsFetching, setProducts, setTags} from '../redux/catalogReducer';
+import * as _ from 'lodash';
 
-import {ApiConnect} from '../common/WooCommerceApi';
+import {ApiConnect, fetchProductsFromApi} from '../common/WooCommerceApi';
 
 class CatalogScreen extends PureComponent {
 
   componentDidMount() {
-    this.fetchProducts()
+    console.log('this.props.selectedTag',this.props.selectedTag)
+    fetchProductsFromApi(this.props.selectedTag)
     this.fetchTags()
-  }
-
-  fetchProducts = () => {
-    this.props.setIsFetching(true);
-    ApiConnect.get('products', {
-      per_page: 100,
-      category: '88',
-
-    })
-      .then((response) => {
-        console.log('products response',response)
-        let list = [];
-        response.map(product => list.push({
-          id: product.id,
-          name: product.name,
-          price: product.regular_price,
-          discountPrice: product.sale_price === '' ? null : product.sale_price,
-          count: 1,
-          image: product.images[0].src,
-          isX2: product.attributes.length === 0 ? false : product.attributes[0].name === 'x2' ? true : false
-        }));
-
-        this.props.setProducts(list);
-        this.props.setIsFetching(false);
-        //console.log(this.props.products)
-      });
   }
 
   fetchTags = () => {
@@ -69,7 +45,7 @@ class CatalogScreen extends PureComponent {
 
   render() {
 
-    const {products, cartTotal, addToCart, cartProducts, isOpened, isFetching, tags} = this.props
+    const {products, cartTotal, addToCart, cartProducts, isOpened, isFetching, tags, selectedTag} = this.props
     const productsList = products.map((item) => <ProductItem
       key={item.id}
       item={item}
@@ -169,6 +145,7 @@ let mapStateToProps = state => {
     cartProducts: state.catalog.cartProducts,
     isFetching: state.catalog.isFetching,
     tags: state.catalog.tags,
+    selectedTag: state.catalog.selectedTag,
   };
 };
 

@@ -96,7 +96,7 @@ let initialState = {
     // {id: 7, name: 'Курица', slug: null, checked: false, count: 0},
     // {id: 8, name: 'Мидии', slug: null, checked: false, count: 0},
   ],
-  selectedTag: 'Все',
+  selectedTag: 1,
   cartProducts: [],
   cartTotal: 0,
   cartIsOpened: false,
@@ -227,6 +227,7 @@ export const catalogReducer = (state = initialState, action) => {
       };
     }
     case SET_PRODUCTS: {
+      console.log(action.products)
       return {
         ...state, products: action.products
       }
@@ -237,10 +238,10 @@ export const catalogReducer = (state = initialState, action) => {
       }
     }
     case SELECT_TAG: {
-      console.log(action.name)
+      console.log(action.id)
       return {
         ...state,
-        selectedTag: action.name,
+        selectedTag: action.id,
       }
     }
     default:
@@ -257,4 +258,4 @@ export const toggleNeedClose = () => ({type: TOGGLE_NEED_CLOSE_CART});
 export const setIsFetching = (isFetching) => ({type: SET_IS_FETCHING, isFetching: isFetching });
 export const setProducts = (products) => ({type: SET_PRODUCTS, products });
 export const setTags = (tags) => ({type: SET_TAGS, tags });
-export const selectTag = (name) => ({type: SELECT_TAG, name });
+export const selectTag = (id) => ({type: SELECT_TAG, id });
