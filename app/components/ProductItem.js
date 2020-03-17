@@ -20,6 +20,7 @@ class ProductItem extends PureComponent {
       cartNeedClose,
       toggleNeedOpen,
       toggleNeedClose,
+      navigation,
     } = this.props;
 
     const addToCartHandler = () => {
@@ -49,7 +50,11 @@ class ProductItem extends PureComponent {
 
     return (
       <View style={styles.container}>
-        <TouchableOpacity style={styles.imageSection} activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}>
+        <TouchableOpacity
+          style={styles.imageSection}
+          activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
+          onPress={() => navigation.navigate('Product')}
+        >
           <Image style={styles.productImage}
                  source={{uri: item.image}}
                  resizeMode={'cover'}
@@ -61,8 +66,13 @@ class ProductItem extends PureComponent {
             </TouchableOpacity>
             }
             {item.isVegetarian &&
-            <TouchableOpacity>
+            <TouchableOpacity style={styles.icon}>
               <FontAwesomeIcon icon={faLeaf} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.GREEN_ICON}/>
+            </TouchableOpacity>
+            }
+            {item.isX2 &&
+            <TouchableOpacity style={styles.x2iconSection}>
+              <Text style={styles.x2icon}>x2</Text>
             </TouchableOpacity>
             }
 
@@ -112,6 +122,16 @@ const styles = StyleSheet.create({
   },
   icon: {
     marginRight: 5,
+  },
+  x2iconSection: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 25,
+    height: 25,
+  },
+  x2icon: {
+    fontSize: THEME.FONT_SIZE.TITLE,
+    color: THEME.COLOR.BLACK,
   },
   titleSection: {},
   titleText: {

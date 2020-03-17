@@ -34,8 +34,8 @@ export const fetchProductsFromApi = (tagId) => {
           count: 1,
           image: product.images[0].src,
           isX2: product.attributes.length === 0 ? false : product.attributes[0].name === 'x2' ? true : false,
-          isVegetarian: product.attributes[_.findIndex(response[0].attributes, {name: 'Вегетерианский'})].options[0] === 'true' ? true : false,
-          isHot: product.attributes[_.findIndex(response[0].attributes, {name: 'Острый'})].options[0] === 'true' ? true : false,
+          isVegetarian: product.attributes[_.findIndex(product.attributes, {name: 'Вегетерианский'})].options[0] === 'true' ? true : false,
+          isHot: product.attributes[_.findIndex(product.attributes, {name: 'Острый'})].options[0] === 'true' ? true : false,
         }));
         store.dispatch(setProducts(list))
         store.dispatch(setIsFetching(false))
@@ -48,8 +48,9 @@ export const fetchProductsFromApi = (tagId) => {
     })
       .then((response) => {
 
-        // console.log('fetchProductsFromApi response',response)
+        console.log('fetchProductsFromApi response',response)
         let list = [];
+        // response.forEach(product => console.log(product.attributes[_.findIndex(product.attributes, {name: 'Вегетерианский'})] ? 'aaaa' : 'bbbb'))
         response.map(product => list.push({
           id: product.id,
           name: product.name,
@@ -57,9 +58,9 @@ export const fetchProductsFromApi = (tagId) => {
           discountPrice: product.sale_price === '' ? null : product.sale_price,
           count: 1,
           image: product.images[0].src,
-          isX2: product.attributes.length === 0 ? false : product.attributes[0].name === 'x2' ? true : false,
-          isVegetarian: product.attributes[_.findIndex(response[0].attributes, {name: 'Вегетерианский'})].options[0] === 'true' ? true : false,
-          isHot: product.attributes[_.findIndex(response[0].attributes, {name: 'Острый'})].options[0] === 'true' ? true : false,
+          isX2: product.attributes[_.findIndex(product.attributes, {name: 'x2'})] ? true : false,
+          isVegetarian: product.attributes[_.findIndex(product.attributes, {name: 'Вегетерианский'})].options[0] === 'true' && product.attributes[_.findIndex(product.attributes, {name: 'Вегетерианский'})] ? true : false,
+          isHot: product.attributes[_.findIndex(product.attributes, {name: 'Острый'})].options[0] === 'true' && product.attributes[_.findIndex(product.attributes, {name: 'Острый'})] ? true : false,
         }));
         store.dispatch(setProducts(list))
         store.dispatch(setIsFetching(false))

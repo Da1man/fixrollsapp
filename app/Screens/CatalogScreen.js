@@ -14,7 +14,6 @@ import {ApiConnect, fetchProductsFromApi} from '../common/WooCommerceApi';
 class CatalogScreen extends PureComponent {
 
   componentDidMount() {
-    console.log('this.props.selectedTag',this.props.selectedTag)
     fetchProductsFromApi(this.props.selectedTag)
     this.fetchTags()
   }
@@ -42,14 +41,20 @@ class CatalogScreen extends PureComponent {
       });
   }
 
+  onRefresh = () => {
+    fetchProductsFromApi(this.props.selectedTag)
+  }
+
 
   render() {
 
-    const {products, cartTotal, addToCart, cartProducts, isOpened, isFetching, tags, selectedTag} = this.props
+    const {products, cartTotal, addToCart, cartProducts,
+      isOpened, isFetching, tags, selectedTag, navigation} = this.props
     const productsList = products.map((item) => <ProductItem
       key={item.id}
       item={item}
       addToCart={addToCart}
+      navigation={navigation}
     />)
     const tagList = tags.map((tag) => <TagComponent
       key={tag.id}
@@ -68,7 +73,7 @@ class CatalogScreen extends PureComponent {
           refreshControl={
             <RefreshControl
               refreshing={isFetching}
-              onRefresh={this.fetchProducts}
+              onRefresh={this.onRefresh}
               colors={[THEME.COLOR.ACCENT]}/>
           }
         >
