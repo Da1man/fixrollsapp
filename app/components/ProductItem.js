@@ -4,9 +4,7 @@ import {THEME, w} from '../common/variables';
 import {connect} from 'react-redux';
 
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faFire} from '@fortawesome/pro-light-svg-icons';
-import {faLeaf} from '@fortawesome/pro-light-svg-icons';
-import {faPlusCircle} from '@fortawesome/pro-light-svg-icons';
+import {faFire, faLeaf, faPlusCircle} from '@fortawesome/pro-light-svg-icons';
 import {toggleNeedClose, toggleNeedOpen} from '../redux/catalogReducer';
 
 class ProductItem extends PureComponent {
@@ -53,7 +51,7 @@ class ProductItem extends PureComponent {
         <TouchableOpacity
           style={styles.imageSection}
           activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
-          onPress={() => navigation.navigate('Product')}
+          onPress={() => navigation.navigate('Product', {item})}
         >
           <Image style={styles.productImage}
                  source={{uri: item.image}}
@@ -61,19 +59,19 @@ class ProductItem extends PureComponent {
           />
           <View style={styles.iconSection}>
             {item.isHot &&
-            <TouchableOpacity style={styles.icon}>
+            <View style={styles.icon}>
               <FontAwesomeIcon icon={faFire} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.RED_ICON}/>
-            </TouchableOpacity>
+            </View>
             }
             {item.isVegetarian &&
-            <TouchableOpacity style={styles.icon}>
+            <View style={styles.icon}>
               <FontAwesomeIcon icon={faLeaf} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.GREEN_ICON}/>
-            </TouchableOpacity>
+            </View>
             }
             {item.isX2 &&
-            <TouchableOpacity style={styles.x2iconSection}>
+            <View style={styles.x2iconSection}>
               <Text style={styles.x2icon}>x2</Text>
-            </TouchableOpacity>
+            </View>
             }
 
           </View>
@@ -82,8 +80,13 @@ class ProductItem extends PureComponent {
           <Text style={styles.titleText}>{item.name}</Text>
         </View>
         <View style={styles.priceSection}>
-          <View>
-            <Text style={styles.priceText}>{item.price} ₽</Text>
+          <View style={styles.priceBox}>
+            <Text style={styles.priceText}>{item.discountPrice ? item.discountPrice : item.price} ₽</Text>
+            {
+              item.discountPrice
+              ? <Text style={styles.discountPriceText}>{item.price} ₽</Text>
+              : null
+            }
           </View>
           <TouchableOpacity activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY} onPress={addToCartHandler}>
             <FontAwesomeIcon icon={faPlusCircle} size={THEME.FONT_SIZE.BUTTON_PLUS} color={THEME.COLOR.ACCENT}/>
@@ -144,10 +147,21 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 20,
   },
+  priceBox: {
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+  },
   priceText: {
     fontSize: THEME.FONT_SIZE.TITLE,
     fontFamily: THEME.FONT_FAMILY.REGULAR,
     color: THEME.COLOR.BLACK,
+    marginRight: 10,
+  },
+  discountPriceText: {
+    fontSize: THEME.FONT_SIZE.MAIN,
+    fontFamily: THEME.FONT_FAMILY.REGULAR,
+    color: THEME.COLOR.GRAY,
+    textDecorationLine: 'line-through',
   },
 });
 

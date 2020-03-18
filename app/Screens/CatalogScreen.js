@@ -67,7 +67,7 @@ class CatalogScreen extends PureComponent {
     return (
 
       <View style={{flex: 1}} >
-        <Header/>
+        <Header backButton={false} navigation={navigation} title={'Каталог'}/>
         <ScrollView
           style={styles.container}
           refreshControl={

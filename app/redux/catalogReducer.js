@@ -84,6 +84,8 @@ let initialState = {
     //   isHot: false,
     //   isVegetarian: true,
     //   count: 1,
+    //   composition: 'Рис, водоросли нори, майонез, сливочный сыр, угорь, лосось, снежный краб, японский омлет, жареная кожа лосося, огурец',
+    //   weight: 260,
     // },
   ],
   tags: [
@@ -227,7 +229,7 @@ export const catalogReducer = (state = initialState, action) => {
       };
     }
     case SET_PRODUCTS: {
-      console.log(action.products)
+      // console.log(action.products)
       return {
         ...state, products: action.products
       }
@@ -238,7 +240,7 @@ export const catalogReducer = (state = initialState, action) => {
       }
     }
     case SELECT_TAG: {
-      console.log(action.id)
+      // console.log(action.id)
       return {
         ...state,
         selectedTag: action.id,

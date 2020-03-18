@@ -29,9 +29,29 @@ const Screen = {
 };
 
 class CartButton extends Component {
+
   constructor(props) {
     super(props);
     // this._deltaY = new Animated.Value(Screen.height - 100);
+  }
+
+  componentDidMount() {
+    this.checkCloseOpen();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    this.checkCloseOpen();
+  }
+
+  checkCloseOpen() {
+    if (this.props.cartNeedOpen) {
+      this.props.toggleNeedOpen();
+      this.cart.snapTo({index: 1});
+    }
+    if (this.props.cartNeedClose) {
+      this.props.toggleNeedClose();
+      this.cart.snapTo({index: 2});
+    }
   }
 
   _deltaY = new Animated.Value(Screen.height - 100);
@@ -44,10 +64,6 @@ class CartButton extends Component {
     }
   }
 
-  componentDidUpdate() {
-
-  }
-
   render() {
 
     const {
@@ -58,19 +74,19 @@ class CartButton extends Component {
       top: this._bottomCartButton,
     };
 
-    if (cartNeedOpen) {
-      toggleNeedOpen();
-      this.cart.snapTo({index: 1});
-    }
-    if (cartNeedClose) {
-      toggleNeedClose();
-      this.cart.snapTo({index: 2});
-    }
+
 
     const cartProductsList = cartProducts.map((item) => <CartProductItem
       key={item.id}
       item={item}
     />);
+
+
+    const stateView = [
+      {y: Screen.height * 0.3, id: 'full'},
+      {y: Screen.height, id: 'opened'},
+      {y: Screen.height * 1.1, id: 'closed'}
+    ];
 
     return (<>
         <View style={styles.panelContainer} pointerEvents={'box-none'}>
@@ -89,11 +105,8 @@ class CartButton extends Component {
             style={styles.container}
             ref={ref => this.cart = ref}
             verticalOnly={true}
-            snapPoints={[
-              {y: Screen.height * 0.3, id: 'full'},
-              {y: Screen.height, id: 'opened'},
-              {y: Screen.height * 1.1, id: 'closed'}]}
-            initialPosition={{y: Screen.height * 1.1}}
+            snapPoints={stateView}
+            initialPosition={stateView[cartTotal ? 1 : 2]}
             boundaries={{top: 60, bounce: 0.5}}
             onSnap={this.onCartSnap}
             animatedValueY={this._deltaY}
@@ -144,6 +157,8 @@ const styles = StyleSheet.create({
     // bottom: -500,
     left: 0,
     borderRadius: 30,
+    borderTopColor: THEME.COLOR.WHITE,
+    borderTopWidth: 1,
   },
   button: {
     // justifyContent: 'center',

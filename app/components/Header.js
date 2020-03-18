@@ -4,12 +4,13 @@ import {THEME} from '../common/variables';
 
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faBars} from '@fortawesome/pro-regular-svg-icons';
-import {faSlidersV} from '@fortawesome/pro-regular-svg-icons';
+import {faUser} from '@fortawesome/pro-regular-svg-icons';
 import {faArrowLeft} from '@fortawesome/pro-regular-svg-icons';
 
 export default class Header extends PureComponent {
+
   render() {
-    const {navigation, backButton} = this.props
+    const {navigation, backButton, title} = this.props
     return (
       <View style={styles.container}>
         {
@@ -21,11 +22,11 @@ export default class Header extends PureComponent {
             <FontAwesomeIcon icon={faArrowLeft} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.GRAY_DARK}/>
           </TouchableOpacity>
             : <TouchableOpacity style={styles.rightButtonSection} activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}>
-              <FontAwesomeIcon icon={faSlidersV} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.GRAY_DARK}/>
+              <FontAwesomeIcon icon={faUser} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.GRAY_DARK}/>
             </TouchableOpacity>
         }
         <View style={styles.titleSection}>
-          <Text style={styles.titleText}>Каталог</Text>
+          <Text style={styles.titleText}>{title}</Text>
         </View>
         <TouchableOpacity style={styles.leftButtonSection} activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}>
           <FontAwesomeIcon icon={faBars} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.GRAY_DARK}/>
