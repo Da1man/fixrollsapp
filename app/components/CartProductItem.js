@@ -9,7 +9,7 @@ import {incCountCart, decCountCart} from '../redux/catalogReducer';
 
 class CartProductItem extends PureComponent {
   render() {
-    const {item, incCountCart, decCountCart} = this.props
+    const {item, incCountCart, decCountCart} = this.props;
     return (
       <View style={styles.container}>
         <TouchableOpacity
@@ -35,7 +35,7 @@ class CartProductItem extends PureComponent {
           <FontAwesomeIcon icon={faPlus} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.WHITE}/>
         </TouchableOpacity>
       </View>
-    )
+    );
   }
 }
 
@@ -53,22 +53,19 @@ const styles = StyleSheet.create({
     width: 30,
   },
   contentSection: {
-    width: w *0.75,
+    width: w * 0.75,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
   },
-  nameSection: {
-  },
+  nameSection: {},
   nameText: {
     fontFamily: THEME.FONT_FAMILY.REGULAR,
     fontSize: THEME.FONT_SIZE.TITLE,
     color: THEME.COLOR.WHITE,
   },
-  countSection: {
-
-  },
+  countSection: {},
   countText: {
     fontFamily: THEME.FONT_FAMILY.REGULAR,
     fontSize: THEME.FONT_SIZE.TITLE,
@@ -83,12 +80,11 @@ const styles = StyleSheet.create({
 });
 
 let mapStateToProps = state => {
-  return {
-  };
+  return {};
 };
 
 export default connect(mapStateToProps, {
   incCountCart,
   decCountCart,
-}) (CartProductItem);
+})(CartProductItem);
 

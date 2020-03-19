@@ -10,7 +10,7 @@ import {faArrowLeft} from '@fortawesome/pro-regular-svg-icons';
 export default class Header extends PureComponent {
 
   render() {
-    const {navigation, backButton, title} = this.props
+    const {navigation, backButton, title} = this.props;
     return (
       <View style={styles.container}>
         {
@@ -19,8 +19,8 @@ export default class Header extends PureComponent {
               activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
               onPress={() => navigation.goBack()}
             >
-            <FontAwesomeIcon icon={faArrowLeft} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.GRAY_DARK}/>
-          </TouchableOpacity>
+              <FontAwesomeIcon icon={faArrowLeft} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.GRAY_DARK}/>
+            </TouchableOpacity>
             : <TouchableOpacity style={styles.rightButtonSection} activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}>
               <FontAwesomeIcon icon={faUser} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.GRAY_DARK}/>
             </TouchableOpacity>
@@ -32,7 +32,7 @@ export default class Header extends PureComponent {
           <FontAwesomeIcon icon={faBars} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.GRAY_DARK}/>
         </TouchableOpacity>
       </View>
-      )
+    );
   }
 }
 
@@ -47,18 +47,12 @@ const styles = StyleSheet.create({
     marginBottom: 0,
     elevation: 8,
   },
-  leftButtonSection: {
-
-  },
-  titleSection: {
-
-  },
+  leftButtonSection: {},
+  titleSection: {},
   titleText: {
     fontFamily: THEME.FONT_FAMILY.BOLD,
     fontSize: THEME.FONT_SIZE.TITLE,
     color: THEME.COLOR.BLACK,
   },
-  rightButtonSection: {
-
-  },
-})
+  rightButtonSection: {},
+});

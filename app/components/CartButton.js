@@ -6,7 +6,7 @@ import {THEME, w, h} from '../common/variables';
 import CartProductItem from './CartProductItem';
 
 import {connect} from 'react-redux';
-import {toggleCartOpened, toggleNeedOpen, toggleNeedClose} from '../redux/catalogReducer';
+import {toggleNeedOpen, toggleNeedClose} from '../redux/catalogReducer';
 
 const onDisableCheckoutPress = (cartTotal) => {
   Alert.alert(
@@ -32,14 +32,9 @@ class CartButton extends Component {
 
   constructor(props) {
     super(props);
-    // this._deltaY = new Animated.Value(Screen.height - 100);
   }
 
   componentDidMount() {
-    // this.checkCloseOpen();
-    // if (this.props.cartTotal) {
-    //   toggleNeedOpen()
-    // }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -65,30 +60,27 @@ class CartButton extends Component {
     if (this.props.cartTotal && snapPointId === 'closed') {
       this.cart.snapTo({index: 1});
     }
-  }
+  };
+
 
   render() {
-
     const {
-      cartTotal, cartProducts, cartIsOpened, toggleCartOpened, cartNeedOpen,
-      cartNeedClose, toggleNeedOpen, toggleNeedClose, initialPos
+      cartTotal, cartProducts, cartNeedOpen,
+      cartNeedClose, toggleNeedOpen, toggleNeedClose, initialPos,
     } = this.props;
     const animatedStyle = {
       top: this._bottomCartButton,
     };
-
-
 
     const cartProductsList = cartProducts.map((item) => <CartProductItem
       key={item.id}
       item={item}
     />);
 
-
     const stateView = [
       {y: Screen.height * 0.3, id: 'full'},
       {y: Screen.height, id: 'opened'},
-      {y: Screen.height * 1.1, id: 'closed'}
+      {y: Screen.height * 1.1, id: 'closed'},
     ];
 
     return (<>
@@ -115,33 +107,32 @@ class CartButton extends Component {
             animatedValueY={this._deltaY}
           >
 
-              <View
-                style={styles.button}
-              >
-                <Text style={styles.priceText}>{cartTotal.toLocaleString('ru-RU')} ₽</Text>
-              </View>
-              <View style={styles.orderTitle}>
-                <Text style={styles.orderTitleText}>Ваш заказ:</Text>
-              </View>
-              <ScrollView style={styles.orderSection}>
-                {cartProductsList}
-              </ScrollView>
-              <View style={styles.totalSection}>
-                <Text style={styles.totalTitleText}>Итого:</Text>
-                <Text style={styles.totalText}>{`${cartTotal.toLocaleString('ru-RU')} ₽`}</Text>
-              </View>
-              <View style={styles.checkoutButtonSection}>
-                {cartTotal >= THEME.SETTINGS.MINIMAL_ORDER_PRICE
-                  ? <TouchableOpacity style={styles.checkoutButton}>
-                    <Text style={styles.checkoutButtonText}>Оплатить</Text>
-                  </TouchableOpacity>
-                  : <TouchableOpacity style={styles.checkoutButtonDisabled}
-                                      onPress={() => onDisableCheckoutPress(cartTotal)}>
-                    <Text style={styles.checkoutButtonTextDisabled}>Оплатить</Text>
-                  </TouchableOpacity>
-                }
-              </View>
-
+            <View
+              style={styles.button}
+            >
+              <Text style={styles.priceText}>{cartTotal.toLocaleString('ru-RU')} ₽</Text>
+            </View>
+            <View style={styles.orderTitle}>
+              <Text style={styles.orderTitleText}>Ваш заказ:</Text>
+            </View>
+            <ScrollView style={styles.orderSection}>
+              {cartProductsList}
+            </ScrollView>
+            <View style={styles.totalSection}>
+              <Text style={styles.totalTitleText}>Итого:</Text>
+              <Text style={styles.totalText}>{`${cartTotal.toLocaleString('ru-RU')} ₽`}</Text>
+            </View>
+            <View style={styles.checkoutButtonSection}>
+              {cartTotal >= THEME.SETTINGS.MINIMAL_ORDER_PRICE
+                ? <TouchableOpacity style={styles.checkoutButton}>
+                  <Text style={styles.checkoutButtonText}>Оплатить</Text>
+                </TouchableOpacity>
+                : <TouchableOpacity style={styles.checkoutButtonDisabled}
+                                    onPress={() => onDisableCheckoutPress(cartTotal)}>
+                  <Text style={styles.checkoutButtonTextDisabled}>Оплатить</Text>
+                </TouchableOpacity>
+              }
+            </View>
           </Interactable.View>
         </View>
       </>
@@ -156,8 +147,6 @@ const styles = StyleSheet.create({
     width: '100%',
     height: 1000,
     backgroundColor: THEME.COLOR.ACCENT,
-    // position: 'absolute',
-    // bottom: -500,
     left: 0,
     borderRadius: 30,
     borderTopColor: THEME.COLOR.WHITE,
@@ -165,7 +154,6 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   button: {
-    // justifyContent: 'center',
     paddingVertical: 20,
     alignItems: 'center',
     width: '100%',
@@ -330,14 +318,12 @@ const styles = StyleSheet.create({
 let mapStateToProps = state => {
   return {
     cartTotal: state.catalog.cartTotal,
-    cartIsOpened: state.catalog.cartIsOpened,
     cartNeedOpen: state.catalog.cartNeedOpen,
     cartNeedClose: state.catalog.cartNeedClose,
   };
 };
 
 export default connect(mapStateToProps, {
-  toggleCartOpened,
   toggleNeedOpen,
   toggleNeedClose,
 })(CartButton);

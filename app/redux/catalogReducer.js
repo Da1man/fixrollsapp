@@ -5,7 +5,6 @@ import * as _ from 'lodash';
 const ADD_TO_CART = 'ADD_TO_CART';
 const INC_COUNT_CART = 'INC_COUNT_CART';
 const DEC_COUNT_CART = 'DEC_COUNT_CART';
-const TOGGLE_CART_OPENED = 'TOGGLE_CART_OPENED';
 const TOGGLE_NEED_OPEN_CART = 'TOGGLE_NEED_OPEN_CART';
 const TOGGLE_NEED_CLOSE_CART = 'TOGGLE_NEED_CLOSE_CART';
 const SET_IS_FETCHING = 'SET_IS_FETCHING';
@@ -154,30 +153,6 @@ export const catalogReducer = (state = initialState, action) => {
 
     case DEC_COUNT_CART: {
       if (action.product.count === 1) {
-
-        // Alert.alert(
-        //   'Удалить из корзины?',
-        //   `Удалить ${action.product.name} из корзины?`,
-        //   [
-        //     {
-        //       text: 'Отменить',
-        //       onPress: () => console.log('Cancel Pressed'),
-        //       style: 'cancel',
-        //     },
-        //     {text: 'Удалить', onPress: () => {
-        //         const deleteIndex = _.findIndex(state.cartProducts, {id: action.product.id});
-        //         const newCartProducts = [...state.cartProducts];
-        //         newCartProducts.splice(deleteIndex, 1);
-        //         const newState = {
-        //           ...state,
-        //           cartProducts: newCartProducts,
-        //         };
-        //         return updateTotal(newState)
-        //       }},
-        //   ],
-        //   {cancelable: false},
-        // );
-
         const deleteIndex = _.findIndex(state.cartProducts, {id: action.product.id});
         const newCartProducts = [...state.cartProducts];
         newCartProducts.splice(deleteIndex, 1);
@@ -201,15 +176,6 @@ export const catalogReducer = (state = initialState, action) => {
       }
     }
 
-
-
-    case TOGGLE_CART_OPENED: {
-
-      const newState = {
-        ...state, cartIsOpened: !state.cartIsOpened
-      };
-      return newState;
-    }
     case TOGGLE_NEED_OPEN_CART: {
       console.log('cartNeedOpen is', action.needOpen)
       const newState = {
@@ -217,6 +183,7 @@ export const catalogReducer = (state = initialState, action) => {
       };
       return newState;
     }
+
     case TOGGLE_NEED_CLOSE_CART: {
       console.log('cartNeedClose is', action.needClose)
       const newState = {
@@ -225,28 +192,33 @@ export const catalogReducer = (state = initialState, action) => {
       };
       return newState;
     }
+
     case SET_IS_FETCHING: {
       console.log('Fetching data is ', action.isFetching)
       return {
         ...state, isFetching: action.isFetching,
       };
     }
+
     case SET_PRODUCTS: {
       return {
         ...state, products: action.products
       }
     }
+
     case SET_TAGS: {
       return {
         ...state, tags: action.tags
       }
     }
+
     case SELECT_TAG: {
       return {
         ...state,
         selectedTag: action.id,
       }
     }
+
     default:
       return state;
   }
@@ -255,7 +227,6 @@ export const catalogReducer = (state = initialState, action) => {
 export const addToCart = (product) => ({type: ADD_TO_CART, product});
 export const incCountCart = (product) => ({type: INC_COUNT_CART, product})
 export const decCountCart = (product) => ({type: DEC_COUNT_CART, product})
-export const toggleCartOpened = () => ({type: TOGGLE_CART_OPENED});
 export const toggleNeedOpen = (needOpen) => ({type: TOGGLE_NEED_OPEN_CART, needOpen});
 export const toggleNeedClose = (needClose) => ({type: TOGGLE_NEED_CLOSE_CART, needClose});
 export const setIsFetching = (isFetching) => ({type: SET_IS_FETCHING, isFetching: isFetching });

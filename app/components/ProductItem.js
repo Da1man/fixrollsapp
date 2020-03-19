@@ -22,27 +22,9 @@ class ProductItem extends PureComponent {
     } = this.props;
 
     const addToCartHandler = () => {
-      // Alert.alert(
-      //   'Добавить в корзину?',
-      //   'Добавить ролл Нежный угорь 1 шт. в корзину?',
-      //   [
-      //     {
-      //       text: 'Отменить',
-      //       onPress: () => console.log('Cancel Pressed'),
-      //       style: 'cancel',
-      //     },
-      //     {text: 'Добавить', onPress: () => {
-      //       addToCart(item)
-      //         if (!cartTotal) {
-      //           toggleNeedOpen()
-      //         }
-      //       }},
-      //   ],
-      //   {cancelable: false},
-      // );
-      addToCart(item)
+      addToCart(item);
       if (!cartTotal) {
-        toggleNeedOpen(true)
+        toggleNeedOpen(true);
       }
     };
 
@@ -73,7 +55,6 @@ class ProductItem extends PureComponent {
               <Text style={styles.x2icon}>x2</Text>
             </View>
             }
-
           </View>
         </TouchableOpacity>
         <View style={styles.titleSection}>
@@ -84,8 +65,8 @@ class ProductItem extends PureComponent {
             <Text style={styles.priceText}>{item.discountPrice ? item.discountPrice : item.price} ₽</Text>
             {
               item.discountPrice
-              ? <Text style={styles.discountPriceText}>{item.price} ₽</Text>
-              : null
+                ? <Text style={styles.discountPriceText}>{item.price} ₽</Text>
+                : null
             }
           </View>
           <TouchableOpacity activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY} onPress={addToCartHandler}>
@@ -176,5 +157,5 @@ let mapStateToProps = state => {
 export default connect(mapStateToProps, {
   toggleNeedOpen,
   toggleNeedClose,
-}) (ProductItem);
+})(ProductItem);
 

@@ -47,9 +47,8 @@ class CatalogScreen extends PureComponent {
 
 
   render() {
-
     const {products, cartTotal, addToCart, cartProducts,
-      isOpened, isFetching, tags, selectedTag, navigation} = this.props
+      isFetching, tags, selectedTag, navigation} = this.props
     const productsList = products.map((item) => <ProductItem
       key={item.id}
       item={item}
@@ -95,8 +94,7 @@ class CatalogScreen extends PureComponent {
             {productsList}
           </View>
         </ScrollView>
-        <CartButton cartTotal={cartTotal} cartProducts={cartProducts} initialPos={0}/>
-
+        <CartButton cartTotal={cartTotal} cartProducts={cartProducts}/>
       </View>
     );
   }

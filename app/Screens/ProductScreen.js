@@ -10,19 +10,15 @@ import CartButton from '../components/CartButton';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faFire, faLeaf, faPlusCircle} from '@fortawesome/pro-light-svg-icons';
 import {faMinus, faPlus} from '@fortawesome/pro-regular-svg-icons';
-import {toggleNeedOpen, addToCart} from '../redux/catalogReducer'
+import {toggleNeedOpen, addToCart} from '../redux/catalogReducer';
 
 class ProductScreen extends PureComponent {
   UNSAFE_componentWillMount() {
     this.setState(
       {
         counter: this.props.route.params.item.count,
-      }
-    )
-    // if (this.props.cartTotal) {
-    //   this.props.toggleNeedOpen(true)
-    //   console.log(this.props.cartTotal);
-    // }
+      },
+    );
   }
 
   componentDidMount() {
@@ -35,106 +31,106 @@ class ProductScreen extends PureComponent {
     const {item} = this.props.route.params;
 
     const onIncHendler = () => {
-      this.setState({counter: this.state.counter + 1})
-    }
+      this.setState({counter: this.state.counter + 1});
+    };
     const onDecHendler = () => {
       if (this.state.counter > 1) {
-        this.setState({counter: this.state.counter - 1})
+        this.setState({counter: this.state.counter - 1});
       }
-    }
+    };
     const addToCartHandler = () => {
-      addToCart(item)
+      addToCart(item);
       if (!cartTotal) {
-        toggleNeedOpen(true)
+        toggleNeedOpen(true);
       }
     };
     return (
       <View style={styles.container}>
         <Header backButton={true} navigation={navigation} title={item.name}/>
         <ScrollView>
-        <View>
-          <Image style={styles.productImage}
-                 source={{uri: item.image}}
-                 resizeMode={'cover'}
-          />
-          <View style={styles.iconSection}>
-            {item.isHot &&
-            <TouchableOpacity style={styles.iconHot} activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}>
-              <FontAwesomeIcon icon={faFire} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.WHITE}/>
+          <View>
+            <Image style={styles.productImage}
+                   source={{uri: item.image}}
+                   resizeMode={'cover'}
+            />
+            <View style={styles.iconSection}>
+              {item.isHot &&
+              <TouchableOpacity style={styles.iconHot} activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}>
+                <FontAwesomeIcon icon={faFire} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.WHITE}/>
+              </TouchableOpacity>
+              }
+              {item.isVegetarian &&
+              <TouchableOpacity style={styles.iconVegetarian} activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}>
+                <FontAwesomeIcon icon={faLeaf} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.WHITE}/>
+              </TouchableOpacity>
+              }
+              {item.isX2 &&
+              <TouchableOpacity style={styles.iconX2} activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}>
+                <Text style={styles.iconX2Text}>x2</Text>
+              </TouchableOpacity>
+              }
+            </View>
+          </View>
+
+          <View style={styles.infoSection}>
+            <View style={styles.infoNameSection}>
+              <Text style={styles.productNameText}>{item.name}</Text>
+            </View>
+            <View style={styles.infoSubSection}>
+
+              <Text style={styles.infoSubText}>{item.weight} г.</Text>
+              <Text style={styles.infoSubText}> | </Text>
+              <Text style={styles.infoSubText}>{item.quantity} шт.</Text>
+
+            </View>
+            <View style={styles.infoDescriptionSection}>
+              <Text style={styles.infoDescriptionText}>Состав: {item.composition}</Text>
+            </View>
+
+          </View>
+
+          <View style={styles.counterSection}>
+            <TouchableOpacity
+              activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
+              style={styles.decSection}
+              onPress={() => onDecHendler()}
+            >
+              <FontAwesomeIcon icon={faMinus} size={THEME.FONT_SIZE.TITLE}
+                               color={this.state.counter > 1 ? THEME.COLOR.GRAY_DARK : THEME.COLOR.GRAY_DISABLED}/>
             </TouchableOpacity>
-            }
-            {item.isVegetarian &&
-            <TouchableOpacity style={styles.iconVegetarian} activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}>
-              <FontAwesomeIcon icon={faLeaf} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.WHITE}/>
+            <View style={styles.counterTextSection}>
+              <Text style={styles.counterText}>
+                {this.state.counter}
+              </Text>
+            </View>
+            <TouchableOpacity
+              activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
+              style={styles.incSection}
+              onPress={() => onIncHendler()}
+            >
+              <FontAwesomeIcon icon={faPlus} size={THEME.FONT_SIZE.TITLE}
+                               color={THEME.COLOR.GRAY_DARK}/>
             </TouchableOpacity>
-            }
-            {item.isX2 &&
-            <TouchableOpacity style={styles.iconX2} activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}>
-              <Text style={styles.iconX2Text}>x2</Text>
+          </View>
+
+          <View style={styles.buttonSection}>
+            <View style={styles.priceSection}>
+              <Text style={styles.priceText}>{`${item.discountPrice ? item.discountPrice : item.price} ₽`}</Text>
+              {
+                item.discountPrice
+                  ? <Text style={styles.discountPriceText}>{item.price} ₽</Text>
+                  : null
+              }
+            </View>
+            <TouchableOpacity
+              style={styles.addToCartButton}
+              activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
+              onPress={() => addToCartHandler()}
+            >
+              <Text style={styles.addToCartButtonText}>В корзину</Text>
+              <FontAwesomeIcon icon={faPlusCircle} size={THEME.FONT_SIZE.BUTTON_PLUS} color={THEME.COLOR.WHITE}/>
             </TouchableOpacity>
-            }
           </View>
-        </View>
-
-        <View style={styles.infoSection}>
-          <View style={styles.infoNameSection}>
-            <Text style={styles.productNameText}>{item.name}</Text>
-          </View>
-          <View style={styles.infoSubSection}>
-
-            <Text style={styles.infoSubText}>{item.weight} г.</Text>
-            <Text style={styles.infoSubText}> | </Text>
-            <Text style={styles.infoSubText}>{item.quantity} шт.</Text>
-
-          </View>
-          <View style={styles.infoDescriptionSection}>
-            <Text style={styles.infoDescriptionText}>Состав: {item.composition}</Text>
-          </View>
-
-        </View>
-
-        <View style={styles.counterSection}>
-          <TouchableOpacity
-            activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
-            style={styles.decSection}
-            onPress={() => onDecHendler()}
-          >
-            <FontAwesomeIcon icon={faMinus} size={THEME.FONT_SIZE.TITLE}
-                             color={this.state.counter > 1 ? THEME.COLOR.GRAY_DARK : THEME.COLOR.GRAY_DISABLED}/>
-          </TouchableOpacity>
-          <View style={styles.counterTextSection}>
-            <Text style={styles.counterText}>
-              {this.state.counter}
-            </Text>
-          </View>
-          <TouchableOpacity
-            activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
-            style={styles.incSection}
-            onPress={() => onIncHendler()}
-          >
-            <FontAwesomeIcon icon={faPlus} size={THEME.FONT_SIZE.TITLE}
-                             color={THEME.COLOR.GRAY_DARK}/>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.buttonSection}>
-          <View style={styles.priceSection}>
-            <Text style={styles.priceText}>{`${item.discountPrice ? item.discountPrice : item.price} ₽`}</Text>
-            {
-              item.discountPrice
-                ? <Text style={styles.discountPriceText}>{item.price} ₽</Text>
-                : null
-            }
-          </View>
-          <TouchableOpacity
-            style={styles.addToCartButton}
-            activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
-            onPress={() => addToCartHandler()}
-          >
-            <Text style={styles.addToCartButtonText}>В корзину</Text>
-            <FontAwesomeIcon icon={faPlusCircle} size={THEME.FONT_SIZE.BUTTON_PLUS} color={THEME.COLOR.WHITE}/>
-          </TouchableOpacity>
-        </View>
         </ScrollView>
 
         <CartButton cartTotal={cartTotal} cartProducts={cartProducts} initialPos={cartTotal ? 1 : 2}/>
@@ -147,7 +143,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: THEME.COLOR.WHITE_BACKGROUND,
     // flex: 1,
-    height: "100%",
+    height: '100%',
   },
   productImage: {
     width: '100%',
