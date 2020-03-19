@@ -65,7 +65,7 @@ class CatalogScreen extends PureComponent {
     />)
     return (
 
-      <View style={{flex: 1}} >
+      <View style={{flex: 1}}>
         <Header backButton={false} navigation={navigation} title={'Каталог'}/>
         <ScrollView
           style={styles.container}
@@ -90,7 +90,7 @@ class CatalogScreen extends PureComponent {
             />
             {tagList}
           </View>
-          <View style={styles.productsSection}>
+          <View style={{...styles.productsSection, paddingBottom: cartTotal ? 70 : 0,}}>
             {productsList}
           </View>
         </ScrollView>
@@ -102,7 +102,7 @@ class CatalogScreen extends PureComponent {
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: 0,
+    paddingBottom: 0,
   },
   blurView: {
     position: "absolute",

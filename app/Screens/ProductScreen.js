@@ -2,6 +2,8 @@ import React, {PureComponent} from 'react';
 import {StyleSheet, Text, View, ScrollView, TouchableOpacity, Image} from 'react-native';
 import Header from '../components/Header';
 import {THEME, w} from '../common/variables';
+import axios from 'axios';
+
 
 import {connect} from 'react-redux';
 import CartButton from '../components/CartButton';
@@ -23,11 +25,27 @@ class ProductScreen extends PureComponent {
 
   componentDidMount() {
     console.log(this.props.route.params.item);
+    // this.getUsers()
   }
+
+  // getUsers = () => {
+  //   axios
+  //     .get(`${this.cnst_wp_rest_api_link}users/`)
+  //     .then((response) => {
+  //       // get some logs to see how data is coming in
+  //       // const data = JSON.stringify(response.data)
+  //       console.log('RESPONSE', response.data);
+  //       // console.log("RESPONSE: " + response.data);
+  //       // this.setState({ posts: response.data });
+  //     })
+  //     .catch(error => alert("ERROR: " + error));
+  //
+  // }
+  cnst_wp_rest_api_link = 'https://fixrolls.ru/wp-json/wp/v2/';
 
 
   render() {
-    const {navigation, cartTotal, cartProducts, addToCart} = this.props;
+    const {navigation, cartTotal, cartProducts, addToCart, toggleNeedOpen} = this.props;
     const {item} = this.props.route.params;
 
     const onIncHendler = () => {
@@ -39,7 +57,8 @@ class ProductScreen extends PureComponent {
       }
     };
     const addToCartHandler = () => {
-      addToCart(item);
+      addToCart({...item, count: this.state.counter});
+      this.setState({counter: 1})
       if (!cartTotal) {
         toggleNeedOpen(true);
       }
@@ -115,7 +134,10 @@ class ProductScreen extends PureComponent {
 
           <View style={styles.buttonSection}>
             <View style={styles.priceSection}>
-              <Text style={styles.priceText}>{`${item.discountPrice ? item.discountPrice : item.price} ₽`}</Text>
+              <Text style={styles.priceText}>
+                {`${item.discountPrice
+                ? item.discountPrice * this.state.counter
+                  : item.price * this.state.counter} ₽`}</Text>
               {
                 item.discountPrice
                   ? <Text style={styles.discountPriceText}>{item.price} ₽</Text>
