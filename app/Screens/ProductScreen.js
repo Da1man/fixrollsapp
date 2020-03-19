@@ -10,26 +10,28 @@ import CartButton from '../components/CartButton';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faFire, faLeaf, faPlusCircle} from '@fortawesome/pro-light-svg-icons';
 import {faMinus, faPlus} from '@fortawesome/pro-regular-svg-icons';
+import {toggleNeedOpen, addToCart} from '../redux/catalogReducer'
 
 class ProductScreen extends PureComponent {
-  componentWillMount() {
+  UNSAFE_componentWillMount() {
     this.setState(
       {
         counter: this.props.route.params.item.count,
       }
     )
+    // if (this.props.cartTotal) {
+    //   this.props.toggleNeedOpen(true)
+    //   console.log(this.props.cartTotal);
+    // }
   }
 
   componentDidMount() {
     console.log(this.props.route.params.item);
-
   }
 
 
-
-
   render() {
-    const {navigation, cartTotal, cartProducts} = this.props;
+    const {navigation, cartTotal, cartProducts, addToCart} = this.props;
     const {item} = this.props.route.params;
 
     const onIncHendler = () => {
@@ -39,8 +41,13 @@ class ProductScreen extends PureComponent {
       if (this.state.counter > 1) {
         this.setState({counter: this.state.counter - 1})
       }
-
     }
+    const addToCartHandler = () => {
+      addToCart(item)
+      if (!cartTotal) {
+        toggleNeedOpen(true)
+      }
+    };
     return (
       <View style={styles.container}>
         <Header backButton={true} navigation={navigation} title={item.name}/>
@@ -122,6 +129,7 @@ class ProductScreen extends PureComponent {
           <TouchableOpacity
             style={styles.addToCartButton}
             activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
+            onPress={() => addToCartHandler()}
           >
             <Text style={styles.addToCartButtonText}>В корзину</Text>
             <FontAwesomeIcon icon={faPlusCircle} size={THEME.FONT_SIZE.BUTTON_PLUS} color={THEME.COLOR.WHITE}/>
@@ -129,7 +137,7 @@ class ProductScreen extends PureComponent {
         </View>
         </ScrollView>
 
-        <CartButton cartTotal={cartTotal} cartProducts={cartProducts}/>
+        <CartButton cartTotal={cartTotal} cartProducts={cartProducts} initialPos={cartTotal ? 1 : 2}/>
       </View>
     );
   }
@@ -296,4 +304,7 @@ let mapStateToProps = state => {
   };
 };
 
-export default connect(mapStateToProps, {})(ProductScreen);
+export default connect(mapStateToProps, {
+  toggleNeedOpen,
+  addToCart,
+})(ProductScreen);

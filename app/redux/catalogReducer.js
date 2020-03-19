@@ -120,6 +120,7 @@ let updateTotal = (state) => {
 export const catalogReducer = (state = initialState, action) => {
   switch (action.type) {
     case ADD_TO_CART: {
+      console.log('add to cart', action.product)
       if (_.findIndex(state.cartProducts, {id: action.product.id}) != -1) {
 
         const newState = {
@@ -203,22 +204,24 @@ export const catalogReducer = (state = initialState, action) => {
 
 
     case TOGGLE_CART_OPENED: {
+
       const newState = {
         ...state, cartIsOpened: !state.cartIsOpened
       };
       return newState;
     }
     case TOGGLE_NEED_OPEN_CART: {
+      console.log('cartNeedOpen is', action.needOpen)
       const newState = {
-        ...state, cartNeedOpen: !state.cartNeedOpen
+        ...state, cartNeedOpen: action.needOpen,
       };
       return newState;
     }
     case TOGGLE_NEED_CLOSE_CART: {
+      console.log('cartNeedClose is', action.needClose)
       const newState = {
         ...state,
-        cartNeedClose: !state.cartNeedClose,
-        cartIsOpened: false,
+        cartNeedClose: action.needClose,
       };
       return newState;
     }
@@ -229,7 +232,6 @@ export const catalogReducer = (state = initialState, action) => {
       };
     }
     case SET_PRODUCTS: {
-      // console.log(action.products)
       return {
         ...state, products: action.products
       }
@@ -240,7 +242,6 @@ export const catalogReducer = (state = initialState, action) => {
       }
     }
     case SELECT_TAG: {
-      // console.log(action.id)
       return {
         ...state,
         selectedTag: action.id,
@@ -255,8 +256,8 @@ export const addToCart = (product) => ({type: ADD_TO_CART, product});
 export const incCountCart = (product) => ({type: INC_COUNT_CART, product})
 export const decCountCart = (product) => ({type: DEC_COUNT_CART, product})
 export const toggleCartOpened = () => ({type: TOGGLE_CART_OPENED});
-export const toggleNeedOpen = () => ({type: TOGGLE_NEED_OPEN_CART});
-export const toggleNeedClose = () => ({type: TOGGLE_NEED_CLOSE_CART});
+export const toggleNeedOpen = (needOpen) => ({type: TOGGLE_NEED_OPEN_CART, needOpen});
+export const toggleNeedClose = (needClose) => ({type: TOGGLE_NEED_CLOSE_CART, needClose});
 export const setIsFetching = (isFetching) => ({type: SET_IS_FETCHING, isFetching: isFetching });
 export const setProducts = (products) => ({type: SET_PRODUCTS, products });
 export const setTags = (tags) => ({type: SET_TAGS, tags });

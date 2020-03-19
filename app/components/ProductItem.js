@@ -42,7 +42,7 @@ class ProductItem extends PureComponent {
       // );
       addToCart(item)
       if (!cartTotal) {
-        toggleNeedOpen()
+        toggleNeedOpen(true)
       }
     };
 

@@ -95,7 +95,7 @@ class CatalogScreen extends PureComponent {
             {productsList}
           </View>
         </ScrollView>
-        <CartButton cartTotal={cartTotal} cartProducts={cartProducts}/>
+        <CartButton cartTotal={cartTotal} cartProducts={cartProducts} initialPos={0}/>
 
       </View>
     );

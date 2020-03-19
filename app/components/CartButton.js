@@ -36,7 +36,10 @@ class CartButton extends Component {
   }
 
   componentDidMount() {
-    this.checkCloseOpen();
+    // this.checkCloseOpen();
+    // if (this.props.cartTotal) {
+    //   toggleNeedOpen()
+    // }
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -45,11 +48,11 @@ class CartButton extends Component {
 
   checkCloseOpen() {
     if (this.props.cartNeedOpen) {
-      this.props.toggleNeedOpen();
+      this.props.toggleNeedOpen(false);
       this.cart.snapTo({index: 1});
     }
     if (this.props.cartNeedClose) {
-      this.props.toggleNeedClose();
+      this.props.toggleNeedClose(true);
       this.cart.snapTo({index: 2});
     }
   }
@@ -68,7 +71,7 @@ class CartButton extends Component {
 
     const {
       cartTotal, cartProducts, cartIsOpened, toggleCartOpened, cartNeedOpen,
-      cartNeedClose, toggleNeedOpen, toggleNeedClose,
+      cartNeedClose, toggleNeedOpen, toggleNeedClose, initialPos
     } = this.props;
     const animatedStyle = {
       top: this._bottomCartButton,
@@ -159,6 +162,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     borderTopColor: THEME.COLOR.WHITE,
     borderTopWidth: 1,
+    elevation: 8,
   },
   button: {
     // justifyContent: 'center',
