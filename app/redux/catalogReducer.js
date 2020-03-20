@@ -108,7 +108,10 @@ let initialState = {
 
 let updateTotal = (state) => {
   let total = 0;
-  state.cartProducts.forEach((item) => total = total + item.price * item.count )
+  state.cartProducts.forEach((item) => {
+    let price = item.discountPrice ? item.discountPrice : item.price
+    total = total + price * item.count
+  })
   return {
     ...state,
     cartTotal: total,

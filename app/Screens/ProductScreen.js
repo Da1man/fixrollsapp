@@ -1,5 +1,5 @@
 import React, {PureComponent} from 'react';
-import {StyleSheet, Text, View, ScrollView, TouchableOpacity, Image} from 'react-native';
+import {StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Animated} from 'react-native';
 import Header from '../components/Header';
 import {THEME, w} from '../common/variables';
 import axios from 'axios';
@@ -19,6 +19,9 @@ class ProductScreen extends PureComponent {
     this.setState(
       {
         counter: this.props.route.params.item.count,
+        isHotOpened: false,
+        isVegetarianOpened: false,
+        isX2Opened: false,
       },
     );
   }
@@ -43,6 +46,16 @@ class ProductScreen extends PureComponent {
   // }
   cnst_wp_rest_api_link = 'https://fixrolls.ru/wp-json/wp/v2/';
 
+  _iconHotWidth = new Animated.Value(50);
+  _iconHotOpacity = new Animated.Value(1);
+  _decrHotTextOpacity = new Animated.Value(0);
+  _iconVegetarianWidth = new Animated.Value(50);
+  _iconVegetarianOpacity = new Animated.Value(1);
+  _decrVegetarianTextOpacity = new Animated.Value(0);
+  _iconX2Width = new Animated.Value(50);
+  _iconX2Opacity = new Animated.Value(1);
+  _decrX2TextOpacity = new Animated.Value(0);
+
 
   render() {
     const {navigation, cartTotal, cartProducts, addToCart, toggleNeedOpen} = this.props;
@@ -58,11 +71,248 @@ class ProductScreen extends PureComponent {
     };
     const addToCartHandler = () => {
       addToCart({...item, count: this.state.counter});
-      this.setState({counter: 1})
+      this.setState({counter: 1});
       if (!cartTotal) {
         toggleNeedOpen(true);
       }
     };
+
+    const animatedHotWidth = {
+      width: this._iconHotWidth,
+    };
+    const animatedHotOpacity = {
+      opacity: this._iconHotOpacity,
+    };
+    const decrHotTextOpacity = {
+      opacity: this._decrHotTextOpacity,
+    };
+    const animatedVegetarianWidth = {
+      width: this._iconVegetarianWidth,
+    };
+    const animatedVegetarianOpacity = {
+      opacity: this._iconVegetarianOpacity,
+    };
+    const decrVegetarianTextOpacity = {
+      opacity: this._decrVegetarianTextOpacity,
+    };
+    const animatedX2Width = {
+      width: this._iconX2Width,
+    };
+    const animatedX2Opacity = {
+      opacity: this._iconX2Opacity,
+    };
+    const decrX2TextOpacity = {
+      opacity: this._decrX2TextOpacity,
+    };
+
+    const onHotHandler = () => {
+      if (!this.state.isHotOpened) {
+        this.setState({isHotOpened: true});
+        this.setState({isVegetarianOpened: false});
+        this.setState({isX2Opened: false});
+          Animated.parallel([
+            /////////////HOT OPEN
+            Animated.timing(this._iconHotOpacity, {
+              toValue: 0,
+              duration: 10,
+            }),
+            Animated.timing(this._iconHotWidth, {
+              toValue: 150,
+              duration: 300,
+            }),
+            Animated.timing(this._decrHotTextOpacity, {
+              toValue: 1,
+              duration: 300,
+            }),
+            /////////////VEG CLOSE
+            Animated.timing(this._iconVegetarianOpacity, {
+              toValue: 1,
+              duration: 300,
+            }),
+            Animated.timing(this._iconVegetarianWidth, {
+              toValue: 50,
+              duration: 300,
+            }),
+            Animated.timing(this._decrVegetarianTextOpacity, {
+              toValue: 0,
+              duration: 10,
+            }),
+            //////////X2 CLOSE
+            Animated.timing(this._iconX2Opacity, {
+              toValue: 1,
+              duration: 300,
+            }),
+            Animated.timing(this._iconX2Width, {
+              toValue: 50,
+              duration: 300,
+            }),
+            Animated.timing(this._decrX2TextOpacity, {
+              toValue: 0,
+              duration: 10,
+            }),
+
+          ]).start();
+      } else {
+        this.setState({isHotOpened: false});
+
+        Animated.parallel([
+          /////////////HOT CLOSE
+          Animated.timing(this._iconHotOpacity, {
+            toValue: 1,
+            duration: 300,
+          }),
+          Animated.timing(this._iconHotWidth, {
+            toValue: 50,
+            duration: 300,
+          }),
+          Animated.timing(this._decrHotTextOpacity, {
+            toValue: 0,
+            duration: 10,
+          }),
+        ]).start();
+      }
+    };
+
+    const onVegetarianHandler = () => {
+      if (!this.state.isVegetarianOpened) {
+        this.setState({isVegetarianOpened: true});
+        this.setState({isHotOpened: false});
+        this.setState({isX2Opened: false});
+
+        Animated.parallel([
+          /////////////VEG OPEN
+          Animated.timing(this._iconVegetarianOpacity, {
+            toValue: 0,
+            duration: 10,
+          }),
+          Animated.timing(this._iconVegetarianWidth, {
+            toValue: 150,
+            duration: 300,
+          }),
+          Animated.timing(this._decrVegetarianTextOpacity, {
+            toValue: 1,
+            duration: 300,
+          }),
+          /////////////HOT CLOSE
+          Animated.timing(this._iconHotOpacity, {
+            toValue: 1,
+            duration: 300,
+          }),
+          Animated.timing(this._iconHotWidth, {
+            toValue: 50,
+            duration: 300,
+          }),
+          Animated.timing(this._decrHotTextOpacity, {
+            toValue: 0,
+            duration: 10,
+          }),
+          //////////X2 CLOSE
+          Animated.timing(this._iconX2Opacity, {
+            toValue: 1,
+            duration: 300,
+          }),
+          Animated.timing(this._iconX2Width, {
+            toValue: 50,
+            duration: 300,
+          }),
+          Animated.timing(this._decrX2TextOpacity, {
+            toValue: 0,
+            duration: 10,
+          }),
+
+
+
+        ]).start();
+      } else {
+        this.setState({isVegetarianOpened: false});
+
+        Animated.parallel([
+          /////////////VEG CLOSE
+          Animated.timing(this._iconVegetarianOpacity, {
+            toValue: 1,
+            duration: 300,
+          }),
+          Animated.timing(this._iconVegetarianWidth, {
+            toValue: 50,
+            duration: 300,
+          }),
+          Animated.timing(this._decrVegetarianTextOpacity, {
+            toValue: 0,
+            duration: 10,
+          }),
+        ]).start();
+      }
+    };
+
+    const onX2Handler = () => {
+      if (!this.state.isX2Opened) {
+        this.setState({isX2Opened: true});
+        this.setState({isHotOpened: false});
+        this.setState({isVegetarianOpened: false});
+        Animated.parallel([
+          //////////X2 OPEN
+          Animated.timing(this._iconX2Opacity, {
+            toValue: 0,
+            duration: 10,
+          }),
+          Animated.timing(this._iconX2Width, {
+            toValue: 150,
+            duration: 300,
+          }),
+          Animated.timing(this._decrX2TextOpacity, {
+            toValue: 1,
+            duration: 300,
+          }),
+          //////////////HOT CLOSE
+          Animated.timing(this._iconHotOpacity, {
+            toValue: 1,
+            duration: 300,
+          }),
+          Animated.timing(this._iconHotWidth, {
+            toValue: 50,
+            duration: 300,
+          }),
+          Animated.timing(this._decrHotTextOpacity, {
+            toValue: 0,
+            duration: 10,
+          }),
+
+            /////////////VEG CLOSE
+            Animated.timing(this._iconVegetarianOpacity, {
+              toValue: 1,
+              duration: 300,
+            }),
+            Animated.timing(this._iconVegetarianWidth, {
+              toValue: 50,
+              duration: 300,
+            }),
+            Animated.timing(this._decrVegetarianTextOpacity, {
+              toValue: 0,
+              duration: 10,
+            }),
+
+        ]).start();
+      } else {
+        this.setState({isX2Opened: false});
+
+        Animated.parallel([
+          //////////X2 CLOSE
+          Animated.timing(this._iconX2Opacity, {
+            toValue: 1,
+            duration: 300,
+          }),
+          Animated.timing(this._iconX2Width, {
+            toValue: 50,
+            duration: 300,
+          }),
+          Animated.timing(this._decrX2TextOpacity, {
+            toValue: 0,
+            duration: 10,
+          }),
+        ]).start();
+      }
+    };
+
     return (
       <View style={styles.container}>
         <Header backButton={true} navigation={navigation} title={item.name}/>
@@ -73,20 +323,61 @@ class ProductScreen extends PureComponent {
                    resizeMode={'cover'}
             />
             <View style={styles.iconSection}>
+
               {item.isHot &&
-              <TouchableOpacity style={styles.iconHot} activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}>
-                <FontAwesomeIcon icon={faFire} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.WHITE}/>
-              </TouchableOpacity>
+              <Animated.View style={[styles.iconHotAnimatedWidht, animatedHotWidth]}>
+                <TouchableOpacity
+                  style={styles.iconHotOpacity}
+                  activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
+                  onPress={() => onHotHandler()}
+                >
+                  <Animated.View style={[styles.iconHot, animatedHotOpacity]}>
+                    <FontAwesomeIcon icon={faFire} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.WHITE}/>
+                  </Animated.View>
+                  <Animated.View style={[styles.iconDescription, decrHotTextOpacity]}>
+                    <Text style={styles.iconDescriptionText}>Острые</Text>
+                    <Text style={styles.iconDescriptionText}>роллы</Text>
+                  </Animated.View>
+                </TouchableOpacity>
+              </Animated.View>
               }
+
               {item.isVegetarian &&
-              <TouchableOpacity style={styles.iconVegetarian} activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}>
-                <FontAwesomeIcon icon={faLeaf} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.WHITE}/>
-              </TouchableOpacity>
+              <Animated.View style={[styles.iconVegetarianAnimatedWidht, animatedVegetarianWidth]}>
+                <TouchableOpacity
+                  style={styles.iconVegetarianOpacity}
+                  activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
+                  onPress={() => onVegetarianHandler()}
+                >
+                  <Animated.View style={[styles.iconVegetarian, animatedVegetarianOpacity]}>
+                    <FontAwesomeIcon icon={faLeaf} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.WHITE}/>
+                  </Animated.View>
+                  <Animated.View style={[styles.iconDescription, decrVegetarianTextOpacity]}>
+                    <Text style={styles.iconDescriptionText}>Вегетерианские</Text>
+                    <Text style={styles.iconDescriptionText}>роллы</Text>
+                  </Animated.View>
+                </TouchableOpacity>
+              </Animated.View>
               }
+
               {item.isX2 &&
-              <TouchableOpacity style={styles.iconX2} activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}>
-                <Text style={styles.iconX2Text}>x2</Text>
-              </TouchableOpacity>
+                <Animated.View style={[styles.iconX2AnimatedWidht, animatedX2Width]}>
+                  <TouchableOpacity
+                    style={styles.iconX2Opacity}
+                    activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
+                    onPress={() => onX2Handler()}
+                  >
+                    <Animated.View style={[styles.iconX2, animatedX2Opacity]}>
+                      <View style={styles.iconX2}>
+                        <Text style={styles.iconX2Text}>x2</Text>
+                      </View>
+                    </Animated.View>
+                    <Animated.View style={[styles.iconDescription, decrX2TextOpacity]}>
+                      <Text style={styles.iconDescriptionText}>На фото</Text>
+                      <Text style={styles.iconDescriptionText}>половина сета</Text>
+                    </Animated.View>
+                  </TouchableOpacity>
+                </Animated.View>
               }
             </View>
           </View>
@@ -136,11 +427,11 @@ class ProductScreen extends PureComponent {
             <View style={styles.priceSection}>
               <Text style={styles.priceText}>
                 {`${item.discountPrice
-                ? item.discountPrice * this.state.counter
+                  ? item.discountPrice * this.state.counter
                   : item.price * this.state.counter} ₽`}</Text>
               {
                 item.discountPrice
-                  ? <Text style={styles.discountPriceText}>{item.price} ₽</Text>
+                  ? <Text style={styles.discountPriceText}>{item.price * this.state.counter} ₽</Text>
                   : null
               }
             </View>
@@ -178,35 +469,86 @@ const styles = StyleSheet.create({
     left: 10,
     flexDirection: 'row',
   },
-  iconHot: {
+  iconHotAnimatedWidht: {
+    width: 50,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 50,
     marginRight: 10,
     backgroundColor: THEME.COLOR.RED_ICON,
-    width: 50,
     height: 50,
     elevation: 6,
   },
-  iconVegetarian: {
+  iconVegetarianAnimatedWidht: {
+    width: 50,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 50,
     marginRight: 10,
     backgroundColor: THEME.COLOR.GREEN_ICON,
-    width: 50,
     height: 50,
     elevation: 6,
   },
-  iconX2: {
+  iconX2AnimatedWidht: {
+    width: 50,
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 50,
     marginRight: 10,
     backgroundColor: THEME.COLOR.BLACK,
-    width: 50,
     height: 50,
     elevation: 6,
+  },
+  iconHotOpacity: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    flexDirection: 'row',
+  },
+  iconVegetarianOpacity: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    flexDirection: 'row',
+  },
+  iconX2Opacity: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    flexDirection: 'row',
+  },
+  iconHot: {},
+  Vegetarian: {},
+  iconDescription: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  iconDescriptionText: {
+    color: THEME.COLOR.WHITE,
+    fontFamily: THEME.FONT_FAMILY.REGULAR,
+    fontSize: THEME.FONT_SIZE.INFO,
+  },
+
+  iconVegetarian: {
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    // borderRadius: 50,
+    // marginRight: 10,
+    // backgroundColor: THEME.COLOR.GREEN_ICON,
+    // width: 50,
+    // height: 50,
+    // elevation: 6,
+  },
+  iconX2: {
+    // justifyContent: 'center',
+    // alignItems: 'center',
+    // borderRadius: 50,
+    // marginRight: 10,
+    // backgroundColor: THEME.COLOR.BLACK,
+    // width: 50,
+    // height: 50,
+    // elevation: 6,
   },
   iconX2Text: {
     color: THEME.COLOR.WHITE,

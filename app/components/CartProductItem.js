@@ -24,7 +24,7 @@ class CartProductItem extends PureComponent {
             <Text style={styles.nameText}>{item.name}</Text>
           </View>
           <View style={styles.countSection}>
-            <Text style={styles.countText}>{`${item.price}x${item.count} ₽`}</Text>
+            <Text style={styles.countText}>{`${item.discountPrice ? item.discountPrice : item.price}x${item.count} ₽`}</Text>
           </View>
         </View>
         <TouchableOpacity
