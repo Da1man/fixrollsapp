@@ -446,7 +446,7 @@ class ProductScreen extends PureComponent {
           </View>
         </ScrollView>
 
-        <CartButton cartTotal={cartTotal} cartProducts={cartProducts} initialPos={cartTotal ? 1 : 2}/>
+        <CartButton cartTotal={cartTotal} cartProducts={cartProducts} initialPos={cartTotal ? 1 : 2} navigation={navigation}/>
       </View>
     );
   }

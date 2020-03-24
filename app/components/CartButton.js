@@ -67,6 +67,7 @@ class CartButton extends Component {
     const {
       cartTotal, cartProducts, cartNeedOpen,
       cartNeedClose, toggleNeedOpen, toggleNeedClose, initialPos,
+      navigation,
     } = this.props;
     const animatedStyle = {
       top: this._bottomCartButton,
@@ -124,7 +125,7 @@ class CartButton extends Component {
             </View>
             <View style={styles.checkoutButtonSection}>
               {cartTotal >= THEME.SETTINGS.MINIMAL_ORDER_PRICE
-                ? <TouchableOpacity style={styles.checkoutButton}>
+                ? <TouchableOpacity style={styles.checkoutButton} onPress={() => navigation.navigate('Checkout')}>
                   <Text style={styles.checkoutButtonText}>Оплатить</Text>
                 </TouchableOpacity>
                 : <TouchableOpacity style={styles.checkoutButtonDisabled}
