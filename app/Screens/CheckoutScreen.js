@@ -6,6 +6,10 @@ import Header from '../components/Header';
 import {THEME, w} from '../common/variables';
 
 import {connect} from 'react-redux';
+import {
+  setUserName, setUserTel, setUserMail, setUserDeliveryAdress, setUserDistrict, setUserComment, setUserPayment,
+  confirmOrder,
+} from '../redux/checkoutReducer'
 
 class CheckoutScreen extends PureComponent {
 
@@ -13,8 +17,15 @@ class CheckoutScreen extends PureComponent {
   }
 
   render() {
-    const {navigation, cartProducts, cartTotal} = this.props;
+    const {
+      navigation, cartProducts, cartTotal,
+      userName, userTel, userMail, userDeliveryAdress, userDistrict, userComment, userPayment,
+      setUserName, setUserTel, setUserMail, setUserDeliveryAdress, setUserDistrict, setUserComment, setUserPayment,
+      confirmOrder,
+    } = this.props;
+
     const orderCartItems = cartProducts.map((item) => <View key={item.id} style={styles.cartOrderItem}>
+
       <View>
         <Text style={styles.orderItemsText}>{`${item.name} X ${item.count}`}</Text>
       </View>
@@ -24,6 +35,59 @@ class CheckoutScreen extends PureComponent {
           : item.price * item.count} ₽`}</Text>
       </View>
     </View>);
+
+    const showConfirmButton = () => {
+
+      if (userDistrict === 'Кимры/Савелово. Мин заказ 500 ₽') {
+        if (cartTotal >= THEME.SETTINGS.MINIMAL_ORDER_PRICE_KIMRY) {
+          return (
+            <View style={styles.confirmButtonSection}>
+              <TouchableOpacity
+                style={styles.confirmButton}
+                activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
+                onPress={() => confirmOrder()}
+              >
+                <Text style={styles.confirmButtonText}>
+                  ПОДТВЕРДИТЬ ЗАКАЗ
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )
+        } else {
+          return (
+            <View style={styles.minimumWarningSection}>
+              <View style={styles.minimumWarning}>
+                <Text style={styles.minimumWarningText}>Минимальная сумма заказа 500 ₽</Text>
+              </View>
+            </View>
+          )
+        }
+      } else {
+        if (cartTotal >= THEME.SETTINGS.MINIMAL_ORDER_PRICE_OTHER) {
+          return (
+            <View style={styles.confirmButtonSection}>
+              <TouchableOpacity
+                style={styles.confirmButton}
+                activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
+                onPress={() => confirmOrder()}
+              >
+                <Text style={styles.confirmButtonText}>
+                  ПОДТВЕРДИТЬ ЗАКАЗ
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )
+        } else {
+          return (
+            <View style={styles.minimumWarningSection}>
+              <View style={styles.minimumWarning}>
+                <Text style={styles.minimumWarningText}>Минимальная сумма заказа 1000 ₽</Text>
+              </View>
+            </View>
+          )
+        }
+      }
+    }
 
     return (
       <View style={{flex: 1}}>
@@ -43,6 +107,8 @@ class CheckoutScreen extends PureComponent {
               maxLength={50}
               placeholder={'Ваше имя'}
               placeholderTextColor={THEME.COLOR.GRAY}
+              value={userName}
+              onChangeText={(value) => setUserName(value)}
             />
             <TextInput
               style={styles.inputText}
@@ -50,6 +116,8 @@ class CheckoutScreen extends PureComponent {
               maxLength={50}
               placeholder={'Ваш телефон'}
               placeholderTextColor={THEME.COLOR.GRAY}
+              value={userTel}
+              onChangeText={(value) => setUserTel(value)}
             />
             <TextInput
               style={styles.inputText}
@@ -57,6 +125,8 @@ class CheckoutScreen extends PureComponent {
               maxLength={50}
               placeholder={'Ваш e-mail'}
               placeholderTextColor={THEME.COLOR.GRAY}
+              value={userMail}
+              onChangeText={(value) => setUserMail(value)}
             />
           </View>
 
@@ -71,10 +141,12 @@ class CheckoutScreen extends PureComponent {
               maxLength={200}
               placeholder={'Адрес доставки'}
               placeholderTextColor={THEME.COLOR.GRAY}
+              value={userDeliveryAdress}
+              onChangeText={(value) => setUserDeliveryAdress(value)}
             />
             <View style={styles.inputDropdown}>
               <Picker
-                selectedValue={'Кимры/Савелово. Мин заказ 500 ₽'}
+                selectedValue={userDistrict}
                 style={{}}
                 itemStyle={{
                   backgroundColor: 'red',
@@ -87,7 +159,7 @@ class CheckoutScreen extends PureComponent {
                   backgroundColor: 'red',
                 }}
                 onValueChange={(itemValue) =>
-                  console.log(itemValue)
+                  setUserDistrict(itemValue)
                 }>
                 <Picker.Item
                   label={`Кимры/Савелово. Мин заказ 500 ₽`}
@@ -105,6 +177,8 @@ class CheckoutScreen extends PureComponent {
               maxLength={1000}
               placeholder={`Примечания к вашему заказу, например, особые пожелания отделу доставки.`}
               placeholderTextColor={THEME.COLOR.GRAY}
+              value={userComment}
+              onChangeText={(value) => setUserComment(value)}
             />
           </View>
 
@@ -127,7 +201,7 @@ class CheckoutScreen extends PureComponent {
               ]}
               initial={0}
               onPress={(value) => {
-                console.log(value);
+                setUserPayment(value);
               }}
               buttonColor={THEME.COLOR.GRAY_DISABLED}
               labelColor={THEME.COLOR.BLACK}
@@ -137,11 +211,7 @@ class CheckoutScreen extends PureComponent {
             </RadioForm>
           </View>
 
-          <View style={styles.minimumWarningSection}>
-            <View style={styles.minimumWarning}>
-              <Text style={styles.minimumWarningText}>Минимальная сумма заказа 500 ₽</Text>
-            </View>
-          </View>
+          {showConfirmButton()}
 
           <View style={styles.policySection}>
             <TouchableOpacity
@@ -150,18 +220,6 @@ class CheckoutScreen extends PureComponent {
             >
               <Text style={styles.policyText}>
                 Оформляя заказ вы соглашаетесь с политикой безопасности и конфиденциальности сайта
-              </Text>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.confirmButtonSection}>
-            <TouchableOpacity
-              style={styles.confirmButton}
-              activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
-
-            >
-              <Text style={styles.confirmButtonText}>
-                ОФОРМИТЬ
               </Text>
             </TouchableOpacity>
           </View>
@@ -289,7 +347,7 @@ const styles = StyleSheet.create({
   },
   confirmButton: {
     height: 60,
-    width: w * 0.5,
+    width: w * 0.8,
     backgroundColor: THEME.COLOR.ACCENT,
     borderRadius: 50,
     justifyContent: 'center',
@@ -306,7 +364,23 @@ let mapStateToProps = state => {
   return {
     cartTotal: state.catalog.cartTotal,
     cartProducts: state.catalog.cartProducts,
+    userName: state.checkout.userName,
+    userTel: state.checkout.userTel,
+    userMail: state.checkout.userMail,
+    userDeliveryAdress: state.checkout.userDeliveryAdress,
+    userDistrict: state.checkout.userDistrict,
+    userComment: state.checkout.userComment,
+    userPayment: state.checkout.userPayment,
   };
 };
 
-export default connect(mapStateToProps, {})(CheckoutScreen);
+export default connect(mapStateToProps, {
+  setUserName,
+  setUserTel,
+  setUserMail,
+  setUserDeliveryAdress,
+  setUserDistrict,
+  setUserComment,
+  setUserPayment,
+  confirmOrder,
+})(CheckoutScreen);

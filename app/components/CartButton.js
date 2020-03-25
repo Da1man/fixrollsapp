@@ -124,7 +124,7 @@ class CartButton extends Component {
               <Text style={styles.totalText}>{`${cartTotal.toLocaleString('ru-RU')} ₽`}</Text>
             </View>
             <View style={styles.checkoutButtonSection}>
-              {cartTotal >= THEME.SETTINGS.MINIMAL_ORDER_PRICE
+              {cartTotal >= THEME.SETTINGS.MINIMAL_ORDER_PRICE_KIMRY
                 ? <TouchableOpacity style={styles.checkoutButton} onPress={() => navigation.navigate('Checkout')}>
                   <Text style={styles.checkoutButtonText}>Оплатить</Text>
                 </TouchableOpacity>
