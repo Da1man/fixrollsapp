@@ -1,5 +1,16 @@
 import React, {PureComponent, Component} from 'react';
-import {Text, View, StyleSheet, TouchableOpacity, Animated, Easing, ScrollView, Alert} from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Animated,
+  Easing,
+  ScrollView,
+  Alert,
+  TouchableWithoutFeedback,
+  Picker,
+} from 'react-native';
 import Interactable from 'react-native-interactable';
 
 import {THEME, w, h} from '../common/variables';
@@ -7,15 +18,16 @@ import CartProductItem from './CartProductItem';
 
 import {connect} from 'react-redux';
 import {toggleNeedOpen, toggleNeedClose} from '../redux/catalogReducer';
+import {setUserDistrict} from '../redux/checkoutReducer'
 
 const onDisableCheckoutPress = (cartTotal) => {
   Alert.alert(
     'Минимальный заказ',
-    `Минимальный заказ составляет ${THEME.SETTINGS.MINIMAL_ORDER_PRICE} рублей, закажите еще на ${THEME.SETTINGS.MINIMAL_ORDER_PRICE - cartTotal} рублей`,
+    `Минимальный заказ составляет ${THEME.SETTINGS.MINIMAL_ORDER_PRICE_KIMRY} рублей, закажите еще на ${THEME.SETTINGS.MINIMAL_ORDER_PRICE_KIMRY - cartTotal} рублей чтобы оформить заказ`,
     [
       {
         text: 'ОК', onPress: () => {
-          console.log('aaaa');
+          console.log('ОК');
         },
       },
     ],
@@ -68,6 +80,7 @@ class CartButton extends Component {
       cartTotal, cartProducts, cartNeedOpen,
       cartNeedClose, toggleNeedOpen, toggleNeedClose, initialPos,
       navigation,
+      userDistrict, setUserDistrict,
     } = this.props;
     const animatedStyle = {
       top: this._bottomCartButton,
@@ -108,10 +121,10 @@ class CartButton extends Component {
             animatedValueY={this._deltaY}
           >
 
-            <View
-              style={styles.button}
-            >
-              <Text style={styles.priceText}>{cartTotal.toLocaleString('ru-RU')} ₽</Text>
+            <View style={styles.button}>
+              <TouchableOpacity onPress={() => this.cart.snapTo({index: 0})} activeOpacity={1}>
+                <Text style={styles.priceText}>{cartTotal.toLocaleString('ru-RU')} ₽</Text>
+              </TouchableOpacity>
             </View>
             <View style={styles.orderTitle}>
               <Text style={styles.orderTitleText}>Ваш заказ:</Text>
@@ -120,8 +133,49 @@ class CartButton extends Component {
               {cartProductsList}
             </ScrollView>
             <View style={styles.totalSection}>
-              <Text style={styles.totalTitleText}>Итого:</Text>
-              <Text style={styles.totalText}>{`${cartTotal.toLocaleString('ru-RU')} ₽`}</Text>
+              <View style={styles.districtSection}>
+                <Text style={styles.totalTitleText}>Регион доставки:</Text>
+                <Picker
+                  selectedValue={userDistrict}
+                  style={{
+                    width: '100%',
+                    color: THEME.COLOR.WHITE,
+                    fontSize: THEME.FONT_SIZE.MAIN,
+                    fontFamily: THEME.FONT_FAMILY.REGULAR,
+                  }}
+                  itemStyle={{
+                    backgroundColor: 'black',
+                    padding: 10,
+                    width: '100%',
+                    fontSize: THEME.FONT_SIZE.MAIN,
+                    fontFamily: THEME.FONT_FAMILY.REGULAR,
+                    color: THEME.COLOR.WHITE,
+                  }}
+                  itemTextStyle={{
+                    padding: 10,
+                    fontSize: THEME.FONT_SIZE.MAIN,
+                    fontFamily: THEME.FONT_FAMILY.REGULAR,
+                    color: THEME.COLOR.WHITE,
+                    width: '100%',
+                  }}
+                  onValueChange={(itemValue) =>
+                    setUserDistrict(itemValue)
+                  }>
+                  <Picker.Item
+                    label={`Кимры/Савелово`}
+                    value={`Кимры/Савелово. Мин заказ 500 ₽`}
+                  />
+                  <Picker.Item
+                    label={`Деревни/Сад. тов./ Док`}
+                    value={`Деревни/Сад. тов./Док. Мин заказ 1000 ₽`}
+                  />
+                </Picker>
+              </View>
+              <View style={styles.totalSectionBox}>
+                <Text style={styles.totalTitleText}>Итого:</Text>
+                <Text style={styles.totalText}>{`${cartTotal.toLocaleString('ru-RU')} ₽`}</Text>
+              </View>
+
             </View>
             <View style={styles.checkoutButtonSection}>
               {cartTotal >= THEME.SETTINGS.MINIMAL_ORDER_PRICE_KIMRY
@@ -180,10 +234,19 @@ const styles = StyleSheet.create({
   },
   totalSection: {
     paddingHorizontal: 30,
-    alignItems: 'flex-end',
-    justifyContent: 'center',
+    flexDirection: 'row',
+    // alignItems: 'flex-end',
+    justifyContent: 'space-between',
     marginBottom: 30,
   },
+  districtSection: {
+    alignItems: 'flex-start',
+    width: w * 0.6,
+  },
+  totalSectionBox: {
+    alignItems: 'flex-end',
+  },
+
   totalTitleText: {
     fontFamily: THEME.FONT_FAMILY.REGULAR,
     fontSize: THEME.FONT_SIZE.TITLE,
@@ -321,11 +384,13 @@ let mapStateToProps = state => {
     cartTotal: state.catalog.cartTotal,
     cartNeedOpen: state.catalog.cartNeedOpen,
     cartNeedClose: state.catalog.cartNeedClose,
+    userDistrict: state.checkout.userDistrict,
   };
 };
 
 export default connect(mapStateToProps, {
   toggleNeedOpen,
   toggleNeedClose,
+  setUserDistrict,
 })(CartButton);
 

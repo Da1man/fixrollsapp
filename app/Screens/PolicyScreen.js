@@ -325,11 +325,12 @@ const styles = StyleSheet.create({
   },
   backButton: {
     height: 60,
-    width: w * 0.5,
+    width: w * 0.7,
     borderColor: THEME.COLOR.GRAY_DARK,
     borderWidth: 1,
     justifyContent: 'center',
     alignItems: 'center',
+    borderRadius: 50,
   },
   backButtonText: {
     fontFamily: THEME.FONT_FAMILY.REGULAR,
