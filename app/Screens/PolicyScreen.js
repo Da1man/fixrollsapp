@@ -1,5 +1,5 @@
 import React, {PureComponent} from 'react';
-import {StyleSheet, Text, View, ScrollView} from 'react-native';
+import {StyleSheet, Text, View, ScrollView, TouchableOpacity} from 'react-native';
 
 import Header from '../components/Header';
 import {THEME, w} from '../common/variables';
@@ -45,6 +45,7 @@ class PolicyScreen extends PureComponent {
               https://fixrolls.ru/.
             </Text>
           </View>
+
 
           <View style={styles.subtitleSection}>
             <Text style={styles.subtitleText}>2. ОСНОВНЫЕ ПОНЯТИЯ, ИСПОЛЬЗУЕМЫЕ В ПОЛИТИКЕ</Text>
@@ -114,6 +115,7 @@ class PolicyScreen extends PureComponent {
               персональных данных.
             </Text>
           </View>
+
 
           <View style={styles.subtitleSection}>
             <Text style={styles.subtitleText}>
@@ -257,6 +259,19 @@ class PolicyScreen extends PureComponent {
           </View>
 
 
+          <View style={styles.backButtonSection}>
+            <TouchableOpacity
+              style={styles.backButton}
+              activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
+              onPress={() => navigation.goBack()}
+            >
+              <Text style={styles.backButtonText}>
+                ВЕРНУТЬСЯ НАЗАД
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+
 
         </ScrollView>
       </View>
@@ -301,6 +316,25 @@ const styles = StyleSheet.create({
     fontFamily: THEME.FONT_FAMILY.REGULAR,
     fontSize: THEME.FONT_SIZE.MAIN,
     color: THEME.COLOR.BLACK,
+  },
+  backButtonSection: {
+    paddingHorizontal: 30,
+    marginBottom: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  backButton: {
+    height: 60,
+    width: w * 0.5,
+    borderColor: THEME.COLOR.GRAY_DARK,
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  backButtonText: {
+    fontFamily: THEME.FONT_FAMILY.REGULAR,
+    fontSize: THEME.FONT_SIZE.TITLE,
+    color: THEME.COLOR.GRAY_DARK,
   },
 });
 

@@ -283,7 +283,7 @@ const styles = StyleSheet.create({
   },
   confirmButtonSection: {
     paddingHorizontal: 30,
-    marginBottom: 40,
+    marginBottom: 30,
     justifyContent: 'center',
     alignItems: 'center',
   },
