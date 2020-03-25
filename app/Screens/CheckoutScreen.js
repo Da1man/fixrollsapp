@@ -31,9 +31,11 @@ class CheckoutScreen extends PureComponent {
         <ScrollView
           style={styles.container}
         >
+
           <View style={styles.titleSection}>
             <Text style={styles.titleText}>ДЕТАЛИ ОПЛАТЫ</Text>
           </View>
+
           <View style={styles.payDetailsSection}>
             <TextInput
               style={styles.inputText}
@@ -57,9 +59,11 @@ class CheckoutScreen extends PureComponent {
               placeholderTextColor={THEME.COLOR.GRAY}
             />
           </View>
+
           <View style={styles.titleSection}>
             <Text style={styles.titleText}>ДЕТАЛИ ДОСТАВКИ</Text>
           </View>
+
           <View style={styles.deliveryDetailsSection}>
             <TextInput
               style={styles.inputText}
@@ -103,33 +107,65 @@ class CheckoutScreen extends PureComponent {
               placeholderTextColor={THEME.COLOR.GRAY}
             />
           </View>
+
           <View style={styles.titleSection}>
             <Text style={styles.titleText}>ВАШ ЗАКАЗ</Text>
           </View>
+
           <View style={styles.cartSection}>
             {orderCartItems}
             <View style={styles.totalSection}>
               <Text style={styles.totalText}>{`Итого: ${cartTotal} ₽`}</Text>
             </View>
           </View>
+
           <View style={styles.paymentMethodSection}>
             <RadioForm
               radio_props={[
                 {label: 'Оплата курьеру наличными', value: 'nal'},
                 {label: 'Оплата курьеру через терминал', value: 'terminal'},
               ]}
-              initial={-1}
+              initial={0}
               onPress={(value) => {
                 console.log(value);
               }}
-              buttonColor={THEME.COLOR.GRAY}
+              buttonColor={THEME.COLOR.GRAY_DISABLED}
               labelColor={THEME.COLOR.BLACK}
               selectedButtonColor={THEME.COLOR.ACCENT}
               labelStyle={{fontFamily: THEME.FONT_FAMILY.REGULAR, fontSize: THEME.FONT_SIZE.MAIN}}
             >
-
             </RadioForm>
           </View>
+
+          <View style={styles.minimumWarningSection}>
+            <View style={styles.minimumWarning}>
+              <Text style={styles.minimumWarningText}>Минимальная сумма заказа 500 ₽</Text>
+            </View>
+          </View>
+
+          <View style={styles.policySection}>
+            <TouchableOpacity
+              activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
+              onPress={() => navigation.navigate('Policy')}
+            >
+              <Text style={styles.policyText}>
+                Оформляя заказ вы соглашаетесь с политикой безопасности и конфиденциальности сайта
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          <View style={styles.confirmButtonSection}>
+            <TouchableOpacity
+              style={styles.confirmButton}
+              activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
+
+            >
+              <Text style={styles.confirmButtonText}>
+                ОФОРМИТЬ
+              </Text>
+            </TouchableOpacity>
+          </View>
+
         </ScrollView>
       </View>
     );
@@ -217,6 +253,53 @@ const styles = StyleSheet.create({
     marginBottom: 40,
     paddingHorizontal: 30,
   },
+  minimumWarningSection: {
+    paddingHorizontal: 15,
+    marginBottom: 20,
+  },
+  minimumWarning: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '100%',
+    height: 50,
+    borderColor: THEME.COLOR.RED_ICON,
+    borderWidth: 1,
+  },
+  minimumWarningText: {
+    fontFamily: THEME.FONT_FAMILY.REGULAR,
+    fontSize: THEME.FONT_SIZE.MAIN,
+    color: THEME.COLOR.RED_ICON,
+  },
+  policySection: {
+    paddingHorizontal: 30,
+    marginBottom: 20,
+    flexDirection: 'row',
+  },
+  policyText: {
+    fontFamily: THEME.FONT_FAMILY.REGULAR,
+    fontSize: THEME.FONT_SIZE.MAIN,
+    color: THEME.COLOR.BLACK,
+    fontStyle: 'italic',
+  },
+  confirmButtonSection: {
+    paddingHorizontal: 30,
+    marginBottom: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  confirmButton: {
+    height: 60,
+    width: w * 0.5,
+    backgroundColor: THEME.COLOR.ACCENT,
+    borderRadius: 50,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  confirmButtonText: {
+    fontFamily: THEME.FONT_FAMILY.REGULAR,
+    fontSize: THEME.FONT_SIZE.TITLE,
+    color: THEME.COLOR.WHITE,
+  }
 });
 
 let mapStateToProps = state => {
