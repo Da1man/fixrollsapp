@@ -32,20 +32,28 @@ class CheckoutScreen extends PureComponent {
     } = this.props;
 
     const validateName = () => {
-      this.setState({isCorrectName: userName ? true : false})
+      const validate = userName ? true : false;
+      this.setState({isCorrectName: validate})
+      return validate
     }
 
     const validateTel = () => {
-      this.setState({isCorrectTel: userTel ? true : false})
+      const validate = userTel ? true : false
+      this.setState({isCorrectTel: validate})
+      return validate
     }
 
     const validateEmail = () => {
       let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-      this.setState({isCorrectEmail: userMail ? reg.test(userMail) : true})
+      const validate = userMail ? reg.test(userMail) : true
+      this.setState({isCorrectEmail: validate})
+      return validate
     }
 
     const validateDeliveryAdress = () => {
-      this.setState({isCorrectDeliveryAdress: userDeliveryAdress ? true : false})
+      const validate = userDeliveryAdress ? true : false
+      this.setState({isCorrectDeliveryAdress: validate})
+      return validate
     }
 
     const onConfirmHandler = () => {
@@ -53,6 +61,11 @@ class CheckoutScreen extends PureComponent {
       validateTel();
       validateEmail();
       validateDeliveryAdress();
+      if (validateName() && validateTel() && validateEmail() && validateDeliveryAdress()) {
+        confirmOrder()
+      } else {
+        console.log('not valid')
+      }
     }
 
     const orderCartItems = cartProducts.map((item) => <View key={item.id} style={styles.cartOrderItem}>
@@ -153,7 +166,10 @@ class CheckoutScreen extends PureComponent {
               placeholder={'Ваш телефон (обязательно)'}
               placeholderTextColor={THEME.COLOR.GRAY}
               value={userTel}
-              onChangeText={(value) => setUserTel(value)}
+              onChangeText={(value) => {
+                let num = value.replace(".", '');
+                setUserTel(num)
+              }}
             />
             {this.state.isCorrectTel
               ? null
