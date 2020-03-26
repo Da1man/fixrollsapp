@@ -20,10 +20,10 @@ import {connect} from 'react-redux';
 import {toggleNeedOpen, toggleNeedClose} from '../redux/catalogReducer';
 import {setUserDistrict} from '../redux/checkoutReducer'
 
-const onDisableCheckoutPress = (cartTotal) => {
+const onDisableCheckoutPress = (cartTotal, minTotal) => {
   Alert.alert(
     'Минимальный заказ',
-    `Минимальный заказ составляет ${THEME.SETTINGS.MINIMAL_ORDER_PRICE_KIMRY} рублей, закажите еще на ${THEME.SETTINGS.MINIMAL_ORDER_PRICE_KIMRY - cartTotal} рублей чтобы оформить заказ`,
+    `Минимальный заказ составляет ${minTotal} рублей, закажите еще на ${minTotal - cartTotal} рублей чтобы оформить заказ`,
     [
       {
         text: 'ОК', onPress: () => {
@@ -97,6 +97,26 @@ class CartButton extends Component {
       {y: Screen.height * 1.1, id: 'closed'},
     ];
 
+    const showCheckoutButton = () => {
+      let MINIMUM_COST
+      if (userDistrict === 'Кимры/Савелово. Мин заказ 500 ₽') {
+        MINIMUM_COST = 500;
+      } else {
+        MINIMUM_COST = 1000;
+      }
+
+      if (cartTotal >= MINIMUM_COST) {
+        return <TouchableOpacity style={styles.checkoutButton} onPress={() => navigation.navigate('Checkout')}>
+          <Text style={styles.checkoutButtonText}>Оплатить</Text>
+        </TouchableOpacity>
+      } else {
+        return <TouchableOpacity style={styles.checkoutButtonDisabled}
+                          onPress={() => onDisableCheckoutPress(cartTotal, MINIMUM_COST)}>
+          <Text style={styles.checkoutButtonTextDisabled}>Оплатить</Text>
+        </TouchableOpacity>
+      }
+    }
+
     return (<>
         <View style={styles.panelContainer} pointerEvents={'box-none'}>
           <Animated.View
@@ -142,6 +162,7 @@ class CartButton extends Component {
                     color: THEME.COLOR.WHITE,
                     fontSize: THEME.FONT_SIZE.MAIN,
                     fontFamily: THEME.FONT_FAMILY.REGULAR,
+                    backgroundColor: THEME.COLOR.ACCENT,
                   }}
                   itemStyle={{
                     backgroundColor: 'black',
@@ -150,13 +171,6 @@ class CartButton extends Component {
                     fontSize: THEME.FONT_SIZE.MAIN,
                     fontFamily: THEME.FONT_FAMILY.REGULAR,
                     color: THEME.COLOR.WHITE,
-                  }}
-                  itemTextStyle={{
-                    padding: 10,
-                    fontSize: THEME.FONT_SIZE.MAIN,
-                    fontFamily: THEME.FONT_FAMILY.REGULAR,
-                    color: THEME.COLOR.WHITE,
-                    width: '100%',
                   }}
                   onValueChange={(itemValue) =>
                     setUserDistrict(itemValue)
@@ -178,15 +192,7 @@ class CartButton extends Component {
 
             </View>
             <View style={styles.checkoutButtonSection}>
-              {cartTotal >= THEME.SETTINGS.MINIMAL_ORDER_PRICE_KIMRY
-                ? <TouchableOpacity style={styles.checkoutButton} onPress={() => navigation.navigate('Checkout')}>
-                  <Text style={styles.checkoutButtonText}>Оплатить</Text>
-                </TouchableOpacity>
-                : <TouchableOpacity style={styles.checkoutButtonDisabled}
-                                    onPress={() => onDisableCheckoutPress(cartTotal)}>
-                  <Text style={styles.checkoutButtonTextDisabled}>Оплатить</Text>
-                </TouchableOpacity>
-              }
+              {showCheckoutButton()}
             </View>
           </Interactable.View>
         </View>

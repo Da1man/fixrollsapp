@@ -16,6 +16,13 @@ class CheckoutScreen extends PureComponent {
   componentDidMount() {
   }
 
+  state = {
+    isCorrectName: true,
+    isCorrectTel: true,
+    isCorrectEmail: true,
+    isCorrectDeliveryAdress: true,
+  }
+
   render() {
     const {
       navigation, cartProducts, cartTotal,
@@ -23,6 +30,30 @@ class CheckoutScreen extends PureComponent {
       setUserName, setUserTel, setUserMail, setUserDeliveryAdress, setUserDistrict, setUserComment, setUserPayment,
       confirmOrder,
     } = this.props;
+
+    const validateName = () => {
+      this.setState({isCorrectName: userName ? true : false})
+    }
+
+    const validateTel = () => {
+      this.setState({isCorrectTel: userTel ? true : false})
+    }
+
+    const validateEmail = () => {
+      let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+      this.setState({isCorrectEmail: userMail ? reg.test(userMail) : true})
+    }
+
+    const validateDeliveryAdress = () => {
+      this.setState({isCorrectDeliveryAdress: userDeliveryAdress ? true : false})
+    }
+
+    const onConfirmHandler = () => {
+      validateName();
+      validateTel();
+      validateEmail();
+      validateDeliveryAdress();
+    }
 
     const orderCartItems = cartProducts.map((item) => <View key={item.id} style={styles.cartOrderItem}>
 
@@ -45,7 +76,7 @@ class CheckoutScreen extends PureComponent {
               <TouchableOpacity
                 style={styles.confirmButton}
                 activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
-                onPress={() => confirmOrder()}
+                onPress={() => onConfirmHandler()}
               >
                 <Text style={styles.confirmButtonText}>
                   ПОДТВЕРДИТЬ ЗАКАЗ
@@ -69,7 +100,7 @@ class CheckoutScreen extends PureComponent {
               <TouchableOpacity
                 style={styles.confirmButton}
                 activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
-                onPress={() => confirmOrder()}
+                onPress={() => onConfirmHandler()}
               >
                 <Text style={styles.confirmButtonText}>
                   ПОДТВЕРДИТЬ ЗАКАЗ
@@ -102,32 +133,47 @@ class CheckoutScreen extends PureComponent {
 
           <View style={styles.payDetailsSection}>
             <TextInput
-              style={styles.inputText}
+              style={{...styles.inputText, borderColor: this.state.isCorrectName ? THEME.COLOR.GRAY_DARK : THEME.COLOR.RED_ICON}}
               multiline={false}
               maxLength={50}
-              placeholder={'Ваше имя'}
+              placeholder={'Ваше имя (обязательно)'}
               placeholderTextColor={THEME.COLOR.GRAY}
               value={userName}
               onChangeText={(value) => setUserName(value)}
             />
+            {this.state.isCorrectName
+              ? null
+              : <Text style={styles.validateText}>Обязательное поле</Text>
+            }
             <TextInput
-              style={styles.inputText}
+              style={{...styles.inputText, borderColor: this.state.isCorrectTel ? THEME.COLOR.GRAY_DARK : THEME.COLOR.RED_ICON}}
               multiline={false}
               maxLength={50}
-              placeholder={'Ваш телефон'}
+              keyboardType={"numeric"}
+              placeholder={'Ваш телефон (обязательно)'}
               placeholderTextColor={THEME.COLOR.GRAY}
               value={userTel}
               onChangeText={(value) => setUserTel(value)}
             />
+            {this.state.isCorrectTel
+              ? null
+              : <Text style={styles.validateText}>Обязательное поле</Text>
+            }
             <TextInput
-              style={styles.inputText}
+              style={{...styles.inputText, borderColor: this.state.isCorrectEmail ? THEME.COLOR.GRAY_DARK : THEME.COLOR.RED_ICON}}
               multiline={false}
+              autoCapitalize={"none"}
+              autoCorrect={false}
               maxLength={50}
-              placeholder={'Ваш e-mail'}
+              placeholder={'Ваш e-mail (не обязательно)'}
               placeholderTextColor={THEME.COLOR.GRAY}
               value={userMail}
               onChangeText={(value) => setUserMail(value)}
             />
+            {this.state.isCorrectEmail
+              ? null
+              : <Text style={styles.validateText}>Некорректно введен e-mail адрес</Text>
+            }
           </View>
 
           <View style={styles.titleSection}>
@@ -136,14 +182,18 @@ class CheckoutScreen extends PureComponent {
 
           <View style={styles.deliveryDetailsSection}>
             <TextInput
-              style={styles.inputText}
+              style={{...styles.inputText, borderColor: this.state.isCorrectDeliveryAdress ? THEME.COLOR.GRAY_DARK : THEME.COLOR.RED_ICON}}
               multiline={false}
               maxLength={200}
-              placeholder={'Адрес доставки'}
+              placeholder={'Адрес доставки (обязательно)'}
               placeholderTextColor={THEME.COLOR.GRAY}
               value={userDeliveryAdress}
               onChangeText={(value) => setUserDeliveryAdress(value)}
             />
+            {this.state.isCorrectDeliveryAdress
+              ? null
+              : <Text style={styles.validateText}>Обязательное поле</Text>
+            }
             <View style={styles.inputDropdown}>
               <Picker
                 selectedValue={userDistrict}
@@ -175,7 +225,7 @@ class CheckoutScreen extends PureComponent {
               style={styles.commentInput}
               multiline={true}
               maxLength={1000}
-              placeholder={`Примечания к вашему заказу, например, особые пожелания отделу доставки.`}
+              placeholder={`Примечания к вашему заказу, например, особые пожелания отделу доставки (не обязательно)`}
               placeholderTextColor={THEME.COLOR.GRAY}
               value={userComment}
               onChangeText={(value) => setUserComment(value)}
@@ -238,7 +288,7 @@ const styles = StyleSheet.create({
   },
   titleSection: {
     marginTop: 20,
-    marginBottom: 40,
+    marginBottom: 20,
     paddingVertical: 5,
     paddingHorizontal: 10,
     borderLeftWidth: 5,
@@ -257,7 +307,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: THEME.COLOR.GRAY_DARK,
     borderRadius: 50,
-    marginBottom: 20,
+    marginBottom: 10,
+    marginTop: 10,
     fontFamily: THEME.FONT_FAMILY.REGULAR,
     fontSize: THEME.FONT_SIZE.MAIN,
     paddingHorizontal: 15,
@@ -266,14 +317,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: THEME.COLOR.GRAY_DARK,
     borderRadius: 50,
-    marginBottom: 20,
+    marginBottom: 10,
+    marginTop: 10,
     paddingHorizontal: 15,
   },
   commentInput: {
     borderWidth: 1,
     borderColor: THEME.COLOR.GRAY_DARK,
     borderRadius: 20,
-    marginBottom: 20,
+    marginBottom: 10,
+    marginTop: 10,
     fontFamily: THEME.FONT_FAMILY.REGULAR,
     fontSize: THEME.FONT_SIZE.MAIN,
     paddingHorizontal: 15,
@@ -357,6 +410,12 @@ const styles = StyleSheet.create({
     fontFamily: THEME.FONT_FAMILY.REGULAR,
     fontSize: THEME.FONT_SIZE.TITLE,
     color: THEME.COLOR.WHITE,
+  },
+  validateText: {
+    color: THEME.COLOR.RED_ICON,
+    paddingHorizontal: 20,
+    fontFamily: THEME.FONT_FAMILY.REGULAR,
+    fontSize: THEME.FONT_SIZE.INFO,
   }
 });
 
