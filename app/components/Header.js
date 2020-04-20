@@ -21,7 +21,11 @@ export default class Header extends PureComponent {
             >
               <FontAwesomeIcon icon={faArrowLeft} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.GRAY_DARK}/>
             </TouchableOpacity>
-            : <TouchableOpacity style={styles.rightButtonSection} activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}>
+            : <TouchableOpacity
+              style={styles.rightButtonSection}
+              activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
+              onPress={() => navigation.navigate('Profile')}
+            >
               <FontAwesomeIcon icon={faUser} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.GRAY_DARK}/>
             </TouchableOpacity>
         }

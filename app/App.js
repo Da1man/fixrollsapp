@@ -11,6 +11,7 @@ import CatalogScreen from './Screens/CatalogScreen';
 import ProductScreen from './Screens/ProductScreen';
 import CheckoutScreen from './Screens/CheckoutScreen';
 import PolicyScreen from './Screens/PolicyScreen';
+import ProfileScreen from './Screens/ProfileScreen';
 
 import { CardStyleInterpolators } from '@react-navigation/stack';
 
@@ -56,6 +57,13 @@ const App = () => {
               component={PolicyScreen}
               options={{
                 cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+              }}
+            />
+            <Stack.Screen
+              name="Profile"
+              component={ProfileScreen}
+              options={{
+                cardStyleInterpolator: CardStyleInterpolators.forVerticalIOS,
               }}
             />
           </Stack.Navigator>
