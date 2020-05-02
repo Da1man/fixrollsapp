@@ -10,9 +10,13 @@ import {faArrowLeft} from '@fortawesome/pro-regular-svg-icons';
 export default class Header extends PureComponent {
 
   render() {
-    const {navigation, backButton, title} = this.props;
+    const {navigation, backButton, title, loading} = this.props;
+    let elevation = 8;
+    if (loading) {
+      elevation = 0
+    }
     return (
-      <View style={styles.container}>
+      <View style={{...styles.container, elevation}}>
         {backButton
           ? <TouchableOpacity
             style={styles.rightButtonSection}
@@ -49,7 +53,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 0,
-    elevation: 8,
   },
   leftButtonSection: {},
   titleSection: {},

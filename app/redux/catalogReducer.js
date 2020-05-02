@@ -7,7 +7,8 @@ const INC_COUNT_CART = 'INC_COUNT_CART';
 const DEC_COUNT_CART = 'DEC_COUNT_CART';
 const TOGGLE_NEED_OPEN_CART = 'TOGGLE_NEED_OPEN_CART';
 const TOGGLE_NEED_CLOSE_CART = 'TOGGLE_NEED_CLOSE_CART';
-const SET_IS_FETCHING = 'SET_IS_FETCHING';
+const SET_PRODUCTS_FETCHING = 'SET_PRODUCTS_FETCHING';
+const SET_TAGS_FETCHING = 'SET_TAGS_FETCHING';
 const SET_PRODUCTS = 'SET_PRODUCTS';
 const SET_TAGS = 'SET_TAGS';
 const SELECT_TAG = 'SELECT_TAG'
@@ -101,7 +102,8 @@ let initialState = {
   cartProducts: [],
   cartTotal: 0,
   cartIsOpened: false,
-  isFetching: false,
+  isProductsFetching: false,
+  isTagsFetching: false,
 };
 
 let updateTotal = (state) => {
@@ -177,10 +179,17 @@ export const catalogReducer = (state = initialState, action) => {
       }
     }
 
-    case SET_IS_FETCHING: {
-      console.log('Fetching data is ', action.isFetching)
+    case SET_PRODUCTS_FETCHING: {
+      console.log('Products fetching is ', action.isFetch)
       return {
-        ...state, isFetching: action.isFetching,
+        ...state, isProductsFetching: action.isFetch,
+      };
+    }
+
+    case SET_TAGS_FETCHING: {
+      console.log('Tags fetching is ', action.isFetch)
+      return {
+        ...state, isTagsFetching: action.isFetch,
       };
     }
 
@@ -213,7 +222,8 @@ export const incCountCart = (product) => ({type: INC_COUNT_CART, product})
 export const decCountCart = (product) => ({type: DEC_COUNT_CART, product})
 export const toggleNeedOpen = (needOpen) => ({type: TOGGLE_NEED_OPEN_CART, needOpen});
 export const toggleNeedClose = (needClose) => ({type: TOGGLE_NEED_CLOSE_CART, needClose});
-export const setIsFetching = (isFetching) => ({type: SET_IS_FETCHING, isFetching: isFetching });
+export const setProductsFetching = (isFetch) => ({type: SET_PRODUCTS_FETCHING, isFetch });
+export const setTagsFetching = (isFetch) => ({type: SET_TAGS_FETCHING, isFetch });
 export const setProducts = (products) => ({type: SET_PRODUCTS, products });
 export const setTags = (tags) => ({type: SET_TAGS, tags });
 export const selectTag = (id) => ({type: SELECT_TAG, id });

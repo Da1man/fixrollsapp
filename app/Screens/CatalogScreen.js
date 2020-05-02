@@ -5,56 +5,47 @@ import {THEME, w, h} from '../common/variables';
 import TagComponent from '../components/TagComponent';
 import ProductItem from '../components/ProductItem';
 import CartButton from '../components/CartButton';
+import {Loader} from '../components/Loader';
 import {connect} from 'react-redux';
-import {addToCart, setIsFetching, setProducts, setTags} from '../redux/catalogReducer';
+import {addToCart, setProducts, setTags} from '../redux/catalogReducer';
 import * as _ from 'lodash';
 
-import {ApiConnect, fetchProductsFromApi} from '../common/WooCommerceApi';
+import {ApiConnect, fetchProductsFromWP, fetchTagsFromWP} from '../common/WooCommerceApi';
 
 class CatalogScreen extends PureComponent {
 
+  state = {
+    loader: false,
+  };
+
   componentDidMount() {
-    fetchProductsFromApi(this.props.selectedTag)
-    this.fetchTags()
+    // fetchProductsFromApi(this.props.selectedTag)
+    fetchTagsFromWP();
   }
 
-  fetchTags = () => {
-    console.log('tag is fetching')
-    ApiConnect.get('products/tags', {
-      per_page: 100,
-      orderby: 'count',
-      order: 'desc',
-    })
-      .then((response) => {
-        // console.log('tags response', response)
-        let list = response.map(tag => ({
-          id: tag.id,
-          name: tag.name,
-          slug: tag.slug,
-          count: tag.count,
-          checked: false,
-        }));
-        // console.log('tags list', list)
-        this.props.setTags(list);
-        console.log('tag is fetching done')
-        //console.log(this.props.products)
-      });
-  }
 
   onRefresh = () => {
-    fetchProductsFromApi(this.props.selectedTag)
-  }
+    // fetchProductsFromApi(this.props.selectedTag)
+    // this.fetchTags()
+    fetchProductsFromWP(this.props.selectedTag)
+    fetchTagsFromWP();
+  };
 
 
   render() {
-    const {products, cartTotal, addToCart, cartProducts,
-      isFetching, tags, selectedTag, navigation} = this.props
+    const {
+      products, cartTotal, addToCart, cartProducts,
+      isProductsFetching, tags, selectedTag, navigation,
+      isTagsFetching
+    } = this.props;
+
     const productsList = products.map((item) => <ProductItem
       key={item.id}
       item={item}
       addToCart={addToCart}
       navigation={navigation}
-    />)
+    />);
+
     const tagList = tags.map((tag) => <TagComponent
       key={tag.id}
       name={tag.name}
@@ -62,40 +53,42 @@ class CatalogScreen extends PureComponent {
       count={tag.count}
       checked={tag.checked}
       id={tag.id}
-    />)
-    return (
+    />);
 
-      <View style={{flex: 1}}>
-        <Header backButton={false} navigation={navigation} title={'Каталог'}/>
-        <ScrollView
-          style={styles.container}
-          refreshControl={
-            <RefreshControl
-              refreshing={isFetching}
-              onRefresh={this.onRefresh}
-              colors={[THEME.COLOR.ACCENT]}/>
-          }
-        >
-          <View style={styles.titleSection}>
-            <Text style={styles.titleText}>Роллы</Text>
-          </View>
-          <View style={styles.tagSection}>
-            <TagComponent
-              key={0}
-              name={'Все'}
-              checked={true}
-              count={99}
-              slug={'products'}
-              id={1}
-            />
-            {tagList}
-          </View>
-          <View style={{...styles.productsSection, paddingBottom: cartTotal ? 70 : 0,}}>
-            {productsList}
-          </View>
-        </ScrollView>
-        <CartButton cartTotal={cartTotal} cartProducts={cartProducts} navigation={navigation}/>
-      </View>
+    if (isTagsFetching || isProductsFetching) {
+      this.setState({loader: true})
+    } else {
+      this.setState({loader: false})
+    }
+
+    return (
+      <React.Fragment>
+        {this.state.loader && <Loader/>}
+        <View style={{flex: 1}}>
+
+          <Header backButton={false} navigation={navigation} title={'Каталог'} loading={this.state.loader}/>
+          <ScrollView
+            style={styles.container}
+            refreshControl={
+              <RefreshControl
+                refreshing={isProductsFetching}
+                onRefresh={this.onRefresh}
+                colors={[THEME.COLOR.ACCENT]}/>
+            }
+          >
+            <View style={styles.titleSection}>
+              <Text style={styles.titleText}>Роллы</Text>
+            </View>
+            <View style={styles.tagSection}>
+              {tagList}
+            </View>
+            <View style={{...styles.productsSection, paddingBottom: cartTotal ? 70 : 0}}>
+              {productsList}
+            </View>
+          </ScrollView>
+          <CartButton cartTotal={cartTotal} cartProducts={cartProducts} navigation={navigation}/>
+        </View>
+      </React.Fragment>
     );
   }
 }
@@ -105,7 +98,7 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
   },
   blurView: {
-    position: "absolute",
+    position: 'absolute',
     top: 0,
     left: 0,
     bottom: 0,
@@ -133,7 +126,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
   },
   productsSection: {
-    width: "100%",
+    width: '100%',
     paddingHorizontal: 10,
     flexWrap: 'wrap',
     flexDirection: 'row',
@@ -146,15 +139,15 @@ let mapStateToProps = state => {
     products: state.catalog.products,
     cartTotal: state.catalog.cartTotal,
     cartProducts: state.catalog.cartProducts,
-    isFetching: state.catalog.isFetching,
+    isProductsFetching: state.catalog.isProductsFetching,
     tags: state.catalog.tags,
     selectedTag: state.catalog.selectedTag,
+    isTagsFetching: state.catalog.isTagsFetching,
   };
 };
 
 export default connect(mapStateToProps, {
   addToCart,
-  setIsFetching,
   setProducts,
   setTags,
-}) (CatalogScreen);
+})(CatalogScreen);
