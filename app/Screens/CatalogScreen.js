@@ -2,7 +2,7 @@ import React, {PureComponent} from 'react';
 import {StyleSheet, Text, View, ScrollView, TouchableOpacity, RefreshControl} from 'react-native';
 import Header from '../components/Header';
 import {THEME, w, h} from '../common/variables';
-import TagComponent from '../components/TagConponent';
+import TagComponent from '../components/TagComponent';
 import ProductItem from '../components/ProductItem';
 import CartButton from '../components/CartButton';
 import {connect} from 'react-redux';

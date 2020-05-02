@@ -3,48 +3,24 @@ import {StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Animated} f
 import Header from '../components/Header';
 import {THEME, w} from '../common/variables';
 import axios from 'axios';
-
-
 import {connect} from 'react-redux';
 import CartButton from '../components/CartButton';
-
-
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faFire, faLeaf, faPlusCircle} from '@fortawesome/pro-light-svg-icons';
 import {faMinus, faPlus} from '@fortawesome/pro-regular-svg-icons';
 import {toggleNeedOpen, addToCart} from '../redux/catalogReducer';
 
 class ProductScreen extends PureComponent {
-  UNSAFE_componentWillMount() {
-    this.setState(
-      {
-        counter: this.props.route.params.item.count,
-        isHotOpened: false,
-        isVegetarianOpened: false,
-        isX2Opened: false,
-      },
-    );
+  state = {
+    counter: this.props.route.params.item.count,
+    isHotOpened: false,
+    isVegetarianOpened: false,
+    isX2Opened: false,
   }
 
   componentDidMount() {
-    console.log(this.props.route.params.item);
-    // this.getUsers()
+    console.log('Product state:', this.props.route.params.item);
   }
-
-  // getUsers = () => {
-  //   axios
-  //     .get(`${this.cnst_wp_rest_api_link}users/`)
-  //     .then((response) => {
-  //       // get some logs to see how data is coming in
-  //       // const data = JSON.stringify(response.data)
-  //       console.log('RESPONSE', response.data);
-  //       // console.log("RESPONSE: " + response.data);
-  //       // this.setState({ posts: response.data });
-  //     })
-  //     .catch(error => alert("ERROR: " + error));
-  //
-  // }
-  cnst_wp_rest_api_link = 'https://fixrolls.ru/wp-json/wp/v2/';
 
   _iconHotWidth = new Animated.Value(50);
   _iconHotOpacity = new Animated.Value(1);
@@ -323,7 +299,6 @@ class ProductScreen extends PureComponent {
                    resizeMode={'cover'}
             />
             <View style={styles.iconSection}>
-
               {item.isHot &&
               <Animated.View style={[styles.iconHotAnimatedWidht, animatedHotWidth]}>
                 <TouchableOpacity
@@ -388,14 +363,15 @@ class ProductScreen extends PureComponent {
             </View>
             <View style={styles.infoSubSection}>
 
-              <Text style={styles.infoSubText}>{item.weight} г.</Text>
+              {item.weight && <Text style={styles.infoSubText}>{item.weight} г.</Text>}
               <Text style={styles.infoSubText}> | </Text>
-              <Text style={styles.infoSubText}>{item.quantity} шт.</Text>
+              {item.quantity && <Text style={styles.infoSubText}>{item.quantity} шт.</Text>}
 
             </View>
-            <View style={styles.infoDescriptionSection}>
+            {item.composition && <View style={styles.infoDescriptionSection}>
               <Text style={styles.infoDescriptionText}>Состав: {item.composition}</Text>
             </View>
+            }
 
           </View>
 
@@ -429,11 +405,8 @@ class ProductScreen extends PureComponent {
                 {`${item.discountPrice
                   ? item.discountPrice * this.state.counter
                   : item.price * this.state.counter} ₽`}</Text>
-              {
-                item.discountPrice
-                  ? <Text style={styles.discountPriceText}>{item.price * this.state.counter} ₽</Text>
-                  : null
-              }
+              {item.discountPrice && <Text style={styles.discountPriceText}>{item.price * this.state.counter} ₽</Text>}
+
             </View>
             <TouchableOpacity
               style={styles.addToCartButton}
@@ -455,13 +428,11 @@ class ProductScreen extends PureComponent {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: THEME.COLOR.WHITE_BACKGROUND,
-    // flex: 1,
     height: '100%',
   },
   productImage: {
     width: '100%',
     height: w / 1.2,
-    // borderRadius: 20,
   },
   iconSection: {
     position: 'absolute',

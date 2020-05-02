@@ -14,8 +14,6 @@ class ProductItem extends PureComponent {
       item,
       addToCart,
       cartTotal,
-      cartNeedOpen,
-      cartNeedClose,
       toggleNeedOpen,
       toggleNeedClose,
       navigation,
@@ -148,8 +146,6 @@ const styles = StyleSheet.create({
 
 let mapStateToProps = state => {
   return {
-    cartNeedOpen: state.catalog.cartNeedOpen,
-    cartNeedClose: state.catalog.cartNeedClose,
     cartTotal: state.catalog.cartTotal,
   };
 };

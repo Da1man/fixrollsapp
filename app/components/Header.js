@@ -13,21 +13,21 @@ export default class Header extends PureComponent {
     const {navigation, backButton, title} = this.props;
     return (
       <View style={styles.container}>
-        {
-          backButton ? <TouchableOpacity
-              style={styles.rightButtonSection}
-              activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
-              onPress={() => navigation.goBack()}
-            >
-              <FontAwesomeIcon icon={faArrowLeft} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.GRAY_DARK}/>
-            </TouchableOpacity>
-            : <TouchableOpacity
-              style={styles.rightButtonSection}
-              activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
-              onPress={() => navigation.navigate('Profile')}
-            >
-              <FontAwesomeIcon icon={faUser} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.GRAY_DARK}/>
-            </TouchableOpacity>
+        {backButton
+          ? <TouchableOpacity
+            style={styles.rightButtonSection}
+            activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
+            onPress={() => navigation.goBack()}
+          >
+            <FontAwesomeIcon icon={faArrowLeft} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.GRAY_DARK}/>
+          </TouchableOpacity>
+          : <TouchableOpacity
+            style={styles.rightButtonSection}
+            activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
+            onPress={() => navigation.navigate('Profile')}
+          >
+            <FontAwesomeIcon icon={faUser} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.GRAY_DARK}/>
+          </TouchableOpacity>
         }
         <View style={styles.titleSection}>
           <Text style={styles.titleText}>{title}</Text>

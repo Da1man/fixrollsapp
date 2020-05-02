@@ -12,13 +12,11 @@ import {
   Picker,
 } from 'react-native';
 import Interactable from 'react-native-interactable';
-
 import {THEME, w, h} from '../common/variables';
 import CartProductItem from './CartProductItem';
-
 import {connect} from 'react-redux';
 import {toggleNeedOpen, toggleNeedClose} from '../redux/catalogReducer';
-import {setUserDistrict} from '../redux/checkoutReducer'
+import {setUserDistrict} from '../redux/checkoutReducer';
 
 const onDisableCheckoutPress = (cartTotal, minTotal) => {
   Alert.alert(
@@ -41,14 +39,6 @@ const Screen = {
 };
 
 class CartButton extends Component {
-
-  constructor(props) {
-    super(props);
-  }
-
-  componentDidMount() {
-  }
-
   componentDidUpdate(prevProps, prevState) {
     this.checkCloseOpen();
   }
@@ -82,9 +72,6 @@ class CartButton extends Component {
       navigation,
       userDistrict, setUserDistrict,
     } = this.props;
-    const animatedStyle = {
-      top: this._bottomCartButton,
-    };
 
     const cartProductsList = cartProducts.map((item) => <CartProductItem
       key={item.id}
@@ -98,7 +85,7 @@ class CartButton extends Component {
     ];
 
     const showCheckoutButton = () => {
-      let MINIMUM_COST
+      let MINIMUM_COST;
       if (userDistrict === 'Кимры/Савелово. Мин заказ 500 ₽') {
         MINIMUM_COST = 500;
       } else {
@@ -108,14 +95,26 @@ class CartButton extends Component {
       if (cartTotal >= MINIMUM_COST) {
         return <TouchableOpacity style={styles.checkoutButton} onPress={() => navigation.navigate('Checkout')}>
           <Text style={styles.checkoutButtonText}>Оплатить</Text>
-        </TouchableOpacity>
+        </TouchableOpacity>;
       } else {
         return <TouchableOpacity style={styles.checkoutButtonDisabled}
-                          onPress={() => onDisableCheckoutPress(cartTotal, MINIMUM_COST)}>
+                                 onPress={() => onDisableCheckoutPress(cartTotal, MINIMUM_COST)}>
           <Text style={styles.checkoutButtonTextDisabled}>Оплатить</Text>
-        </TouchableOpacity>
+        </TouchableOpacity>;
       }
-    }
+    };
+
+    const showCheckoutInfo = () => {
+      let MINIMUM_COST;
+      if (userDistrict === 'Кимры/Савелово. Мин заказ 500 ₽') {
+        MINIMUM_COST = 500;
+      } else {
+        MINIMUM_COST = 1000;
+      }
+      if (cartTotal < MINIMUM_COST) {
+        return <Text style={styles.checkOutButtonInfoText}>Минимальная сумма заказа {MINIMUM_COST} руб.</Text>;
+      }
+    };
 
     return (<>
         <View style={styles.panelContainer} pointerEvents={'box-none'}>
@@ -194,6 +193,9 @@ class CartButton extends Component {
             <View style={styles.checkoutButtonSection}>
               {showCheckoutButton()}
             </View>
+            <View style={styles.checkOutButtonInfo}>
+              {showCheckoutInfo()}
+            </View>
           </Interactable.View>
         </View>
       </>
@@ -267,7 +269,7 @@ const styles = StyleSheet.create({
   checkoutButtonSection: {
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 50,
+    marginBottom: 10,
   },
   checkoutButton: {
     justifyContent: 'center',
@@ -381,8 +383,16 @@ const styles = StyleSheet.create({
     height: Screen.height,
     width: Screen.width,
   },
-
-
+  checkOutButtonInfo: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  checkOutButtonInfoText: {
+    fontSize: THEME.FONT_SIZE.INFO,
+    color: THEME.COLOR.GRAY_DISABLED,
+    fontFamily: THEME.FONT_FAMILY.REGULAR,
+  },
 });
 
 let mapStateToProps = state => {

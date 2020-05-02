@@ -101,8 +101,6 @@ let initialState = {
   cartProducts: [],
   cartTotal: 0,
   cartIsOpened: false,
-  cartNeedOpen: false,
-  cartNeedClose: false,
   isFetching: false,
 };
 
@@ -177,23 +175,6 @@ export const catalogReducer = (state = initialState, action) => {
         }
         return updateTotal(newState)
       }
-    }
-
-    case TOGGLE_NEED_OPEN_CART: {
-      console.log('cartNeedOpen is', action.needOpen)
-      const newState = {
-        ...state, cartNeedOpen: action.needOpen,
-      };
-      return newState;
-    }
-
-    case TOGGLE_NEED_CLOSE_CART: {
-      console.log('cartNeedClose is', action.needClose)
-      const newState = {
-        ...state,
-        cartNeedClose: action.needClose,
-      };
-      return newState;
     }
 
     case SET_IS_FETCHING: {
