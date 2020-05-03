@@ -18,10 +18,6 @@ class ProductScreen extends PureComponent {
     isX2Opened: false,
   }
 
-  componentDidMount() {
-    console.log('Product state:', this.props.route.params.item);
-  }
-
   _iconHotWidth = new Animated.Value(50);
   _iconHotOpacity = new Animated.Value(1);
   _decrHotTextOpacity = new Animated.Value(0);

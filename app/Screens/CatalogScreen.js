@@ -5,7 +5,7 @@ import {THEME, w, h} from '../common/variables';
 import TagComponent from '../components/TagComponent';
 import ProductItem from '../components/ProductItem';
 import CartButton from '../components/CartButton';
-import {Loader} from '../components/Loader';
+import Loader from '../components/Loader';
 import {connect} from 'react-redux';
 import {addToCart, setProducts, setTags} from '../redux/catalogReducer';
 import * as _ from 'lodash';
@@ -19,14 +19,12 @@ class CatalogScreen extends PureComponent {
   };
 
   componentDidMount() {
-    // fetchProductsFromApi(this.props.selectedTag)
+    fetchProductsFromWP(this.props.selectedTag)
     fetchTagsFromWP();
   }
 
 
   onRefresh = () => {
-    // fetchProductsFromApi(this.props.selectedTag)
-    // this.fetchTags()
     fetchProductsFromWP(this.props.selectedTag)
     fetchTagsFromWP();
   };

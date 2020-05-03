@@ -20,7 +20,8 @@ export const THEME = {
   },
   COLOR: {
     // ACCENT: '#3D989D',
-    ACCENT: '#FB5520',
+    // ACCENT: '#FB5520',
+    ACCENT: '#E4003D',
     GRAY_BACKGROUND: '#F6F7F7',
     WHITE_BACKGROUND: '#FCFCFD',
     GRAY: '#C1C2C2',
@@ -35,5 +36,6 @@ export const THEME = {
     ACTIVE_OPACITY: 0.3,
     MINIMAL_ORDER_PRICE_KIMRY: 500,
     MINIMAL_ORDER_PRICE_OTHER: 1000,
+    LOADER_SIZE: 150,
   },
 };

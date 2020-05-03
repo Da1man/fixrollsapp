@@ -2,8 +2,8 @@ import React, {PureComponent, Component} from 'react';
 import {Text, View, StyleSheet, TouchableOpacity} from 'react-native';
 import {THEME} from '../common/variables';
 import {connect} from 'react-redux';
-import {selectTag, setIsFetching, setProducts} from '../redux/catalogReducer';
-import {ApiConnect, fetchProductsFromApi} from '../common/WooCommerceApi';
+import {selectTag, setProducts} from '../redux/catalogReducer';
+import {ApiConnect, fetchProductsFromWP} from '../common/WooCommerceApi';
 
 class TagComponent extends Component {
 
@@ -12,7 +12,7 @@ class TagComponent extends Component {
 
     const onPressHendler = (tagId) => {
       selectTag(tagId);
-      fetchProductsFromApi(tagId);
+      fetchProductsFromWP(tagId);
     };
 
     return (
@@ -57,7 +57,6 @@ let mapStateToProps = state => {
 
 export default connect(mapStateToProps, {
   selectTag,
-  setIsFetching,
   setProducts,
 })(TagComponent);
 

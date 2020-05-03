@@ -214,7 +214,7 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     borderTopColor: THEME.COLOR.WHITE,
     borderTopWidth: 1,
-    elevation: 8,
+    // elevation: 8,
   },
   button: {
     paddingVertical: 20,
@@ -318,7 +318,7 @@ const styles = StyleSheet.create({
     shadowOffset: {width: 0, height: 0},
     shadowRadius: 5,
     shadowOpacity: 0.4,
-    elevation: 8,
+    // elevation: 8,
     borderWidth: 1,
     borderColor: THEME.COLOR.GRAY,
   },

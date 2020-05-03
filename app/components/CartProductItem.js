@@ -10,12 +10,37 @@ import {incCountCart, decCountCart} from '../redux/catalogReducer';
 class CartProductItem extends PureComponent {
   render() {
     const {item, incCountCart, decCountCart} = this.props;
+
+    const onDecCountHandler = (item) => {
+      if (item.count === 1) {
+        Alert.alert(
+          'Удалить товар?',
+          `Удалить ${item.name} из корзины?`,
+          [
+            {
+              text: 'Отмена',
+              onPress: () => console.log('Отмена удаления из корзины'),
+              style: 'cancel',
+            },
+            {
+              text: 'ОК', onPress: () => {
+                decCountCart(item);
+              },
+            },
+          ],
+          {cancelable: false},
+        );
+      } else {
+        decCountCart(item);
+      }
+    };
+
     return (
       <View style={styles.container}>
         <TouchableOpacity
           activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
           style={styles.decSection}
-          onPress={() => decCountCart(item)}
+          onPress={() => onDecCountHandler(item)}
         >
           <FontAwesomeIcon icon={faMinus} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.WHITE}/>
         </TouchableOpacity>
@@ -24,7 +49,8 @@ class CartProductItem extends PureComponent {
             <Text style={styles.nameText}>{item.name}</Text>
           </View>
           <View style={styles.countSection}>
-            <Text style={styles.countText}>{`${item.discountPrice ? item.discountPrice : item.price}x${item.count} ₽`}</Text>
+            <Text
+              style={styles.countText}>{`${item.discountPrice ? item.discountPrice : item.price}x${item.count} ₽`}</Text>
           </View>
         </View>
         <TouchableOpacity

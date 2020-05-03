@@ -7,8 +7,7 @@ const SET_USER_DELIVERY_ADRESS = 'SET_USER_DELIVERY_ADRESS';
 const SET_USER_DISTRICT = 'SET_USER_DISTRICT';
 const SET_USER_COMMENT = 'SET_USER_COMMENT';
 const SET_USER_PAYMENT = 'SET_USER_PAYMENT';
-
-const CONFIRM_ORDER = 'CONFIRM_ORDER';
+const SET_SENDING_ORDER = 'SET_SENDING_ORDER';
 
 
 let initialState = {
@@ -18,7 +17,8 @@ let initialState = {
   userDeliveryAdress: '',
   userDistrict: 'Кимры/Савелово. Мин заказ 500 ₽',
   userComment: '',
-  userPayment: 'nal',
+  userPayment: 'cod',
+  sendingOrder: false,
 };
 
 
@@ -66,9 +66,12 @@ export const checkoutReducer = (state = initialState, action) => {
         ...state, userPayment: action.inputValue
       }
     }
-    case CONFIRM_ORDER: {
-      console.log(state)
-      return state
+
+    case SET_SENDING_ORDER: {
+      console.log('Sending order is: ', action.isSending)
+      return {
+        ...state, sendingOrder: action.isSending
+      }
     }
 
     default:
@@ -84,4 +87,4 @@ export const setUserDeliveryAdress = (inputValue) => ({type: SET_USER_DELIVERY_A
 export const setUserDistrict = (inputValue) => ({type: SET_USER_DISTRICT, inputValue });
 export const setUserComment = (inputValue) => ({type: SET_USER_COMMENT, inputValue });
 export const setUserPayment = (inputValue) => ({type: SET_USER_PAYMENT, inputValue });
-export const confirmOrder = () => ({type: CONFIRM_ORDER });
+export const setSendingOrder = (isSending) => ({type: SET_SENDING_ORDER, isSending});

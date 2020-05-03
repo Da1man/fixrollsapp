@@ -8,8 +8,9 @@ import {THEME, w} from '../common/variables';
 import {connect} from 'react-redux';
 import {
   setUserName, setUserTel, setUserMail, setUserDeliveryAdress, setUserDistrict, setUserComment, setUserPayment,
-  confirmOrder,
 } from '../redux/checkoutReducer'
+import {sendOrderWP} from '../common/WooCommerceApi';
+import OrderLoader from '../components/OrderLoader';
 
 class CheckoutScreen extends PureComponent {
 
@@ -21,6 +22,8 @@ class CheckoutScreen extends PureComponent {
     isCorrectTel: true,
     isCorrectEmail: true,
     isCorrectDeliveryAdress: true,
+    showMainError: false,
+    isSending: false,
   }
 
   render() {
@@ -28,8 +31,14 @@ class CheckoutScreen extends PureComponent {
       navigation, cartProducts, cartTotal,
       userName, userTel, userMail, userDeliveryAdress, userDistrict, userComment, userPayment,
       setUserName, setUserTel, setUserMail, setUserDeliveryAdress, setUserDistrict, setUserComment, setUserPayment,
-      confirmOrder,
+      sendingOrder,
     } = this.props;
+
+    console.log(sendingOrder)
+
+    if (sendingOrder) {
+      this.setState({isSending: true})
+    } else this.setState({isSending: false})
 
     const validateName = () => {
       const validate = userName ? true : false;
@@ -38,7 +47,7 @@ class CheckoutScreen extends PureComponent {
     }
 
     const validateTel = () => {
-      const validate = userTel ? true : false
+      const validate = userTel.length > 9 ? true : false
       this.setState({isCorrectTel: validate})
       return validate
     }
@@ -62,9 +71,11 @@ class CheckoutScreen extends PureComponent {
       validateEmail();
       validateDeliveryAdress();
       if (validateName() && validateTel() && validateEmail() && validateDeliveryAdress()) {
-        confirmOrder()
+        this.setState({showMainError: false})
+        sendOrderWP(cartProducts)
       } else {
-        console.log('not valid')
+        this.setState({showMainError: true})
+        console.log('Не верно заполнены поля')
       }
     }
 
@@ -135,7 +146,8 @@ class CheckoutScreen extends PureComponent {
 
     return (
       <View style={{flex: 1}}>
-        <Header backButton={true} navigation={navigation} title={'Оформление заказа'}/>
+        {this.state.isSending && <OrderLoader />}
+        <Header backButton={true} navigation={navigation} title={'Оформление заказа'} loading={this.state.isSending}/>
         <ScrollView
           style={styles.container}
         >
@@ -161,7 +173,7 @@ class CheckoutScreen extends PureComponent {
             <TextInput
               style={{...styles.inputText, borderColor: this.state.isCorrectTel ? THEME.COLOR.GRAY_DARK : THEME.COLOR.RED_ICON}}
               multiline={false}
-              maxLength={50}
+              maxLength={20}
               keyboardType={"numeric"}
               placeholder={'Ваш телефон (обязательно)'}
               placeholderTextColor={THEME.COLOR.GRAY}
@@ -173,7 +185,7 @@ class CheckoutScreen extends PureComponent {
             />
             {this.state.isCorrectTel
               ? null
-              : <Text style={styles.validateText}>Обязательное поле</Text>
+              : <Text style={styles.validateText}>Некорректно введен телефон</Text>
             }
             <TextInput
               style={{...styles.inputText, borderColor: this.state.isCorrectEmail ? THEME.COLOR.GRAY_DARK : THEME.COLOR.RED_ICON}}
@@ -181,6 +193,7 @@ class CheckoutScreen extends PureComponent {
               autoCapitalize={"none"}
               autoCorrect={false}
               maxLength={50}
+              keyboardType={"email-address"}
               placeholder={'Ваш e-mail (не обязательно)'}
               placeholderTextColor={THEME.COLOR.GRAY}
               value={userMail}
@@ -262,8 +275,8 @@ class CheckoutScreen extends PureComponent {
           <View style={styles.paymentMethodSection}>
             <RadioForm
               radio_props={[
-                {label: 'Оплата курьеру наличными', value: 'nal'},
-                {label: 'Оплата курьеру через терминал', value: 'terminal'},
+                {label: 'Оплата курьеру наличными', value: 'cod'},
+                {label: 'Оплата курьеру через терминал', value: 'cheque'},
               ]}
               initial={0}
               onPress={(value) => {
@@ -278,6 +291,14 @@ class CheckoutScreen extends PureComponent {
           </View>
 
           {showConfirmButton()}
+
+          {
+            this.state.showMainError && <View style={styles.mainErrorSection}>
+              <Text style={styles.mainErrorSectionText}>
+                Некорректно заполнены данные
+              </Text>
+            </View>
+          }
 
           <View style={styles.policySection}>
             <TouchableOpacity
@@ -408,6 +429,18 @@ const styles = StyleSheet.create({
     color: THEME.COLOR.BLACK,
     fontStyle: 'italic',
   },
+  mainErrorSection: {
+    paddingHorizontal: 30,
+    marginBottom: 20,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  mainErrorSectionText: {
+    fontFamily: THEME.FONT_FAMILY.REGULAR,
+    fontSize: THEME.FONT_SIZE.MAIN,
+    color: THEME.COLOR.RED_ICON,
+  },
+
   confirmButtonSection: {
     paddingHorizontal: 30,
     marginBottom: 30,
@@ -446,6 +479,7 @@ let mapStateToProps = state => {
     userDistrict: state.checkout.userDistrict,
     userComment: state.checkout.userComment,
     userPayment: state.checkout.userPayment,
+    sendingOrder: state.checkout.sendingOrder,
   };
 };
 
@@ -457,5 +491,4 @@ export default connect(mapStateToProps, {
   setUserDistrict,
   setUserComment,
   setUserPayment,
-  confirmOrder,
 })(CheckoutScreen);
