@@ -4,66 +4,51 @@ import Header from '../components/Header';
 import {THEME, w} from '../common/variables';
 import {connect} from 'react-redux';
 
+// import auth from '@react-native-firebase/auth';
+
+import {
+  setRegistrationEmail,
+  setRegistrationPassword,
+  setIsSending,
+} from '../redux/profileReducer'
+
 class ProfileScreen extends React.Component {
-  componentDidMount() {
-    this.state = {
-      validating: false,
-      email: '',
-      pass: '',
-    };
+
+  state = {
+    validating: false,
+    registrationEmail: '',
+    registrationPassword: '',
   }
 
-  validate = () => {
-    console.log('validating', this.state)
-    this.setState({ validating: true });
-
-    let formData = new FormData();
-    formData.append('type', 'login');
-    formData.append('email', this.state.email);
-    formData.append('password', this.state.password);
-
-    return fetch('https://fixrolls.ru/authentication.php', {
-      method: 'POST',
-      body: formData
-    })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        let data = responseJson.data;
-
-        if (this.saveToStorage(data)){
-          this.setState({
-            validating: false
-          });
-
-          /* Redirect to accounts page */
-          // Actions.pageAccount();
-          console.log('Success to store auth');
-        } else {
-          console.log('Failed to store auth');
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  }
-
-  async saveToStorage(userData){
-    if (userData) {
-      await AsyncStorage.setItem('user', JSON.stringify({
-          isLoggedIn: true,
-          authToken: userData.auth_token,
-          id: userData.user_id,
-          name: userData.user_login
-        })
-      );
-      return true;
+  validateEmail = () => {
+    if (this.state.registrationEmail) {
+      return true
     }
+  }
 
-    return false;
+  validatePassword = () => {
+    if (this.state.registrationPassword) {
+      return true
+    }
   }
 
   render() {
-    const {navigation} = this.props;
+    const {navigation,
+      setRegistrationEmail, setRegistrationPassword, setIsSending
+    } = this.props;
+
+
+    const onRegistrationHandler = () => {
+      if (this.validateEmail() && this.validatePassword()) {
+        console.log('Validation success')
+        setRegistrationEmail(this.state.registrationEmail)
+        setRegistrationPassword(this.state.registrationPassword)
+        setIsSending(true)
+      } else {
+        console.log('Validation fail')
+        setIsSending(false)
+      }
+    }
 
     return (
       <View style={styles.container}>
@@ -76,7 +61,7 @@ class ProfileScreen extends React.Component {
               maxLength={50}
               placeholder={'Email'}
               placeholderTextColor={THEME.COLOR.GRAY}
-              onChangeText={(text) => this.setState({email:text})}
+              onChangeText={(text) => this.setState({registrationEmail:text})}
             />
             <TextInput
               style={styles.inputText}
@@ -84,12 +69,12 @@ class ProfileScreen extends React.Component {
               maxLength={50}
               placeholder={'Пароль'}
               placeholderTextColor={THEME.COLOR.GRAY}
-              onChangeText={(text) => this.setState({pass:text})}
+              onChangeText={(text) => this.setState({registrationPassword:text})}
             />
             <TouchableOpacity
               style={styles.submitButton}
               activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
-              onPress={this.validate}
+              onPress={onRegistrationHandler}
             >
               <Text style={styles.submitButtonText}>Отправить</Text>
             </TouchableOpacity>
@@ -140,7 +125,15 @@ const styles = StyleSheet.create({
 });
 
 let mapStateToProps = state => {
-  return {};
+  return {
+    registrationEmail: state.profile.registrationEmail,
+    registrationPassword: state.profile.registrationPassword,
+    isSending: state.profile.isSending,
+  };
 };
 
-export default connect(mapStateToProps, {})(ProfileScreen);
+export default connect(mapStateToProps, {
+  setRegistrationEmail,
+  setRegistrationPassword,
+  setIsSending,
+})(ProfileScreen);

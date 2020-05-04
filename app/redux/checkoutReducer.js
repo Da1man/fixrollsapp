@@ -1,20 +1,19 @@
-import * as _ from 'lodash';
-
-const SET_USER_NAME = 'SET_NAME';
-const SET_USER_TEL = 'SET_USER_TEL';
-const SET_USER_MAIL = 'SET_USER_MAIL';
-const SET_USER_DELIVERY_ADRESS = 'SET_USER_DELIVERY_ADRESS';
-const SET_USER_DISTRICT = 'SET_USER_DISTRICT';
-const SET_USER_COMMENT = 'SET_USER_COMMENT';
-const SET_USER_PAYMENT = 'SET_USER_PAYMENT';
-const SET_SENDING_ORDER = 'SET_SENDING_ORDER';
-
+import {
+  SET_USER_NAME,
+  SET_USER_TEL,
+  SET_USER_MAIL,
+  SET_USER_DELIVERY_ADRESS,
+  SET_USER_DISTRICT,
+  SET_USER_COMMENT,
+  SET_USER_PAYMENT,
+  SET_SENDING_ORDER,
+} from './actionTypes';
 
 let initialState = {
-  userName: '',
-  userTel: '',
+  userName: 'Дмитрий',
+  userTel: '+74954443322',
   userMail: '',
-  userDeliveryAdress: '',
+  userDeliveryAdress: 'ул Мира 101',
   userDistrict: 'Кимры/Савелово. Мин заказ 500 ₽',
   userComment: '',
   userPayment: 'cod',

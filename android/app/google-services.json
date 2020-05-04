@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "1064842046632",
+    "firebase_url": "https://fixrolls-app.firebaseio.com",
+    "project_id": "fixrolls-app",
+    "storage_bucket": "fixrolls-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1064842046632:android:d96b04fedd613c3901a69d",
+        "android_client_info": {
+          "package_name": "com.fixrollsapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1064842046632-cfds14emvols0edmam3ukrb1hptka130.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhFMmXyHLNPKzas2Xnf0j5RHYdIWDMYbQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1064842046632-cfds14emvols0edmam3ukrb1hptka130.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

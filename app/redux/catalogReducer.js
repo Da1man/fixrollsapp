@@ -1,17 +1,17 @@
-import {Alert} from 'react-native';
-import AlertAsync from "react-native-alert-async";
 import * as _ from 'lodash';
 
-const ADD_TO_CART = 'ADD_TO_CART';
-const INC_COUNT_CART = 'INC_COUNT_CART';
-const DEC_COUNT_CART = 'DEC_COUNT_CART';
-const TOGGLE_NEED_OPEN_CART = 'TOGGLE_NEED_OPEN_CART';
-const TOGGLE_NEED_CLOSE_CART = 'TOGGLE_NEED_CLOSE_CART';
-const SET_PRODUCTS_FETCHING = 'SET_PRODUCTS_FETCHING';
-const SET_TAGS_FETCHING = 'SET_TAGS_FETCHING';
-const SET_PRODUCTS = 'SET_PRODUCTS';
-const SET_TAGS = 'SET_TAGS';
-const SELECT_TAG = 'SELECT_TAG'
+import {
+  ADD_TO_CART,
+  INC_COUNT_CART,
+  DEC_COUNT_CART,
+  TOGGLE_NEED_OPEN_CART,
+  TOGGLE_NEED_CLOSE_CART,
+  SET_PRODUCTS_FETCHING,
+  SET_TAGS_FETCHING,
+  SET_PRODUCTS,
+  SET_TAGS,
+  SELECT_TAG,
+} from './actionTypes';
 
 let initialState = {
   products: [
