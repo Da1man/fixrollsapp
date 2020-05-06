@@ -4,11 +4,11 @@ import Header from '../components/Header';
 import {THEME, w} from '../common/variables';
 import {connect} from 'react-redux';
 
-// import auth from '@react-native-firebase/auth';
+import axios from 'axios'
+
+import auth from '@react-native-firebase/auth';
 
 import {
-  setRegistrationEmail,
-  setRegistrationPassword,
   setIsSending,
 } from '../redux/profileReducer'
 
@@ -18,31 +18,35 @@ class ProfileScreen extends React.Component {
     validating: false,
     registrationEmail: '',
     registrationPassword: '',
+    emailValidate: true,
+    passwordValidate: true,
   }
 
   validateEmail = () => {
-    if (this.state.registrationEmail) {
-      return true
-    }
+    let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    const validate = this.state.registrationEmail ? reg.test(this.state.registrationEmail) : false
+    this.setState({emailValidate: validate})
+    return validate
   }
 
   validatePassword = () => {
-    if (this.state.registrationPassword) {
-      return true
-    }
+    const validate = this.state.registrationPassword ? true : false;
+    console.log('validatePassword', validate)
+    this.setState({passwordValidate: validate})
+    return validate
   }
-
   render() {
-    const {navigation,
-      setRegistrationEmail, setRegistrationPassword, setIsSending
+    const {
+      navigation,
+      setIsSending,
     } = this.props;
 
 
     const onRegistrationHandler = () => {
+      this.validateEmail()
+      this.validatePassword()
       if (this.validateEmail() && this.validatePassword()) {
         console.log('Validation success')
-        setRegistrationEmail(this.state.registrationEmail)
-        setRegistrationPassword(this.state.registrationPassword)
         setIsSending(true)
       } else {
         console.log('Validation fail')
@@ -56,21 +60,27 @@ class ProfileScreen extends React.Component {
         <ScrollView>
           <View style={styles.contentContainer}>
             <TextInput
-              style={styles.inputText}
+              style={{...styles.inputText, borderColor: this.state.emailValidate ? THEME.COLOR.GRAY_DARK : THEME.COLOR.RED_ICON}}
               multiline={false}
               maxLength={50}
               placeholder={'Email'}
               placeholderTextColor={THEME.COLOR.GRAY}
-              onChangeText={(text) => this.setState({registrationEmail:text})}
+              onChangeText={(text) => this.setState({registrationEmail: text})}
             />
+            {!this.state.emailValidate &&
+            <Text style={styles.validateText}>Некорректно введен e-mail адрес</Text>
+            }
             <TextInput
-              style={styles.inputText}
+              style={{...styles.inputText, borderColor: this.state.passwordValidate ? THEME.COLOR.GRAY_DARK : THEME.COLOR.RED_ICON}}
               multiline={false}
               maxLength={50}
               placeholder={'Пароль'}
               placeholderTextColor={THEME.COLOR.GRAY}
-              onChangeText={(text) => this.setState({registrationPassword:text})}
+              onChangeText={(text) => this.setState({registrationPassword: text})}
             />
+            {!this.state.passwordValidate &&
+            <Text style={styles.validateText}>Обязательное поле</Text>
+            }
             <TouchableOpacity
               style={styles.submitButton}
               activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
@@ -78,6 +88,7 @@ class ProfileScreen extends React.Component {
             >
               <Text style={styles.submitButtonText}>Отправить</Text>
             </TouchableOpacity>
+
           </View>
         </ScrollView>
 
@@ -116,11 +127,18 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 10,
   },
   submitButtonText: {
     fontFamily: THEME.FONT_FAMILY.REGULAR,
     fontSize: THEME.FONT_SIZE.TITLE,
     color: THEME.COLOR.WHITE,
+  },
+  validateText: {
+    color: THEME.COLOR.RED_ICON,
+    paddingHorizontal: 20,
+    fontFamily: THEME.FONT_FAMILY.REGULAR,
+    fontSize: THEME.FONT_SIZE.INFO,
   },
 });
 
@@ -133,7 +151,5 @@ let mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps, {
-  setRegistrationEmail,
-  setRegistrationPassword,
   setIsSending,
 })(ProfileScreen);

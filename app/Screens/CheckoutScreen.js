@@ -54,7 +54,7 @@ class CheckoutScreen extends PureComponent {
 
     const validateEmail = () => {
       let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-      const validate = userMail ? reg.test(userMail) : true
+      const validate = userMail ? reg.test(userMail) : false
       this.setState({isCorrectEmail: validate})
       return validate
     }
@@ -194,7 +194,7 @@ class CheckoutScreen extends PureComponent {
               autoCorrect={false}
               maxLength={50}
               keyboardType={"email-address"}
-              placeholder={'Ваш e-mail (не обязательно)'}
+              placeholder={'Ваш e-mail (обязательно)'}
               placeholderTextColor={THEME.COLOR.GRAY}
               value={userMail}
               onChangeText={(value) => setUserMail(value)}
@@ -465,7 +465,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     fontFamily: THEME.FONT_FAMILY.REGULAR,
     fontSize: THEME.FONT_SIZE.INFO,
-  }
+  },
 });
 
 let mapStateToProps = state => {

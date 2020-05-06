@@ -1,34 +1,18 @@
 import {
-  SET_REGISTRATION_EMAIL,
-  SET_REGISTRATION_PASSWORD,
-  SET_IS_LOGGED
+  SET_IS_SENDING,
 } from './actionTypes';
 
 
 let initialState = {
-  registrationEmail: '',
-  registrationPassword: '',
   isSending: false,
 };
 
 
 export const profileReducer = (state = initialState, action) => {
   switch (action.type) {
-
-    case SET_REGISTRATION_EMAIL: {
-      return {
-        ...state, registrationEmail: action.value
-      }
-    }
-
-    case SET_REGISTRATION_PASSWORD: {
-      return {
-        ...state, registrationPassword: action.value
-      }
-    }
-
-    case SET_IS_LOGGED: {
+    case SET_IS_SENDING: {
       console.log('IS_LOGGED is ', action.isSending)
+      console.log('state is ', state)
       return {
         ...state, isSending: action.isSending
       }
@@ -40,7 +24,5 @@ export const profileReducer = (state = initialState, action) => {
 };
 
 
-export const setRegistrationEmail = (value) => ({type: SET_REGISTRATION_EMAIL, value });
-export const setRegistrationPassword = (value) => ({type: SET_REGISTRATION_PASSWORD, value });
-export const setIsSending = (isSending) => ({type: SET_IS_LOGGED, isSending });
+export const setIsSending = (isSending) => ({type: SET_IS_SENDING, isSending });
 
