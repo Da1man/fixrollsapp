@@ -10,7 +10,7 @@ import {connect} from 'react-redux';
 import {addToCart, setProducts, setTags} from '../redux/catalogReducer';
 import * as _ from 'lodash';
 
-import {ApiConnect, fetchProductsFromWP, fetchTagsFromWP} from '../common/WooCommerceApi';
+import {fetchProductsFromWP, fetchTagsFromWP} from '../common/WooCommerceApi';
 
 class CatalogScreen extends PureComponent {
 

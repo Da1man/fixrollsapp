@@ -28,5 +28,6 @@ export const SET_SENDING_ORDER = 'SET_SENDING_ORDER';
 // Profile screen
 
 export const SET_IS_SENDING = 'SET_IS_SENDING';
+export const SET_CURRENT_USER_ID = 'SET_CURRENT_USER';
 
 
