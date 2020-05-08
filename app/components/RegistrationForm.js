@@ -2,14 +2,20 @@ import React, {Fragment, Component} from 'react';
 import {Text, StyleSheet, TextInput, TouchableOpacity, View} from "react-native";
 import {THEME, w} from "../common/variables";
 import auth from "@react-native-firebase/auth";
+import database from '@react-native-firebase/database';
+
+import {connect} from "react-redux";
+import axios from "axios";
+import {setIsSending, setCurrentUser, setCurrentUserData} from "../redux/profileReducer";
+
 
 class RegistrationForm extends Component {
 
   state = {
     validating: false,
-    registrationName: '',
-    registrationEmail: '',
-    registrationPassword: '',
+    registrationName: 'Виктория',
+    registrationEmail: 'vika@mail.ru',
+    registrationPassword: '12345678',
     nameValidate: true,
     emailValidate: true,
     passwordValidate: true,
@@ -39,28 +45,56 @@ class RegistrationForm extends Component {
     this.validatePassword()
     this.validateName()
     if (this.validateEmail() && this.validatePassword() && this.validateName()) {
+      this.props.setIsSending(true)
 
       auth()
-        .signInWithEmailAndPassword(this.state.registrationEmail, this.state.registrationPassword)
+        .createUserWithEmailAndPassword(this.state.registrationEmail, this.state.registrationPassword)
         .then((response) => {
           console.log('User account created & signed in!', response);
+          this.props.setCurrentUser(response.user._user.uid)
+
+          database()
+            .ref('/users/' + response.user._user.uid)
+            .set({
+              name: this.state.registrationName,
+              email: this.state.registrationEmail,
+              address: '',
+              image: '',
+              id: response.user._user.uid,
+            })
+            .then(() => {
+              this.props.setIsSending(false)
+              this.props.setCurrentUser(response.user._user.uid)
+              console.log('New user data set.')
+              this.props.setCurrentUserData({
+                name: this.state.registrationName,
+                email: this.state.registrationEmail,
+                address: '',
+                image: '',
+                id: response.user._user.uid,
+              })
+            });
+          this.props.setIsSending(false)
         })
         .catch(error => {
           if (error.code === 'auth/email-already-in-use') {
             console.log('That email address is already in use!');
+            this.props.setIsSending(false)
           }
 
           if (error.code === 'auth/invalid-email') {
             console.log('That email address is invalid!');
+            this.props.setIsSending(false)
           }
 
           console.error(error);
+          this.props.setIsSending(false)
         });
 
-      this.props.route.params.setIsSending(true)
+
     } else {
 
-      this.props.route.params.setIsSending(false)
+      this.props.setIsSending(false)
     }
   }
 
@@ -127,8 +161,6 @@ class RegistrationForm extends Component {
   }
 }
 
-export default RegistrationForm;
-
 
 const styles = StyleSheet.create({
   container: {
@@ -176,3 +208,17 @@ const styles = StyleSheet.create({
     fontSize: THEME.FONT_SIZE.INFO,
   },
 });
+
+let mapStateToProps = state => {
+  return {
+    currentUser: state.profile.currentUser,
+  };
+};
+
+export default connect(mapStateToProps, {
+  setIsSending,
+  setCurrentUser,
+  setCurrentUserData,
+})(RegistrationForm);
+
+

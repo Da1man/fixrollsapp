@@ -12,6 +12,11 @@ import * as _ from 'lodash';
 
 import {fetchProductsFromWP, fetchTagsFromWP} from '../common/WooCommerceApi';
 
+import auth from "@react-native-firebase/auth";
+import database from '@react-native-firebase/database';
+import axios from 'axios';
+
+
 class CatalogScreen extends PureComponent {
 
   state = {
@@ -19,10 +24,11 @@ class CatalogScreen extends PureComponent {
   };
 
   componentDidMount() {
+    console.log('currentUser', this.props.currentUser)
     fetchProductsFromWP(this.props.selectedTag)
     fetchTagsFromWP();
+    // console.log('currentUserData', currentUserData)
   }
-
 
   onRefresh = () => {
     fetchProductsFromWP(this.props.selectedTag)
@@ -34,7 +40,7 @@ class CatalogScreen extends PureComponent {
     const {
       products, cartTotal, addToCart, cartProducts,
       isProductsFetching, tags, selectedTag, navigation,
-      isTagsFetching
+      isTagsFetching, currentUser,
     } = this.props;
 
     const productsList = products.map((item) => <ProductItem
@@ -59,12 +65,26 @@ class CatalogScreen extends PureComponent {
       this.setState({loader: false})
     }
 
+
+    let userName = null
+    if (currentUser) {
+      userName = this.props.currentUserData.name
+    }
+    console.log('this.props.currentUserData', this.props.currentUserData)
+    // userName = currentUser ? this.props.currentUserData.name : null
+
     return (
       <React.Fragment>
         {this.state.loader && <Loader/>}
         <View style={{flex: 1}}>
 
-          <Header backButton={false} navigation={navigation} title={'Каталог'} loading={this.state.loader}/>
+          <Header
+            backButton={false}
+            navigation={navigation}
+            title={'Каталог'}
+            loading={this.state.loader}
+            userName={userName}
+          />
           <ScrollView
             style={styles.container}
             refreshControl={
@@ -141,6 +161,8 @@ let mapStateToProps = state => {
     tags: state.catalog.tags,
     selectedTag: state.catalog.selectedTag,
     isTagsFetching: state.catalog.isTagsFetching,
+    currentUser: state.profile.currentUser,
+    currentUserData: state.profile.currentUserData
   };
 };
 

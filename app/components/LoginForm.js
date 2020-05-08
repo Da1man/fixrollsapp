@@ -2,8 +2,10 @@ import React, {Fragment, Component} from 'react';
 import {Text, StyleSheet, TextInput, TouchableOpacity, View} from "react-native";
 import {THEME, w, h} from "../common/variables";
 import auth from "@react-native-firebase/auth";
+import database from '@react-native-firebase/database';
 import {connect} from "react-redux";
-import {setCurrentUserId, setIsSending} from "../redux/profileReducer";
+import {setCurrentUser, setIsSending, setCurrentUserData} from "../redux/profileReducer";
+import axios from "axios";
 
 class LoginForm extends Component {
   componentDidMount() {
@@ -15,6 +17,24 @@ class LoginForm extends Component {
     loginPassword: '12345678',
     emailValidate: true,
     passwordValidate: true,
+  }
+
+  getUserData = (userId) => {
+
+    database()
+      .ref('/users/' + userId)
+      .once('value')
+      .then(snapshot => {
+        console.log('User data: ', snapshot.val());
+        this.props.setCurrentUserData({
+          name: snapshot.val().name,
+          email: snapshot.val().email,
+          address: snapshot.val().address,
+          image: snapshot.val().image,
+          id: snapshot.val().id,
+        })
+      });
+
   }
 
   validateEmail = () => {
@@ -41,16 +61,19 @@ class LoginForm extends Component {
         .signInWithEmailAndPassword(this.state.loginEmail, this.state.loginPassword)
         .then((response) => {
           console.log('User account signed in!', response);
-          this.props.setCurrentUserId(response.user._user.uid)
+          this.props.setCurrentUser(response.user._user.uid)
+          this.getUserData(response.user._user.uid)
           this.props.setIsSending(false)
         })
         .catch(error => {
           if (error.code === 'auth/email-already-in-use') {
             console.log('That email address is already in use!');
+            this.props.setIsSending(false)
           }
 
           if (error.code === 'auth/invalid-email') {
             console.log('That email address is invalid!');
+            this.props.setIsSending(false)
           }
 
           console.error(error);
@@ -161,11 +184,12 @@ const styles = StyleSheet.create({
 
 let mapStateToProps = state => {
   return {
-    currentUserId: state.profile.currentUser,
+    currentUser: state.profile.currentUser,
   };
 };
 
 export default connect(mapStateToProps, {
-  setCurrentUserId,
+  setCurrentUser,
   setIsSending,
+  setCurrentUserData
 })(LoginForm);

@@ -10,7 +10,7 @@ import {faArrowLeft} from '@fortawesome/pro-regular-svg-icons';
 export default class Header extends PureComponent {
 
   render() {
-    const {navigation, backButton, title, loading} = this.props;
+    const {navigation, backButton, title, loading, userName} = this.props;
     let elevation = 8;
     if (loading) {
       elevation = 0
@@ -19,24 +19,29 @@ export default class Header extends PureComponent {
       <View style={{...styles.container, elevation}}>
         {backButton
           ? <TouchableOpacity
-            style={styles.rightButtonSection}
+            style={styles.leftButtonSection}
             activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
             onPress={() => navigation.goBack()}
           >
             <FontAwesomeIcon icon={faArrowLeft} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.GRAY_DARK}/>
           </TouchableOpacity>
           : <TouchableOpacity
-            style={styles.rightButtonSection}
+            style={styles.leftButtonSection}
             activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
             onPress={() => navigation.navigate('Profile')}
           >
-            <FontAwesomeIcon icon={faUser} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.GRAY_DARK}/>
+            {
+              userName
+                ? <Text style={styles.userNameText}>{userName}</Text>
+                : <FontAwesomeIcon icon={faUser} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.GRAY_DARK}/>
+            }
+
           </TouchableOpacity>
         }
         <View style={styles.titleSection}>
           <Text style={styles.titleText}>{title}</Text>
         </View>
-        <TouchableOpacity style={styles.leftButtonSection} activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}>
+        <TouchableOpacity style={styles.rightButtonSection} activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}>
           <FontAwesomeIcon icon={faBars} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.GRAY_DARK}/>
         </TouchableOpacity>
       </View>
@@ -54,12 +59,23 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 0,
   },
-  leftButtonSection: {},
+  leftButtonSection: {
+    width: 150,
+  },
   titleSection: {},
   titleText: {
     fontFamily: THEME.FONT_FAMILY.BOLD,
     fontSize: THEME.FONT_SIZE.TITLE,
     color: THEME.COLOR.BLACK,
   },
-  rightButtonSection: {},
+  rightButtonSection: {
+    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
+    width: 150,
+  },
+  userNameText: {
+    fontFamily: THEME.FONT_FAMILY.BOLD,
+    fontSize: THEME.FONT_SIZE.MAIN,
+    color: THEME.COLOR.BLACK,
+  }
 });

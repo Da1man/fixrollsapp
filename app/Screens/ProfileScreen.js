@@ -1,10 +1,10 @@
 import React from 'react';
-import {StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity, Button} from 'react-native';
+import {StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity, Button, Image} from 'react-native';
 import Header from '../components/Header';
 import {THEME, w, h} from '../common/variables';
 import {connect} from 'react-redux';
 
-
+import Loader from '../components/Loader'
 import RegistrationForm from "../components/RegistrationForm";
 import LoginForm from "../components/LoginForm";
 import {LoginRegNavigator} from '../components/LoginRegNavigator'
@@ -15,36 +15,36 @@ import axios from 'axios';
 
 import {
   setIsSending,
-  setCurrentUserId,
+  setCurrentUser,
 } from '../redux/profileReducer'
 
 
 class ProfileScreen extends React.Component {
 
   componentDidMount() {
-    console.log(this.props.currentUserId)
+    console.log(this.props.currentUser)
     // console.log('this.props.currentUser', this.props.currentUser)
     // if (!this.props.currentUser) {
     //   auth().onAuthStateChanged(user => {
     //     console.log(user)
-    //     this.props.setCurrentUserId(user._user.uid)
+    //     this.props.setCurrentUser(user._user.uid)
     //   })
     // }
   }
 
-  getUserInfo = (currentUserId) => {
-    axios.get(`https://fixrolls-app.firebaseio.com/users/${currentUserId}.json`).then(
-      response => {
-        console.log(response.data)
-      }
-    )
-  }
+  // getUserInfo = (currentUser) => {
+  //   auth().onAuthStateChanged(user => {
+  //     console.log(user)
+  //     this.props.setCurrentUser(user._user.mail)
+  //     return user
+  //   })
+  // }
 
   userSingOut = () => {
     auth()
       .signOut()
       .then(() => {
-        this.props.setCurrentUserId(null)
+        this.props.setCurrentUser(null)
         console.log('User signed out!')
       });
   }
@@ -53,9 +53,34 @@ class ProfileScreen extends React.Component {
   render() {
     const {
       navigation,
-      currentUserId,
+      isSending,
+      currentUser,
       setIsSending,
     } = this.props;
+
+    const renderContent = () => {
+      if (isSending) {
+        return <Loader/>
+      }
+
+      if (currentUser) {
+        return (
+          <>
+            <Image style={styles.userImage}
+                   source={require('../assets/fixrolls-logo.png')}
+                   resizeMode={'cover'}
+            />
+            <Button title={'userSingOut'} onPress={() => this.userSingOut()}/>
+          </>
+        )
+      } else {
+        return (
+          <View style={styles.tabBarContainer}>
+            <LoginRegNavigator setIsSending={setIsSending}/>
+          </View>
+        )
+      }
+    }
 
 
     return (
@@ -63,17 +88,8 @@ class ProfileScreen extends React.Component {
         <Header backButton={true} navigation={navigation} title={'Профиль'}/>
         <View>
           <View style={styles.contentContainer}>
-
             {
-              currentUserId
-                ? <>
-                <Text>User logged in {currentUserId}</Text>
-                <Button title={'getUserInfo'} onPress={() => this.getUserInfo(currentUserId)} />
-                <Button title={'userSingOut'} onPress={() => this.userSingOut()} />
-                </>
-                : <View style={styles.tabBarContainer}>
-                  <LoginRegNavigator setIsSending={setIsSending}/>
-                </View>
+              renderContent()
             }
 
 
@@ -94,7 +110,7 @@ const styles = StyleSheet.create({
   contentContainer: {
     justifyContent: 'center',
     alignItems: 'center',
-    height: '90%',
+    height: h,
     width: '100%',
     // flex: 1,
     paddingVertical: 5,
@@ -105,16 +121,21 @@ const styles = StyleSheet.create({
     height: h / 2,
     width: '100%',
   },
+  userImage: {
+    // width: '100%',
+    height: w / 2,
+  },
 });
 
 let mapStateToProps = state => {
   return {
     isSending: state.profile.isSending,
-    currentUserId: state.profile.currentUserId,
+    currentUser: state.profile.currentUser,
+    currentUserData: state.profile.currentUserData,
   };
 };
 
 export default connect(mapStateToProps, {
   setIsSending,
-  setCurrentUserId,
+  setCurrentUser,
 })(ProfileScreen);

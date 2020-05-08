@@ -1,36 +1,40 @@
 import {
   SET_IS_SENDING,
-  SET_CURRENT_USER_ID,
+  SET_CURRENT_USER,
+  SET_CURRENT_USER_DATA,
 } from './actionTypes';
 
 
 let initialState = {
   isSending: false,
-  currentUserId: null,
-  currentUserData: {
-    name: '',
-    email: '',
-    address: '',
-    image: '',
-  },
+  currentUser: null,
+  currentUserData: null,
 };
 
 
 export const profileReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_IS_SENDING: {
-      console.log('IS_LOGGED is ', action.isSending)
+      console.log('isSending ', action.isSending)
       return {
         ...state, isSending: action.isSending
       }
     }
 
-    case SET_CURRENT_USER_ID: {
-      // console.log('SET_CURRENT_USER_ID', action.userId)
+    case SET_CURRENT_USER: {
+      console.log('SET_CURRENT_USER', action.user)
       return {
-        ...state, currentUserId: action.userId
+        ...state, currentUser: action.user
       }
     }
+
+    case SET_CURRENT_USER_DATA: {
+      console.log('SET_CURRENT_USER_DATA', action.userData)
+      return {
+        ...state, currentUserData: action.userData
+      }
+    }
+
 
     default:
       return state;
@@ -39,5 +43,6 @@ export const profileReducer = (state = initialState, action) => {
 
 
 export const setIsSending = (isSending) => ({type: SET_IS_SENDING, isSending });
-export const setCurrentUserId = (userId) => ({type: SET_CURRENT_USER_ID, userId });
+export const setCurrentUser = (user) => ({type: SET_CURRENT_USER, user});
+export const setCurrentUserData = (userData) => ({type: SET_CURRENT_USER_DATA, userData});
 
