@@ -59,9 +59,9 @@ class ProfileScreen extends React.Component {
     } = this.props;
 
     const renderContent = () => {
-      if (isSending) {
-        return <Loader/>
-      }
+      // if (isSending) {
+      //   return <Loader/>
+      // }
 
       if (currentUser) {
         return (
@@ -83,15 +83,19 @@ class ProfileScreen extends React.Component {
     }
 
 
+    if (isSending) {
+      return <Loader/>
+    }
+
     return (
       <View style={styles.container}>
         <Header backButton={true} navigation={navigation} title={'Профиль'}/>
         <View>
           <View style={styles.contentContainer}>
+
             {
               renderContent()
             }
-
 
           </View>
         </View>
@@ -107,9 +111,17 @@ const styles = StyleSheet.create({
     // width: '100%',
     // height: '100%',
   },
+  loaderContainer: {
+    // backgroundColor: 'red',
+    // position: 'absolute',
+    // top: 0,
+    // bottom: 0,
+    // left: 0,
+    // right: 0,
+  },
   contentContainer: {
-    justifyContent: 'center',
-    alignItems: 'center',
+    // justifyContent: 'center',
+    // alignItems: 'center',
     height: h,
     width: '100%',
     // flex: 1,
@@ -125,6 +137,7 @@ const styles = StyleSheet.create({
     // width: '100%',
     height: w / 2,
   },
+
 });
 
 let mapStateToProps = state => {

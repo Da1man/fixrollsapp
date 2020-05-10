@@ -30,7 +30,7 @@ const App = () => {
             screenOptions={{
               headerShown: false,
               cardStyle: {
-                backgroundColor: THEME.COLOR.GRAY_BACKGROUND,
+                backgroundColor: THEME.COLOR.WHITE_BACKGROUND,
               },
             }}
           >

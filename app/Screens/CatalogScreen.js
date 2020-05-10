@@ -1,5 +1,5 @@
 import React, {PureComponent} from 'react';
-import {StyleSheet, Text, View, ScrollView, TouchableOpacity, RefreshControl} from 'react-native';
+import {StyleSheet, Text, View, ScrollView, TouchableOpacity, RefreshControl, Button} from 'react-native';
 import Header from '../components/Header';
 import {THEME, w, h} from '../common/variables';
 import TagComponent from '../components/TagComponent';
@@ -8,6 +8,7 @@ import CartButton from '../components/CartButton';
 import Loader from '../components/Loader';
 import {connect} from 'react-redux';
 import {addToCart, setProducts, setTags} from '../redux/catalogReducer';
+import {setCurrentUserData, setCurrentUser} from '../redux/profileReducer';
 import * as _ from 'lodash';
 
 import {fetchProductsFromWP, fetchTagsFromWP} from '../common/WooCommerceApi';
@@ -24,10 +25,9 @@ class CatalogScreen extends PureComponent {
   };
 
   componentDidMount() {
-    console.log('currentUser', this.props.currentUser)
+    this.checkUserLogin();
     fetchProductsFromWP(this.props.selectedTag)
     fetchTagsFromWP();
-    // console.log('currentUserData', currentUserData)
   }
 
   onRefresh = () => {
@@ -35,12 +35,34 @@ class CatalogScreen extends PureComponent {
     fetchTagsFromWP();
   };
 
+  checkUserLogin = () => {
+    auth().onAuthStateChanged(user => {
+      if(user) {
+        this.props.setCurrentUser(user.uid)
+        database()
+          .ref('/users/' + user.uid)
+          .once('value')
+          .then(snapshot => {
+            console.log('User data: ', snapshot.val());
+            this.props.setCurrentUserData({
+              name: snapshot.val().name,
+              email: snapshot.val().email,
+              address: snapshot.val().address,
+              image: snapshot.val().image,
+              id: snapshot.val().id,
+            })
+          });
+      }
+      console.log('AAAAAAAAuser', user)
+    })
+  }
+
 
   render() {
     const {
       products, cartTotal, addToCart, cartProducts,
       isProductsFetching, tags, selectedTag, navigation,
-      isTagsFetching, currentUser,
+      isTagsFetching, currentUser, currentUserData
     } = this.props;
 
     const productsList = products.map((item) => <ProductItem
@@ -67,7 +89,7 @@ class CatalogScreen extends PureComponent {
 
 
     let userName = null
-    if (currentUser) {
+    if (currentUserData) {
       userName = this.props.currentUserData.name
     }
     console.log('this.props.currentUserData', this.props.currentUserData)
@@ -77,7 +99,6 @@ class CatalogScreen extends PureComponent {
       <React.Fragment>
         {this.state.loader && <Loader/>}
         <View style={{flex: 1}}>
-
           <Header
             backButton={false}
             navigation={navigation}
@@ -170,4 +191,6 @@ export default connect(mapStateToProps, {
   addToCart,
   setProducts,
   setTags,
+  setCurrentUser,
+  setCurrentUserData,
 })(CatalogScreen);
