@@ -41,7 +41,11 @@ export default class Header extends PureComponent {
         <View style={styles.titleSection}>
           <Text style={styles.titleText}>{title}</Text>
         </View>
-        <TouchableOpacity style={styles.rightButtonSection} activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}>
+        <TouchableOpacity
+          style={styles.rightButtonSection}
+          activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
+          onPress={() => navigation.toggleDrawer()}
+        >
           <FontAwesomeIcon icon={faBars} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.GRAY_DARK}/>
         </TouchableOpacity>
       </View>

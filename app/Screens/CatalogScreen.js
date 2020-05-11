@@ -93,7 +93,6 @@ class CatalogScreen extends PureComponent {
       userName = this.props.currentUserData.name
     }
     console.log('this.props.currentUserData', this.props.currentUserData)
-    // userName = currentUser ? this.props.currentUserData.name : null
 
     return (
       <React.Fragment>
