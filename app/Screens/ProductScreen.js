@@ -1,7 +1,7 @@
 import React, {PureComponent} from 'react';
 import {StyleSheet, Text, View, ScrollView, TouchableOpacity, Image, Animated} from 'react-native';
 import Header from '../components/Header';
-import {THEME, w} from '../common/variables';
+import {THEME, w, h} from '../common/variables';
 import axios from 'axios';
 import {connect} from 'react-redux';
 import CartButton from '../components/CartButton';
@@ -32,6 +32,8 @@ class ProductScreen extends PureComponent {
   render() {
     const {navigation, cartTotal, cartProducts, addToCart, toggleNeedOpen} = this.props;
     const {item} = this.props.route.params;
+
+    console.log('item', item)
 
     const onIncHendler = () => {
       this.setState({counter: this.state.counter + 1});
@@ -82,48 +84,48 @@ class ProductScreen extends PureComponent {
         this.setState({isHotOpened: true});
         this.setState({isVegetarianOpened: false});
         this.setState({isX2Opened: false});
-          Animated.parallel([
-            /////////////HOT OPEN
-            Animated.timing(this._iconHotOpacity, {
-              toValue: 0,
-              duration: 10,
-            }),
-            Animated.timing(this._iconHotWidth, {
-              toValue: 150,
-              duration: 300,
-            }),
-            Animated.timing(this._decrHotTextOpacity, {
-              toValue: 1,
-              duration: 300,
-            }),
-            /////////////VEG CLOSE
-            Animated.timing(this._iconVegetarianOpacity, {
-              toValue: 1,
-              duration: 300,
-            }),
-            Animated.timing(this._iconVegetarianWidth, {
-              toValue: 50,
-              duration: 300,
-            }),
-            Animated.timing(this._decrVegetarianTextOpacity, {
-              toValue: 0,
-              duration: 10,
-            }),
-            //////////X2 CLOSE
-            Animated.timing(this._iconX2Opacity, {
-              toValue: 1,
-              duration: 300,
-            }),
-            Animated.timing(this._iconX2Width, {
-              toValue: 50,
-              duration: 300,
-            }),
-            Animated.timing(this._decrX2TextOpacity, {
-              toValue: 0,
-              duration: 10,
-            }),
+        Animated.parallel([
+          /////////////HOT OPEN
+          Animated.timing(this._iconHotOpacity, {
+            toValue: 0,
+            duration: 10,
+          }),
+          Animated.timing(this._iconHotWidth, {
+            toValue: 150,
+            duration: 300,
+          }),
+          Animated.timing(this._decrHotTextOpacity, {
+            toValue: 1,
+            duration: 300,
+          }),
+          /////////////VEG CLOSE
+          Animated.timing(this._iconVegetarianOpacity, {
+            toValue: 1,
+            duration: 300,
+          }),
+          Animated.timing(this._iconVegetarianWidth, {
+            toValue: 50,
+            duration: 300,
+          }),
+          Animated.timing(this._decrVegetarianTextOpacity, {
+            toValue: 0,
+            duration: 10,
+          }),
+          //////////X2 CLOSE
+          Animated.timing(this._iconX2Opacity, {
+            toValue: 1,
+            duration: 300,
+          }),
+          Animated.timing(this._iconX2Width, {
+            toValue: 50,
+            duration: 300,
+          }),
+          Animated.timing(this._decrX2TextOpacity, {
+            toValue: 0,
+            duration: 10,
+          }),
 
-          ]).start();
+        ]).start();
       } else {
         this.setState({isHotOpened: false});
 
@@ -193,7 +195,6 @@ class ProductScreen extends PureComponent {
           }),
 
 
-
         ]).start();
       } else {
         this.setState({isVegetarianOpened: false});
@@ -249,19 +250,19 @@ class ProductScreen extends PureComponent {
             duration: 10,
           }),
 
-            /////////////VEG CLOSE
-            Animated.timing(this._iconVegetarianOpacity, {
-              toValue: 1,
-              duration: 300,
-            }),
-            Animated.timing(this._iconVegetarianWidth, {
-              toValue: 50,
-              duration: 300,
-            }),
-            Animated.timing(this._decrVegetarianTextOpacity, {
-              toValue: 0,
-              duration: 10,
-            }),
+          /////////////VEG CLOSE
+          Animated.timing(this._iconVegetarianOpacity, {
+            toValue: 1,
+            duration: 300,
+          }),
+          Animated.timing(this._iconVegetarianWidth, {
+            toValue: 50,
+            duration: 300,
+          }),
+          Animated.timing(this._decrVegetarianTextOpacity, {
+            toValue: 0,
+            duration: 10,
+          }),
 
         ]).start();
       } else {
@@ -288,8 +289,8 @@ class ProductScreen extends PureComponent {
     return (
       <View style={styles.container}>
         <Header backButton={true} navigation={navigation} title={item.name}/>
-        <ScrollView>
-          <View>
+        <ScrollView style={{marginBottom: cartTotal ? 70 : 0}}>
+          <View >
             <Image style={styles.productImage}
                    source={{uri: item.image}}
                    resizeMode={'cover'}
@@ -332,23 +333,23 @@ class ProductScreen extends PureComponent {
               }
 
               {item.isX2 &&
-                <Animated.View style={[styles.iconX2AnimatedWidht, animatedX2Width]}>
-                  <TouchableOpacity
-                    style={styles.iconX2Opacity}
-                    activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
-                    onPress={() => onX2Handler()}
-                  >
-                    <Animated.View style={[styles.iconX2, animatedX2Opacity]}>
-                      <View style={styles.iconX2}>
-                        <Text style={styles.iconX2Text}>x2</Text>
-                      </View>
-                    </Animated.View>
-                    <Animated.View style={[styles.iconDescription, decrX2TextOpacity]}>
-                      <Text style={styles.iconDescriptionText}>На фото</Text>
-                      <Text style={styles.iconDescriptionText}>половина сета</Text>
-                    </Animated.View>
-                  </TouchableOpacity>
-                </Animated.View>
+              <Animated.View style={[styles.iconX2AnimatedWidht, animatedX2Width]}>
+                <TouchableOpacity
+                  style={styles.iconX2Opacity}
+                  activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
+                  onPress={() => onX2Handler()}
+                >
+                  <Animated.View style={[styles.iconX2, animatedX2Opacity]}>
+                    <View style={styles.iconX2}>
+                      <Text style={styles.iconX2Text}>x2</Text>
+                    </View>
+                  </Animated.View>
+                  <Animated.View style={[styles.iconDescription, decrX2TextOpacity]}>
+                    <Text style={styles.iconDescriptionText}>На фото</Text>
+                    <Text style={styles.iconDescriptionText}>половина сета</Text>
+                  </Animated.View>
+                </TouchableOpacity>
+              </Animated.View>
               }
             </View>
           </View>
@@ -401,7 +402,10 @@ class ProductScreen extends PureComponent {
                 {`${item.discountPrice
                   ? item.discountPrice * this.state.counter
                   : item.price * this.state.counter} ₽`}</Text>
-              {item.discountPrice && <Text style={styles.discountPriceText}>{item.price * this.state.counter} ₽</Text>}
+              {item.discountPrice
+                ? <Text style={styles.discountPriceText}>{item.price * this.state.counter} ₽</Text>
+                : null
+              }
 
             </View>
             <TouchableOpacity
@@ -415,7 +419,8 @@ class ProductScreen extends PureComponent {
           </View>
         </ScrollView>
 
-        <CartButton cartTotal={cartTotal} cartProducts={cartProducts} initialPos={cartTotal ? 1 : 2} navigation={navigation}/>
+        <CartButton cartTotal={cartTotal} cartProducts={cartProducts} initialPos={cartTotal ? 1 : 2}
+                    navigation={navigation}/>
       </View>
     );
   }
@@ -425,6 +430,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: THEME.COLOR.WHITE_BACKGROUND,
     height: '100%',
+    // marginBottom: h * 0.5,
   },
   productImage: {
     width: '100%',

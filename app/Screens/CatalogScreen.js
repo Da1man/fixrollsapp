@@ -103,7 +103,7 @@ class CatalogScreen extends PureComponent {
             navigation={navigation}
             title={'Каталог'}
             loading={this.state.loader}
-            userName={userName}
+            // userName={userName}
           />
           <ScrollView
             style={styles.container}

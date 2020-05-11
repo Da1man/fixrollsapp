@@ -16,6 +16,7 @@ import axios from 'axios';
 import {
   setIsSending,
   setCurrentUser,
+  setCurrentUserData,
 } from '../redux/profileReducer'
 
 
@@ -45,6 +46,7 @@ class ProfileScreen extends React.Component {
       .signOut()
       .then(() => {
         this.props.setCurrentUser(null)
+        this.props.setCurrentUserData(null)
         console.log('User signed out!')
       });
   }
@@ -66,10 +68,6 @@ class ProfileScreen extends React.Component {
       if (currentUser) {
         return (
           <>
-            <Image style={styles.userImage}
-                   source={require('../assets/fixrolls-logo.png')}
-                   resizeMode={'cover'}
-            />
             <Button title={'userSingOut'} onPress={() => this.userSingOut()}/>
           </>
         )
@@ -120,8 +118,8 @@ const styles = StyleSheet.create({
     // right: 0,
   },
   contentContainer: {
-    // justifyContent: 'center',
-    // alignItems: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
     height: h,
     width: '100%',
     // flex: 1,
@@ -130,7 +128,7 @@ const styles = StyleSheet.create({
   },
   tabBarContainer: {
     backgroundColor: 'green',
-    height: h / 2,
+    height: h / 1.7,
     width: '100%',
   },
   userImage: {
@@ -151,4 +149,5 @@ let mapStateToProps = state => {
 export default connect(mapStateToProps, {
   setIsSending,
   setCurrentUser,
+  setCurrentUserData,
 })(ProfileScreen);

@@ -112,7 +112,7 @@ const styles = StyleSheet.create({
     height: 25,
   },
   x2icon: {
-    fontSize: THEME.FONT_SIZE.TITLE,
+    fontSize: THEME.FONT_SIZE.MAIN,
     color: THEME.COLOR.BLACK,
   },
   titleSection: {},

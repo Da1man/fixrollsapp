@@ -70,7 +70,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 10,
+    paddingVertical: 5,
   },
   decSection: {
     justifyContent: 'center',
@@ -83,18 +83,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
   },
   nameSection: {},
   nameText: {
     fontFamily: THEME.FONT_FAMILY.REGULAR,
-    fontSize: THEME.FONT_SIZE.TITLE,
+    fontSize: THEME.FONT_SIZE.MAIN,
     color: THEME.COLOR.WHITE,
   },
   countSection: {},
   countText: {
     fontFamily: THEME.FONT_FAMILY.REGULAR,
-    fontSize: THEME.FONT_SIZE.TITLE,
+    fontSize: THEME.FONT_SIZE.MAIN,
     color: THEME.COLOR.WHITE,
   },
   incSection: {

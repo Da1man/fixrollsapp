@@ -25,18 +25,7 @@ export default class Header extends PureComponent {
           >
             <FontAwesomeIcon icon={faArrowLeft} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.GRAY_DARK}/>
           </TouchableOpacity>
-          : <TouchableOpacity
-            style={styles.leftButtonSection}
-            activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
-            onPress={() => navigation.navigate('Profile')}
-          >
-            {
-              userName
-                ? <Text style={styles.userNameText}>{userName}</Text>
-                : <FontAwesomeIcon icon={faUser} size={THEME.FONT_SIZE.TITLE} color={THEME.COLOR.GRAY_DARK}/>
-            }
-
-          </TouchableOpacity>
+          : null
         }
         <View style={styles.titleSection}>
           <Text style={styles.titleText}>{title}</Text>
@@ -64,7 +53,7 @@ const styles = StyleSheet.create({
     marginBottom: 0,
   },
   leftButtonSection: {
-    width: 150,
+    width: 50,
   },
   titleSection: {},
   titleText: {
@@ -75,7 +64,7 @@ const styles = StyleSheet.create({
   rightButtonSection: {
     justifyContent: 'flex-end',
     alignItems: 'flex-end',
-    width: 150,
+    width: 50,
   },
   userNameText: {
     fontFamily: THEME.FONT_FAMILY.BOLD,

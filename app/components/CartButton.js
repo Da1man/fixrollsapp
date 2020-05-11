@@ -81,7 +81,7 @@ class CartButton extends Component {
     const stateView = [
       {y: Screen.height * 0.3, id: 'full'},
       {y: Screen.height, id: 'opened'},
-      {y: Screen.height * 1.1, id: 'closed'},
+      {y: Screen.height * 1.2, id: 'closed'},
     ];
 
     const showCheckoutButton = () => {
@@ -206,7 +206,7 @@ class CartButton extends Component {
 const styles = StyleSheet.create({
   container: {
     paddingTop: 5,
-    paddingBottom: 400,
+    paddingBottom: h * 0.7,
     width: '100%',
     height: 1000,
     backgroundColor: THEME.COLOR.ACCENT,
@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     // alignItems: 'flex-end',
     justifyContent: 'space-between',
-    marginBottom: 30,
+    marginBottom: 10,
   },
   districtSection: {
     alignItems: 'flex-start',

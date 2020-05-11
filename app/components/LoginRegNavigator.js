@@ -17,7 +17,7 @@ const tabBarOptions = {
   },
   labelStyle: {
     fontFamily: THEME.FONT_FAMILY.BOLD,
-    fontSize: THEME.FONT_SIZE.MAIN,
+    fontSize: THEME.FONT_SIZE.INFO,
     padding: 0,
   },
   showIcon: false,
@@ -31,8 +31,8 @@ export const LoginRegNavigator = (props) => {
       tabBarOptions={tabBarOptions}
       lazy={true}
     >
-      <Tab.Screen name="Войти" component={LoginForm} initialParams={props}/>
-      <Tab.Screen name="Зарегистироваться" component={RegistrationForm} initialParams={props}/>
+      <Tab.Screen name="Вход" component={LoginForm} initialParams={props}/>
+      <Tab.Screen name="Регистрация" component={RegistrationForm} initialParams={props}/>
     </Tab.Navigator>
   )
 }

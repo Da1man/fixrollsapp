@@ -19,6 +19,8 @@ import CheckoutScreen from './Screens/CheckoutScreen';
 import PolicyScreen from './Screens/PolicyScreen';
 import ProfileScreen from './Screens/ProfileScreen';
 
+import DrawerScreen from "./Screens/DrawerScreen";
+
 import {CardStyleInterpolators} from '@react-navigation/stack';
 
 const Stack = createStackNavigator();
@@ -71,16 +73,11 @@ const CatalogStack = () => {
 
 const Drawer = createDrawerNavigator();
 
-const drawerStyle = {
-  backgroundColor: THEME.COLOR.WHITE_BACKGROUND,
-  width: w * 0.85,
-}
 
-const drawerContent = () => {
+
+const drawerContent = ({state, navigation}) => {
   return(
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Notifications Screen</Text>
-    </View>
+    <DrawerScreen state={state} navigation={navigation}/>
   )
 }
 
@@ -112,5 +109,10 @@ const styles = StyleSheet.create({
     backgroundColor: THEME.COLOR.WHITE_BACKGROUND,
   },
 });
+
+const drawerStyle = {
+  backgroundColor: THEME.COLOR.WHITE_BACKGROUND,
+  width: w * 0.85,
+}
 
 export default App;
