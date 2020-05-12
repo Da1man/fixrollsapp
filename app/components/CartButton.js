@@ -239,6 +239,8 @@ const styles = StyleSheet.create({
   orderSection: {
     paddingHorizontal: 20,
     marginBottom: 30,
+    height: h * 0.7,
+    paddingBottom: h * 0.25,
   },
   totalSection: {
     paddingHorizontal: 30,

@@ -5,7 +5,7 @@ import {THEME, w, h} from '../common/variables';
 import {connect} from 'react-redux';
 
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faUser, faLeaf, faPlusCircle, faFire} from '@fortawesome/pro-light-svg-icons';
+import {faUser, faGripVertical} from '@fortawesome/pro-light-svg-icons';
 
 import Loader from '../components/Loader'
 
@@ -38,15 +38,28 @@ class DrawerScreen extends React.Component {
     const renderMenuList = () => {
 
       return (<>
-          <TouchableOpacity style={styles.listItemSection} onPress={() => this.props.navigation.navigate('Мой профиль')}>
+          <TouchableOpacity
+            style={styles.listItemSection}
+            activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
+            onPress={() => this.props.navigation.navigate('Мой профиль')}
+          >
             <FontAwesomeIcon style={styles.listIcon} icon={faUser} size={THEME.FONT_SIZE.TITLE}
-                             color={THEME.COLOR.GRAY_DARK}/>
+                             color={THEME.COLOR.ACCENT}/>
             {
               this.props.currentUserData
                 ? <Text style={styles.listText}>{this.props.currentUserData.name}</Text>
                 : <Text style={styles.listText}>Войти</Text>
             }
 
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.listItemSection}
+            activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
+            onPress={() => this.props.navigation.navigate('Каталог')}
+          >
+            <FontAwesomeIcon style={styles.listIcon} icon={faGripVertical} size={THEME.FONT_SIZE.TITLE}
+                             color={THEME.COLOR.ACCENT}/>
+            <Text style={styles.listText}>Каталог</Text>
           </TouchableOpacity>
         </>
       )
@@ -90,6 +103,7 @@ const styles = StyleSheet.create({
   listItemSection: {
     flexDirection: 'row',
     alignItems: 'center',
+    marginBottom: 20,
   },
   listIcon: {
     marginRight: 20,
@@ -97,7 +111,7 @@ const styles = StyleSheet.create({
   listText: {
     fontFamily: THEME.FONT_FAMILY.REGULAR,
     fontSize: THEME.FONT_SIZE.TITLE,
-    color: THEME.COLOR.GRAY,
+    color: THEME.COLOR.BLACK,
   }
 });
 

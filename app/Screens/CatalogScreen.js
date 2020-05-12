@@ -50,6 +50,7 @@ class CatalogScreen extends PureComponent {
               address: snapshot.val().address,
               image: snapshot.val().image,
               id: snapshot.val().id,
+              tel: snapshot.val().tel,
             })
           });
       }

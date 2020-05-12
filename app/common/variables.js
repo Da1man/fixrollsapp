@@ -19,9 +19,9 @@ export const THEME = {
     INFO: 16,
   },
   COLOR: {
-    // ACCENT: '#3D989D',
+    ACCENT: '#3D989D',
     // ACCENT: '#FB5520',
-    ACCENT: '#E4003D',
+    // ACCENT: '#E4003D',
     GRAY_BACKGROUND: '#F6F7F7',
     WHITE_BACKGROUND: '#FCFCFD',
     GRAY: '#C1C2C2',

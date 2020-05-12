@@ -20,6 +20,7 @@ class LoginForm extends Component {
   }
 
   getUserData = (userId) => {
+    this.props.setIsSending(true)
 
     database()
       .ref('/users/' + userId)
@@ -32,7 +33,9 @@ class LoginForm extends Component {
           address: snapshot.val().address,
           image: snapshot.val().image,
           id: snapshot.val().id,
+          tel: snapshot.val().tel
         })
+        this.props.setIsSending(false)
       });
 
   }

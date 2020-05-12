@@ -61,6 +61,7 @@ class RegistrationForm extends Component {
               address: '',
               image: '',
               id: response.user._user.uid,
+              tel: '',
             })
             .then(() => {
               this.props.setIsSending(false)
@@ -72,6 +73,7 @@ class RegistrationForm extends Component {
                 address: '',
                 image: '',
                 id: response.user._user.uid,
+                tel: '',
               })
             });
           this.props.setIsSending(false)
