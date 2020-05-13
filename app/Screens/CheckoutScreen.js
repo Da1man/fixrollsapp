@@ -1,5 +1,8 @@
 import React, {PureComponent} from 'react';
-import {StyleSheet, Text, View, ScrollView, TouchableOpacity, TextInput, Picker, Keyboard} from 'react-native';
+import {StyleSheet, Text, View, ScrollView,
+  TouchableOpacity, TextInput, Picker, Keyboard,
+  KeyboardAvoidingView,
+  Platform} from 'react-native';
 import RadioForm from 'react-native-simple-radio-button';
 
 import Header from '../components/Header';
@@ -145,6 +148,11 @@ class CheckoutScreen extends PureComponent {
     }
 
     return (
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : null}
+        style={{flex: 1}}
+        keyboardVerticalOffset={-500}
+      >
       <View style={{flex: 1}}>
         {this.state.isSending && <OrderLoader />}
         <Header backButton={true} navigation={navigation} title={'Оформление заказа'} loading={this.state.isSending}/>
@@ -166,7 +174,8 @@ class CheckoutScreen extends PureComponent {
               value={userName}
               onChangeText={(value) => setUserName(value)}
             />
-            {this.state.isCorrectName
+            {
+              this.state.isCorrectName
               ? null
               : <Text style={styles.validateText}>Обязательное поле</Text>
             }
@@ -313,6 +322,7 @@ class CheckoutScreen extends PureComponent {
 
         </ScrollView>
       </View>
+      </KeyboardAvoidingView>
     );
   }
 }

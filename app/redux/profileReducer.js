@@ -9,13 +9,6 @@ let initialState = {
   isSending: false,
   currentUser: null,
   currentUserData: null,
-  editUserData: {
-    name: '',
-    email: '',
-    address: '',
-    tel: '',
-    image: '',
-  }
 };
 
 
@@ -41,7 +34,6 @@ export const profileReducer = (state = initialState, action) => {
         ...state, currentUserData: action.userData
       }
     }
-
 
     default:
       return state;

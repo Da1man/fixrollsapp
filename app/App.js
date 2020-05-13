@@ -96,6 +96,7 @@ const App = () => {
           >
             <Drawer.Screen name="Каталог" component={CatalogStack} />
             <Drawer.Screen name="Мой профиль" component={ProfileScreen} />
+            <Drawer.Screen name="Политика" component={PolicyScreen} />
           </Drawer.Navigator>
         </NavigationContainer>
       </Provider>

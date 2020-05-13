@@ -1,5 +1,17 @@
 import React from 'react';
-import {StyleSheet, Text, View, ScrollView, TextInput, TouchableOpacity, Button, Image} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  TextInput,
+  TouchableOpacity,
+  Button,
+  Image,
+  KeyboardAvoidingView,
+  Platform
+} from 'react-native';
+import {KeyboardAwareView} from 'react-native-keyboard-aware-view'
 import Header from '../components/Header';
 import {THEME, w, h} from '../common/variables';
 import {connect} from 'react-redux';
@@ -10,10 +22,14 @@ import LoginForm from "../components/LoginForm";
 import {LoginRegNavigator} from '../components/LoginRegNavigator'
 
 import auth from "@react-native-firebase/auth";
+import database from '@react-native-firebase/database';
+import storage from '@react-native-firebase/storage';
 import axios from 'axios';
 
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faPencil} from '@fortawesome/pro-light-svg-icons';
+
+import ImagePicker from 'react-native-image-picker';
 
 
 import {
@@ -21,6 +37,7 @@ import {
   setCurrentUser,
   setCurrentUserData,
 } from '../redux/profileReducer'
+import {sendOrderWP} from "../common/WooCommerceApi";
 
 const EditButton = (props) => {
   return (
@@ -31,40 +48,30 @@ const EditButton = (props) => {
   )
 }
 
-const EditImage = (props) => {
-  return (
-    <TouchableOpacity style={styles.editImageButton}>
-      <FontAwesomeIcon style={styles.editImageIcon} icon={faPencil} size={THEME.FONT_SIZE.MAIN}
-                       color={THEME.COLOR.WHITE}/>
-    </TouchableOpacity>
-  )
-}
+
 
 
 class ProfileScreen extends React.Component {
 
   state = {
     isEditing: false,
-    editData: {
-      name: '',
-      email: '',
-      address: '',
-      tel: '',
-      image: '',
-    },
+    editName: '',
+    editEmail: '',
+    editAddress: '',
+    editTel: '',
+    editImage: '',
+    imageLoading: false,
+    isCorrectName: true,
+    isCorrectTel: true,
+    isCorrectEmail: true,
+    isCorrectAdress: true,
   }
 
   componentDidMount() {
-
-    this.setState({
-      editData: {
-        name: this.props.currentUserData.name,
-        email: this.props.currentUserData.email,
-        address: this.props.currentUserData.address,
-        tel: this.props.currentUserData.tel,
-        image: this.props.currentUserData.image,
-      }
-    })
+    this.setState({editName: this.props.currentUserData.name})
+    this.setState({editEmail: this.props.currentUserData.email})
+    this.setState({editAddress: this.props.currentUserData.address})
+    this.setState({editTel: this.props.currentUserData.tel})
   }
 
   userSingOut = () => {
@@ -90,6 +97,9 @@ class ProfileScreen extends React.Component {
   }
 
 
+
+
+
   render() {
     const {
       navigation,
@@ -98,26 +108,133 @@ class ProfileScreen extends React.Component {
       setIsSending,
     } = this.props;
 
-    const NameInput = () => {
+    const validateName = () => {
+      const validate = this.state.editName ? true : false;
+      console.log('validateName', validate)
+      this.setState({isCorrectName: validate})
+      return validate
+    }
+
+    const validateTel = () => {
+      const validate = this.state.editTel.length > 9 ? true : false
+      this.setState({isCorrectTel: validate})
+      return validate
+    }
+
+    const validateEmail = () => {
+      let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+      const validate = this.state.editEmail ? reg.test(this.state.editEmail) : false
+      this.setState({isCorrectEmail: validate})
+      return validate
+    }
+
+    const validateAdress = () => {
+      const validate = this.state.editAddress ? true : false
+      this.setState({isCorrectAdress: validate})
+      return validate
+    }
+
+    const onSaveProfile = () => {
+      validateName();
+      validateTel();
+      validateEmail();
+      validateAdress();
+
+      if (validateName() && validateTel() && validateEmail() && validateAdress()) {
+        console.log('onSaveProfile start')
+        console.log('this.props.currentUser', this.props.currentUser)
+        this.props.setIsSending(true)
+        database()
+          .ref('/users/' + this.props.currentUser)
+          .set({
+            name: this.state.editName,
+            email: this.state.editEmail,
+            address: this.state.editAddress,
+            image: this.state.editImage,
+            id: this.props.currentUserData.id,
+            tel: this.state.editTel,
+          })
+          .then(() => {
+            console.log('New user data set.')
+            this.props.setCurrentUserData({
+              name: this.state.editName,
+              email: this.state.editEmail,
+              address: this.state.editAddress,
+              image: this.state.editImage,
+              id: this.props.currentUserData.id,
+              tel: this.state.editTel,
+            })
+            this.props.setIsSending(false)
+            this.setState({isEditing: false})
+          });
+      } else {
+        console.log('Не верно заполнены поля')
+      }
+    }
+
+    const EditImage = () => {
+      const onImageEditHandler = () => {
+        const options = {
+          title: 'Загрузить фото',
+          storageOptions: {
+            skipBackup: true,
+            path: 'images',
+          },
+        };
+        ImagePicker.showImagePicker(options, (response) => {
+          this.props.setIsSending(true)
+          console.log('Response = ', response);
+
+          if (response.didCancel) {
+            console.log('User cancelled image picker');
+          } else if (response.error) {
+            console.log('ImagePicker Error: ', response.error);
+          } else if (response.customButton) {
+            console.log('User tapped custom button: ', response.customButton);
+          } else {
+
+
+
+            // You can also display the image using data:
+            // const source = { uri: 'data:image/jpeg;base64,' + response.data };
+
+            storage()
+              .ref(`/images/${this.props.currentUser}_avatar.jpeg`)
+              .putFile(response.path)
+              .on(
+                storage.TaskEvent.STATE_CHANGED,
+                snapshot => {
+                  console.log(snapshot)
+
+                  console.log('imageLoading: false')
+                  storage()
+                    .ref(`/images/${this.props.currentUser}_avatar.jpeg`)
+                    .getDownloadURL().then(data => {
+                    this.setState({editImage: data})
+                    this.props.setIsSending(false)
+                  }).catch(error => {
+                    this.props.setIsSending(false)
+                  })
+                }
+              )
+
+
+          }
+        });
+      }
 
       return (
-        <TextInput
-          style={styles.nameInput}
-          value={this.state.editData.name}
-          multiline={false}
-          maxLength={50}
-          // onChangeText={(value) => {
-          //   this.setState({
-          //       editData: {
-          //         name: value
-          //       }
-          //     }
-          //   )
-          // }
-          // }
-        />
+        <TouchableOpacity
+          style={styles.editImageButton}
+          onPress={() => onImageEditHandler()}
+        >
+          <FontAwesomeIcon style={styles.editImageIcon} icon={faPencil} size={THEME.FONT_SIZE.MAIN}
+                           color={THEME.COLOR.WHITE}/>
+        </TouchableOpacity>
       )
     }
+
+
 
     const renderContent = () => {
 
@@ -126,13 +243,13 @@ class ProfileScreen extends React.Component {
           <View>
             <View style={styles.imageSection}>
               {
-                this.props.currentUserData && this.props.currentUserData.image
+                this.props.currentUserData && this.props.currentUserData.image && !this.state.editImage
                   ? <Image style={styles.userImage}
                            source={{uri: this.props.currentUserData.image}}
                            resizeMode={'cover'}
                   />
                   : <Image style={styles.userImage}
-                           source={require('../assets/fixrolls-logo.png')}
+                           source={{uri: this.state.editImage}}
                            resizeMode={'cover'}
                   />
               }
@@ -146,62 +263,123 @@ class ProfileScreen extends React.Component {
 
                     {
                       this.state.isEditing
-                        ? <NameInput/>
+                        ? <TextInput
+                          style={styles.nameInput}
+                          value={this.state.editName}
+                          multiline={false}
+                          maxLength={50}
+                          placeholder={'Не указано'}
+                          placeholderTextColor={THEME.COLOR.GRAY}
+                          onChangeText={(value) => this.setState({editName: value})}
+                        />
                         : <Text style={styles.dataSectionText}>{this.props.currentUserData.name}</Text>
                     }
+
                   </View>
+                  {
+                    !this.state.isCorrectName && this.state.isEditing
+                      ? <Text style={styles.validateText}>Обязательное поле</Text>
+                      : null
+                  }
 
                   <View style={styles.dataSection}>
                     <Text style={styles.dataSectionTitle}>Email: </Text>
                     <Text style={styles.dataSectionText}>{this.props.currentUserData.email}</Text>
-                    {this.state.isEditing && <EditButton/>}
                   </View>
 
                   <View style={styles.dataSection}>
                     <Text style={styles.dataSectionTitle}>Телефон: </Text>
-                    <Text style={styles.dataSectionText}>
-                      {
-                        this.props.currentUserData.tel
-                          ? this.props.currentUserData.tel
-                          : 'Не указано'
-                      }
-                    </Text>
-                    {this.state.isEditing && <EditButton/>}
+
+                    {
+                      this.state.isEditing
+                        ? <TextInput
+                          style={styles.nameInput}
+                          value={this.state.editTel}
+                          multiline={false}
+                          maxLength={50}
+                          placeholder={'Не указано'}
+                          placeholderTextColor={THEME.COLOR.GRAY}
+                          onChangeText={(value) => this.setState({editTel: value})}
+                        />
+                        : <Text style={styles.dataSectionText}>
+                          {
+                            this.props.currentUserData.tel
+                              ? this.props.currentUserData.tel
+                              : 'Не указано'
+                          }
+                        </Text>
+                    }
                   </View>
+
+                  {
+                    !this.state.isCorrectTel && this.state.isEditing
+                      ? <Text style={styles.validateText}>Некорректный телефон</Text>
+                      : null
+                  }
 
                   <View style={styles.dataSection}>
                     <Text style={styles.dataSectionTitle}>Адрес: </Text>
-                    <Text style={styles.dataSectionText}>
-                      {
-                        this.props.currentUserData.address
-                          ? this.props.currentUserData.address
-                          : 'Не указано'
-                      }
-                    </Text>
-                    {this.state.isEditing && <EditButton/>}
+
+                    {
+                      this.state.isEditing
+                        ? <TextInput
+                          style={styles.nameInput}
+                          value={this.state.editAddress}
+                          multiline={false}
+                          maxLength={50}
+                          placeholder={'Не указано'}
+                          placeholderTextColor={THEME.COLOR.GRAY}
+                          onChangeText={(value) => this.setState({editAddress: value})}
+                        />
+                        : <Text style={styles.dataSectionText}>
+                          {
+                            this.props.currentUserData.address
+                              ? this.props.currentUserData.address
+                              : 'Не указано'
+                          }
+                        </Text>
+                    }
                   </View>
 
                   <View style={styles.buttonSection}>
+                    {
+                      this.state.isEditing
+                        ? <TouchableOpacity
+                          activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
+                          style={styles.buttonEdit}
+                          onPress={() => onSaveProfile()}
+                        >
+                          <Text style={styles.buttonSectionText}>Сохранить</Text>
+                        </TouchableOpacity>
 
-                    <TouchableOpacity
-                      activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
-                      style={styles.buttonEdit}
-                      onPress={() => this.onEditHandler()}
-                    >
-                      {
-                        this.state.isEditing
-                          ? <Text style={styles.buttonSectionText}>Сохранить</Text>
-                          : <Text style={styles.buttonSectionText}>Редактировать</Text>
-                      }
-                    </TouchableOpacity>
+                        : <TouchableOpacity
+                          activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
+                          style={styles.buttonEdit}
+                          onPress={() => this.onEditHandler()}
+                        >
+                          <Text style={styles.buttonSectionText}>Редактировать</Text>
+                        </TouchableOpacity>
+                    }
 
-                    <TouchableOpacity
-                      activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
-                      style={styles.buttonLogout}
-                      onPress={() => this.userSingOut()}
-                    >
-                      <Text style={styles.buttonSectionText}>Выйти</Text>
-                    </TouchableOpacity>
+                    {
+                      this.state.isEditing
+                        ? <TouchableOpacity
+                          activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
+                          style={styles.buttonLogout}
+                          onPress={() => this.onEditHandler()}
+                        >
+                          <Text style={styles.buttonSectionText}>Отмена</Text>
+                        </TouchableOpacity>
+                        : <TouchableOpacity
+                          activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
+                          style={styles.buttonLogout}
+                          onPress={() => this.userSingOut()}
+                        >
+                          <Text style={styles.buttonSectionText}>Выйти</Text>
+                        </TouchableOpacity>
+                    }
+
+
 
                   </View>
                 </>
@@ -226,17 +404,22 @@ class ProfileScreen extends React.Component {
     }
 
     return (
-      <View style={styles.container}>
-        <Header backButton={true} navigation={navigation} title={'Профиль'}/>
-        <View>
-          <ScrollView style={styles.contentContainer}>
-            {
-              renderContent()
-            }
-          </ScrollView>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : null}
+        style={{flex: 1}}
+        keyboardVerticalOffset={-500}
+      >
+        <View style={styles.container}>
+          <Header backButton={true} navigation={navigation} title={'Профиль'}/>
+          <View>
+            <ScrollView style={styles.contentContainer}>
+                {
+                  renderContent()
+                }
+            </ScrollView>
+          </View>
         </View>
-
-      </View>
+      </KeyboardAvoidingView>
     );
   }
 }
@@ -244,6 +427,7 @@ class ProfileScreen extends React.Component {
 const styles = StyleSheet.create({
   container: {
     backgroundColor: THEME.COLOR.WHITE_BACKGROUND,
+    flex: 1,
   },
   contentContainer: {
     // justifyContent: 'center',
@@ -270,8 +454,8 @@ const styles = StyleSheet.create({
   },
   dataSection: {
     paddingHorizontal: 20,
-    paddingVertical: 5,
-    marginBottom: 10,
+    paddingVertical: 10,
+    marginBottom: 0,
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -300,6 +484,7 @@ const styles = StyleSheet.create({
     height: 50,
     backgroundColor: THEME.COLOR.GRAY_DISABLED,
     borderRadius: 50,
+    elevation: 8,
   },
   buttonSectionText: {
     fontFamily: THEME.FONT_FAMILY.REGULAR,
@@ -313,6 +498,7 @@ const styles = StyleSheet.create({
     height: 50,
     backgroundColor: THEME.COLOR.ACCENT,
     borderRadius: 50,
+    elevation: 8,
   },
   editIcon: {
     marginLeft: 20,
@@ -328,6 +514,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     justifyContent: 'center',
     alignItems: 'center',
+    elevation: 8,
   },
   nameInput: {
     // borderWidth: 1,
@@ -342,6 +529,12 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     padding: 0,
     margin: 0,
+  },
+  validateText: {
+    color: THEME.COLOR.RED_ICON,
+    paddingHorizontal: 20,
+    fontFamily: THEME.FONT_FAMILY.REGULAR,
+    fontSize: THEME.FONT_SIZE.INFO,
   },
 
 });

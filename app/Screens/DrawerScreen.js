@@ -5,7 +5,7 @@ import {THEME, w, h} from '../common/variables';
 import {connect} from 'react-redux';
 
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faUser, faGripVertical} from '@fortawesome/pro-light-svg-icons';
+import {faUser, faGripVertical, faBallot} from '@fortawesome/pro-light-svg-icons';
 
 import Loader from '../components/Loader'
 
@@ -38,6 +38,7 @@ class DrawerScreen extends React.Component {
     const renderMenuList = () => {
 
       return (<>
+
           <TouchableOpacity
             style={styles.listItemSection}
             activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
@@ -52,6 +53,7 @@ class DrawerScreen extends React.Component {
             }
 
           </TouchableOpacity>
+
           <TouchableOpacity
             style={styles.listItemSection}
             activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
@@ -61,6 +63,18 @@ class DrawerScreen extends React.Component {
                              color={THEME.COLOR.ACCENT}/>
             <Text style={styles.listText}>Каталог</Text>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.listItemSection}
+            activeOpacity={THEME.SETTINGS.ACTIVE_OPACITY}
+            onPress={() => this.props.navigation.navigate('Политика')}
+          >
+            <FontAwesomeIcon style={styles.listIcon} icon={faBallot} size={THEME.FONT_SIZE.TITLE}
+                             color={THEME.COLOR.ACCENT}/>
+            <Text style={styles.listText}>Политика ПД</Text>
+          </TouchableOpacity>
+
+
         </>
       )
     }
