@@ -229,7 +229,7 @@ const styles = StyleSheet.create({
   orderTitle: {
     width: '100%',
     alignItems: 'center',
-    marginBottom: 30,
+    marginBottom: 15,
   },
   orderTitleText: {
     fontFamily: THEME.FONT_FAMILY.BOLD,
@@ -239,8 +239,8 @@ const styles = StyleSheet.create({
   orderSection: {
     paddingHorizontal: 20,
     marginBottom: 30,
-    height: h * 0.7,
-    paddingBottom: h * 0.25,
+    // height: h * 0.6,
+    paddingBottom: h * 0.1,
   },
   totalSection: {
     paddingHorizontal: 30,

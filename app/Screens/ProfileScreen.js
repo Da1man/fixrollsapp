@@ -72,6 +72,7 @@ class ProfileScreen extends React.Component {
     this.setState({editEmail: this.props.currentUserData.email})
     this.setState({editAddress: this.props.currentUserData.address})
     this.setState({editTel: this.props.currentUserData.tel})
+    this.setState({editImage: this.props.currentUserData.image})
   }
 
   userSingOut = () => {
@@ -150,7 +151,7 @@ class ProfileScreen extends React.Component {
             name: this.state.editName,
             email: this.state.editEmail,
             address: this.state.editAddress,
-            image: this.state.editImage,
+            image: this.props.currentUserData.image,
             id: this.props.currentUserData.id,
             tel: this.state.editTel,
           })
@@ -160,7 +161,7 @@ class ProfileScreen extends React.Component {
               name: this.state.editName,
               email: this.state.editEmail,
               address: this.state.editAddress,
-              image: this.state.editImage,
+              image: this.props.currentUserData.image,
               id: this.props.currentUserData.id,
               tel: this.state.editTel,
             })
@@ -211,6 +212,14 @@ class ProfileScreen extends React.Component {
                     .ref(`/images/${this.props.currentUser}_avatar.jpeg`)
                     .getDownloadURL().then(data => {
                     this.setState({editImage: data})
+                    this.props.setCurrentUserData({
+                      name: this.state.editName,
+                      email: this.state.editEmail,
+                      address: this.state.editAddress,
+                      image: this.state.editImage,
+                      id: this.props.currentUserData.id,
+                      tel: this.state.editTel,
+                    })
                     this.props.setIsSending(false)
                   }).catch(error => {
                     this.props.setIsSending(false)
@@ -243,13 +252,13 @@ class ProfileScreen extends React.Component {
           <View>
             <View style={styles.imageSection}>
               {
-                this.props.currentUserData && this.props.currentUserData.image && !this.state.editImage
+                this.props.currentUserData && this.props.currentUserData.image
                   ? <Image style={styles.userImage}
                            source={{uri: this.props.currentUserData.image}}
                            resizeMode={'cover'}
                   />
                   : <Image style={styles.userImage}
-                           source={{uri: this.state.editImage}}
+                           source={require('../assets/fixrolls-logo.png')}
                            resizeMode={'cover'}
                   />
               }
